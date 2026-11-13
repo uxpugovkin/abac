@@ -89,32 +89,37 @@
 </article>
 
 <!-- ════════════════════════ THE EXAMPLES ════════════════════════
-     One snippet per rule, in the order of the rules. -->
+     One snippet per rule, in the order of the rules.
+
+     Two kinds:
+     - most examples show a few rows (`limit`) and do not scroll at all
+     - the SCROLLING examples use `viewport`: the example box plays the browser
+       window and scrolls, while the toolbar and the table header stay on top -->
 
 <!-- 1. Tables -->
 {#snippet anatomy()}
-	<TableExample title="Employees" annotate selectable summary maxHeight={230} />
+	<TableExample title="Employees" annotate selectable summary limit={5} />
 {/snippet}
 
 {#snippet sorting()}
-	<TableExample title="Employees" selectable summary maxHeight={300} />
+	<TableExample title="Employees" selectable summary limit={7} />
 {/snippet}
 
 {#snippet wrapAndCut()}
-	<TableExample title="Employees" longTexts selectable summary maxHeight={260} />
+	<TableExample title="Employees" longTexts selectable summary limit={5} />
 {/snippet}
 
 <!-- 2. Scrolling -->
 {#snippet scrollDown()}
-	<TableExample maxHeight={400} />
+	<TableExample viewport={420} />
 {/snippet}
 
 {#snippet scrollSideways()}
-	<TableExample wide pinned />
+	<TableExample wide pinned viewport limit={11} />
 {/snippet}
 
 {#snippet scrollBoth()}
-	<TableExample wide pinned selectable maxHeight={400} />
+	<TableExample wide pinned selectable viewport={440} />
 {/snippet}
 
 <!-- 3. Search and filter -->
@@ -133,21 +138,17 @@
 	/>
 {/snippet}
 
+<!-- minHeight keeps the box the same size when the search leaves one row, or none. -->
 {#snippet searchAll()}
-	<TableExample search="Cooper" minHeight={330} />
+	<TableExample search="Cooper" limit={10} minHeight={400} />
 {/snippet}
 
 {#snippet searchOne()}
-	<TableExample
-		searchPlaceholder="Search by name"
-		search="Cooper"
-		minHeight={220}
-		maxHeight={220}
-	/>
+	<TableExample searchPlaceholder="Search by name" search="Cooper" limit={10} minHeight={220} />
 {/snippet}
 
 {#snippet moreFilters()}
-	<TableExample title="Employees" filterMenu maxHeight={360} minHeight={360} />
+	<TableExample title="Employees" filterMenu limit={10} minHeight={400} />
 {/snippet}
 
 <!-- 4. Button placement -->
@@ -157,7 +158,7 @@
 			<h4 class="hb-text-h2">Page</h4>
 			<Button appearance="accent" mode="primary">Add row</Button>
 		</div>
-		<TableExample narrow maxHeight={330} />
+		<TableExample narrow limit={9} />
 	</AppFrame>
 {/snippet}
 
@@ -165,7 +166,7 @@
 	<AppFrame>
 		<div class="page-header"><h4 class="hb-text-h2">Page</h4></div>
 		<div class="page-tabs"><Tabs {tabs} bind:active={tab} /></div>
-		<TableExample narrow maxHeight={300}>
+		<TableExample narrow limit={8}>
 			{#snippet toolbarEnd()}
 				<Button icon="overflow" label="More" />
 				<Button icon="upload" label="Upload" />
@@ -179,7 +180,7 @@
 	<AppFrame>
 		<div class="page-header"><h4 class="hb-text-h2">Page</h4></div>
 		<div class="page-tabs"><Tabs {tabs} bind:active={tab} /></div>
-		<TableExample narrow maxHeight={300}>
+		<TableExample narrow limit={8}>
 			{#snippet toolbarEnd()}
 				<Button icon="overflow" label="More" />
 				<Button icon="upload" label="Upload" />
@@ -191,34 +192,36 @@
 
 <!-- 5. Single-row actions -->
 {#snippet actionsColumn()}
-	<TableExample hide={['office']} actions={['delete']} actionsWidth={48} maxHeight={400} />
+	<TableExample hide={['office']} actions={['delete']} actionsWidth={48} limit={12} />
 {/snippet}
 
+<!-- These two are about tables that scroll sideways, so they use the window too. -->
 {#snippet actionsFloating()}
 	<TableExample
 		title="Employees"
 		wide
 		pinned
 		actions={['edit', 'download', 'delete']}
-		maxHeight={400}
+		viewport
+		limit={10}
 	/>
 {/snippet}
 
 {#snippet actionsPinned()}
-	<TableExample wide pinned actions={['delete']} actionsWidth={48} maxHeight={400} />
+	<TableExample wide pinned actions={['delete']} actionsWidth={48} viewport={440} />
 {/snippet}
 
 <!-- 6. Bulk operations -->
 {#snippet selectStart()}
-	<TableExample title="Employees" selectable summary maxHeight={330} />
+	<TableExample title="Employees" selectable limit={10} />
 {/snippet}
 
 {#snippet selectAndFilter()}
-	<TableExample selectable summary minHeight={330} maxHeight={330} />
+	<TableExample selectable summary limit={10} minHeight={400} />
 {/snippet}
 
 {#snippet selectAndPages()}
-	<TableExample title="Employees" selectable paged minHeight={220} />
+	<TableExample title="Employees" selectable paged />
 {/snippet}
 
 <style>

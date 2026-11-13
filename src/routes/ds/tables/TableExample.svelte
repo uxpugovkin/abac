@@ -32,7 +32,11 @@
 		paged             true = 5 rows per page, with a pager in the summary row
 		actions           icon names of the row actions, e.g. ['delete']
 		actionsWidth      px. Puts the actions in their own column
-		maxHeight         px. Rows scroll inside
+		limit             show only the first N people (most examples need just a few rows)
+		viewport          for the SCROLLING examples: the example box plays the browser window.
+		                  true = it scrolls sideways; a number = it is that many px tall and also
+		                  scrolls up-down. Title and toolbar stick to its top, the table header under them
+		maxHeight         px. Rows scroll inside the table (not used by the guide any more)
 		minHeight         px. Keeps the height when a search leaves few rows
 		summary           true = summary row
 -->
@@ -76,6 +80,8 @@
 		paged = false,
 		actions = [],
 		actionsWidth = 0,
+		limit = 0,
+		viewport = false,
 		maxHeight = 0,
 		minHeight = 0,
 		summary = false
@@ -99,6 +105,9 @@
 	let sortDirection = $state('desc');
 	let selection = $state([]); // ids of the ticked rows
 	let page = $state(0);
+	let stickyHeight = $state(0); // how tall the stuck title + toolbar are (scrolling examples)
+	// How wide the window is inside (without its scrollbar): the stuck part is this wide.
+	let windowWidth = $state(0);
 
 	/* ---------- Columns ---------- */
 
@@ -154,7 +163,7 @@
 
 	/* ---------- Rows: the page filters, sorts and cuts into pages. The Table only shows. ---------- */
 
-	let people = $derived(
+	let everyone = $derived(
 		longTexts
 			? employees.map((person) =>
 					person.id === 1
@@ -167,6 +176,8 @@
 				)
 			: employees
 	);
+	// Most examples only need a few rows.
+	let people = $derived(limit ? everyone.slice(0, limit) : everyone);
 
 	let matching = $derived(
 		sortEmployees(filterEmployees(people, query, values), sortKey, sortDirection)
@@ -216,69 +227,88 @@
 	{/if}
 {/snippet}
 
-<div class="example" class:example--annotate={annotate}>
-	{#if title}
-		<div class="part">
-			{@render note('Title')}
-			<div class="region"><h4 class="hb-text-h3">{title}</h4></div>
-		</div>
-	{/if}
+<!--
+	With `viewport`, this box plays the browser window: IT scrolls, not the table.
+	  - .stuck (title + toolbar) sticks to its top and does not move sideways
+	  - the table header sticks right under it: --table-sticky-top is the height of .stuck
+-->
+<div
+	class="example"
+	class:example--annotate={annotate}
+	class:viewport
+	class:hb-scroll={viewport}
+	style:height={typeof viewport === 'number' ? `${viewport}px` : undefined}
+	style:--table-sticky-top={viewport ? `${stickyHeight}px` : undefined}
+	bind:clientWidth={windowWidth}
+>
+	<div
+		class="stuck"
+		bind:clientHeight={stickyHeight}
+		style:width={viewport ? `${windowWidth}px` : undefined}
+	>
+		{#if title}
+			<div class="part">
+				{@render note('Title')}
+				<div class="region"><h4 class="hb-text-h3">{title}</h4></div>
+			</div>
+		{/if}
 
-	{#if toolbar}
-		<div class="part">
-			{@render note('Toolbar')}
-			<div class="region">
-				<div class="hb-table-toolbar">
-					<!-- The two small white buttons at the start: all filters, and search. -->
-					<span class="tune">
-						<Button
-							appearance="white"
-							mode="primary"
-							icon="tune"
-							label="Filters"
-							onclick={(event) => {
-								event.stopPropagation(); // do not let the window handler close what we just opened
-								if (filterMenu) menuOpen = !menuOpen;
-							}}
-						/>
-						{#if menuOpen}
-							<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
-							<div class="tune__menu" onclick={(event) => event.stopPropagation()}>
-								<Menu label="Filters to show">
-									{#each allFilters as name}
-										<Checkbox checked={chips.includes(name)} onchange={() => toggleChip(name)}
-											>{name}</Checkbox
-										>
-									{/each}
-								</Menu>
-							</div>
-						{/if}
-					</span>
-					<SearchChip bind:value={query} placeholder={searchPlaceholder} />
+		{#if toolbar}
+			<div class="part">
+				{@render note('Toolbar')}
+				<div class="region">
+					<div class="hb-table-toolbar">
+						<!-- The two small white buttons at the start: all filters, and search. -->
+						<span class="tune">
+							<Button
+								appearance="white"
+								mode="primary"
+								icon="tune"
+								label="Filters"
+								onclick={(event) => {
+									event.stopPropagation(); // do not let the window handler close what we just opened
+									if (filterMenu) menuOpen = !menuOpen;
+								}}
+							/>
+							{#if menuOpen}
+								<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
+								<div class="tune__menu" onclick={(event) => event.stopPropagation()}>
+									<Menu label="Filters to show">
+										{#each allFilters as name}
+											<Checkbox checked={chips.includes(name)} onchange={() => toggleChip(name)}
+												>{name}</Checkbox
+											>
+										{/each}
+									</Menu>
+								</div>
+							{/if}
+						</span>
+						<SearchChip bind:value={query} placeholder={searchPlaceholder} />
 
-					<!-- Filter chips. In these examples a click simply sets a ready-made value. -->
-					{#each chips as name}
-						<FilterChip
-							{name}
-							value={values[name]}
-							onclick={() => (values[name] = filterPresets[name])}
-							onclear={() => (values[name] = '')}
-						/>
-					{/each}
-					{#if anyFilter}<Button mode="ghost" onclick={reset}>Reset</Button>{/if}
+						<!-- Filter chips. In these examples a click simply sets a ready-made value. -->
+						{#each chips as name}
+							<FilterChip
+								{name}
+								value={values[name]}
+								onclick={() => (values[name] = filterPresets[name])}
+								onclear={() => (values[name] = '')}
+							/>
+						{/each}
+						{#if anyFilter}<Button mode="ghost" onclick={reset}>Reset</Button>{/if}
 
-					<div class="hb-table-toolbar__end">
-						{#if toolbarEnd}
-							{@render toolbarEnd()}
-						{:else}
-							<Button icon="download" label="Download" />
-							<Button icon="settings" label="Table settings" />
-						{/if}
+						<div class="hb-table-toolbar__end">
+							{#if toolbarEnd}
+								{@render toolbarEnd()}
+							{:else}
+								<Button icon="download" label="Download" />
+								<Button icon="settings" label="Table settings" />
+							{/if}
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-	{/if}
+		{/if}
+	</div>
 
 	<div class="part">
 		{@render note('Table body')}
@@ -298,6 +328,7 @@
 				bind:selection
 				allRows={paged ? matching : undefined}
 				{maxHeight}
+				pageScroll={!!viewport}
 				{minHeight}
 				{actionsWidth}
 				actions={actions.length ? rowActions : undefined}
@@ -388,6 +419,39 @@
 	.region {
 		position: relative; /* the baseline guides are placed inside it */
 		min-width: 0;
+	}
+
+	/* Title and toolbar. In normal examples this wrapper does nothing. */
+	.example--annotate .stuck {
+		display: contents; /* let the Anatomy boxes line up as one column */
+	}
+
+	/* ---------- The scrolling examples: the box is the "browser window" ---------- */
+	.viewport {
+		overflow: auto;
+		/* Fill the bordered card up to its top and bottom edge (it has 16px of padding). */
+		margin-block: -16px;
+		/* Keep room for the scrollbar at all times, and put it in the card's side
+		   padding, so the table inside stays 1184px wide like in the other examples. */
+		scrollbar-gutter: stable;
+		margin-inline-end: -14px;
+	}
+	.viewport .stuck {
+		position: sticky;
+		top: 0;
+		/* Stays put when the table scrolls sideways. Its width is set in the markup:
+		   exactly as wide as the window (without the scrollbar). */
+		inset-inline-start: 0;
+		z-index: 6;
+		padding-top: 16px;
+		background: var(--uncolorful-grey-surface);
+		/* The 12px gap above the table belongs to the stuck part (as padding, not as the
+		   toolbar's margin), so rows cannot show through it while they scroll. */
+		padding-bottom: 12px;
+	}
+	.viewport .stuck > .part:last-child :global(.hb-table-toolbar),
+	.viewport .stuck > .part:last-child h4 {
+		margin-bottom: 0;
 	}
 
 	/* The "tune" button, with its list opening right under it. */

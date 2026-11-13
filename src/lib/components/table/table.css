@@ -28,26 +28,32 @@
 	--table-surface: var(--uncolorful-grey-surface);
 }
 
+/* (Add class="hb-scroll" to any other scrolling box to give it the same scrollbars.) */
 /* The scrollbars of the table: a thin grey pill on a pale track (Figma "scrollbar-h").
    Drawn by us, so they are always visible and people can see that there is more.
    Chrome, Edge and Safari use the ::-webkit-scrollbar rules; Firefox does not know
    them and gets the two standard properties instead. */
 @supports not selector(::-webkit-scrollbar) {
-	.hb-table-scroll {
+	.hb-table-scroll,
+	.hb-scroll {
 		scrollbar-width: thin;
 		scrollbar-color: var(--uncolorful-grey-disabled) var(--uncolorful-grey-background);
 	}
 }
-.hb-table-scroll::-webkit-scrollbar {
+.hb-table-scroll::-webkit-scrollbar,
+.hb-scroll::-webkit-scrollbar {
 	width: 12px;
 	height: 12px;
 }
 .hb-table-scroll::-webkit-scrollbar-track,
-.hb-table-scroll::-webkit-scrollbar-corner {
+.hb-table-scroll::-webkit-scrollbar-corner,
+.hb-scroll::-webkit-scrollbar-track,
+.hb-scroll::-webkit-scrollbar-corner {
 	border-radius: var(--radius-full);
 	background: var(--uncolorful-grey-background);
 }
-.hb-table-scroll::-webkit-scrollbar-thumb {
+.hb-table-scroll::-webkit-scrollbar-thumb,
+.hb-scroll::-webkit-scrollbar-thumb {
 	/* A 6px pill: the 3px border in the track colour makes it look thinner than the track. */
 	border: 3px solid var(--uncolorful-grey-background);
 	border-radius: var(--radius-full);
@@ -83,12 +89,26 @@
 	font: var(--text-body-d);
 }
 
+/* `pageScroll`: the table does not scroll by itself. It grows to its full size and
+   the page (or the box) around it scrolls. The summary sticks to the bottom of that page. */
+.hb-table-frame--page-scroll .hb-table-scroll {
+	overflow: visible;
+}
+.hb-table-frame--page-scroll .hb-table__summary {
+	position: sticky;
+	bottom: 0;
+	inset-inline-start: 0;
+	z-index: 2;
+	background: var(--table-surface);
+}
+
 /* ---------- 2. Header cells (Figma "column-title") ---------- */
 
 .hb-table th {
-	/* The header stays at the top while the rows scroll under it. */
+	/* The header stays at the top while the rows scroll under it.
+	   --table-sticky-top is only needed with `pageScroll`, see Table.svelte. */
 	position: sticky;
-	top: 0;
+	top: var(--table-sticky-top, 0px);
 	z-index: 2;
 
 	height: 36px;
@@ -301,9 +321,29 @@
 	border-start-end-radius: var(--radius-m);
 	border-end-end-radius: var(--radius-m);
 }
-/* Column style (when you give actionsWidth): a real column, pinned to the far side. */
-td.hb-table__actions-cell--column {
+/* Column style (when you give actionsWidth): a real column, pinned to the far side.
+   It is solid, so the columns that scroll sideways slide UNDER it. */
+.hb-table .hb-table__actions-cell--column {
 	background: var(--table-surface);
+	border-inline-start: 1px solid var(--uncolorful-grey-border);
+}
+/* Its header cell is pinned in both directions, like a pinned column's header. */
+.hb-table th.hb-table__actions-cell {
+	z-index: 3;
+}
+/* The same soft shadow as a pinned column, mirrored: it falls on the columns before it. */
+.hb-table .hb-table__actions-cell--column::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	inset-inline-end: calc(100% + 1px);
+	width: 12px;
+	background: linear-gradient(to left, #0000000f, transparent);
+	pointer-events: none;
+}
+[dir='rtl'] .hb-table .hb-table__actions-cell--column::after {
+	background: linear-gradient(to right, #0000000f, transparent);
 }
 
 /* ---------- 7. Two-level header (columns with `children`) ----------
@@ -325,7 +365,7 @@ td.hb-table__actions-cell--column {
 }
 /* The second header row sits right under the first one. */
 .hb-table--grouped thead tr:nth-child(2) th {
-	top: 36px;
+	top: calc(var(--table-sticky-top, 0px) + 36px);
 }
 
 /* ---------- 8. Helpers ---------- */

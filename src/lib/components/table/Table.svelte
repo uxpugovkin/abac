@@ -68,6 +68,11 @@
 		minHeight       px. The rows area is never shorter than this, so the page does not
 		                jump when a search or a filter leaves only a few rows
 		maxHeight       px. Taller tables scroll inside; the header stays on top
+		pageScroll      true = the table does NOT scroll by itself: it is as big as its content and
+		                scrolls together with the page (or the box) around it. Its header then sticks
+		                to the top of that page, pinned columns to its side, the summary to its bottom.
+		                If something is already stuck at the top (a toolbar), say how tall it is:
+		                    style="--table-sticky-top: 56px"   on the table or any parent
 		summary         snippet for the summary row under the table, e.g. two <span>s
 
 	────────────────────────────────────────────────────────────────────────────
@@ -103,6 +108,7 @@
 		allRows = undefined,
 		minHeight = 0,
 		maxHeight = 0,
+		pageScroll = false,
 		summary,
 		class: extraClass = ''
 	} = $props();
@@ -211,7 +217,7 @@
 	</th>
 {/snippet}
 
-<div class="hb-table-frame {extraClass}">
+<div class="hb-table-frame {extraClass}" class:hb-table-frame--page-scroll={pageScroll}>
 	<div
 		class="hb-table-scroll"
 		style:min-height={minHeight ? `${minHeight}px` : undefined}
