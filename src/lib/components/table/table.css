@@ -217,8 +217,8 @@
 	text-align: end;
 }
 
-/* Rows highlight under the mouse when there is something to do with them. */
-.hb-table--hover tbody tr:not(.hb-table__empty):hover td {
+/* Every row highlights under the mouse. */
+.hb-table tbody tr:not(.hb-table__empty):hover td {
 	background: var(--boring-blue-90);
 }
 .hb-table--clickable tbody tr {

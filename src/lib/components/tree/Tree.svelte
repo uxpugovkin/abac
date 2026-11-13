@@ -30,6 +30,8 @@
 		onselect   called with the node when a row is clicked (optional)
 
 	Clicking a row selects it; if it has children, it also opens or closes.
+	An open row shows an arrow up, a closed one an arrow down.
+	Thin lines connect every row to its parent (drawn in tree.css).
 -->
 <script>
 	import Icon from '../icon/Icon.svelte';
@@ -70,11 +72,7 @@
 				onclick={() => click(node)}
 			>
 				{#if node.children}
-					<Icon
-						name={open[node.id] ? 'chevron-down' : 'chevron-right'}
-						size={16}
-						class={open[node.id] ? '' : 'hb-tree__arrow-closed'}
-					/>
+					<Icon name={open[node.id] ? 'chevron-up' : 'chevron-down'} size={16} />
 				{:else}
 					<span class="hb-tree__spacer"></span>
 				{/if}

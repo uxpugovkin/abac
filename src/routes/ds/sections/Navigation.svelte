@@ -111,8 +111,25 @@
 								{ id: 'model', label: 'Model' }
 							]
 						},
-						{ id: 'd145', label: 'res-domain-145', children: [{ id: 'users2', label: 'Users' }] },
-						{ id: 'd146', label: 'res-domain-146' }
+						{
+							id: 'd145',
+							label: 'res-domain-145',
+							open: true,
+							children: [
+								{
+									id: 'users2',
+									label: 'Users',
+									open: true,
+									children: [
+										{ id: 'admins', label: 'Admins' },
+										{ id: 'guests', label: 'Guests' }
+									]
+								},
+								{ id: 'model2', label: 'Model' }
+							]
+						},
+						{ id: 'd146', label: 'res-domain-146', children: [{ id: 'users3', label: 'Users' }] },
+						{ id: 'd147', label: 'res-domain-147' }
 					]
 				}
 			]}

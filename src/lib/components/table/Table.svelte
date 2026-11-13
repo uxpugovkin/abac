@@ -233,7 +233,6 @@
 			class="hb-table"
 			class:hb-table--grouped={grouped}
 			class:hb-table--clickable={onrowclick}
-			class:hb-table--hover={onrowclick || actions || selectable}
 			style:min-width={minWidth ? `${minWidth}px` : undefined}
 		>
 			<!-- Column widths. One <col> per column of cells, in the same order as the cells below. -->
