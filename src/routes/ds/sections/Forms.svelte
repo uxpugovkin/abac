@@ -1,6 +1,6 @@
-<!-- DOCS: TextInput, Select, Checkbox, Radio, Switch, Slider. -->
+<!-- DOCS: TextInput, Select, MultiSelect, Checkbox, Radio, Switch, Slider. -->
 <script>
-	import { TextInput, Select, Checkbox, Radio, Switch, Slider } from '#lib';
+	import { TextInput, Select, MultiSelect, Checkbox, Radio, Switch, Slider } from '#lib';
 	import Demo from '../Demo.svelte';
 
 	// Each example keeps its own value, so you can play with it.
@@ -11,6 +11,9 @@
 	let fullName = $state('Brenda Gray Cooper');
 	let type = $state('');
 	let compareWith = $state('constantinopolski.b.e@acme.corp');
+	let skills = $state(['Go', 'API', 'SQL']);
+	let offices = $state([]);
+	let roles = $state(['Admin', 'Auditor', 'Editor', 'Viewer', 'Owner']);
 
 	let agree = $state(true);
 	let updates = $state(false);
@@ -55,6 +58,43 @@
 			label="Compare with"
 			options={['constantinopolski.b.e@acme.corp', 'walker85@acme.corp']}
 			bind:value={compareWith}
+		/>
+	</div>
+</Demo>
+
+<Demo
+	title="MultiSelect"
+	figma="input → combobox"
+	about="Pick several options from a list. The chosen ones are shown as tags; the box grows when they need more lines."
+>
+	<div class="grid">
+		<MultiSelect
+			label="Skills"
+			placeholder="Choose…"
+			options={['Go', 'API', 'SQL', 'Rust', 'Ops', 'UX', 'Web']}
+			bind:value={skills}
+		/>
+		<MultiSelect
+			label="Offices"
+			placeholder="Choose…"
+			icon="search"
+			options={['Berlin', 'Lisbon', 'Dubai']}
+			bind:value={offices}
+			hint="Nothing chosen yet"
+		/>
+		<MultiSelect
+			label="With an error"
+			placeholder="Choose…"
+			options={['One', 'Two']}
+			error="Please choose at least one"
+		/>
+		<MultiSelect label="Disabled" options={['Go', 'API']} value={['Go', 'API']} disabled />
+		<MultiSelect
+			big
+			label="Roles"
+			placeholder="Choose…"
+			options={['Admin', 'Auditor', 'Editor', 'Viewer', 'Owner', 'Guest']}
+			bind:value={roles}
 		/>
 	</div>
 </Demo>

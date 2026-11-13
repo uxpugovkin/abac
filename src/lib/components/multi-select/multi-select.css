@@ -1,0 +1,80 @@
+/* ==========================================================================
+   MULTI-SELECT — see MultiSelect.svelte for how to use it.
+   Figma: habibi-library → page "input" → "combobox"
+
+   The box itself (label, colours, hover / focus / error / disabled) is the
+   shared FIELD from ../field/field.css. This file only adds what is special:
+     1. the box holds tags and grows with them
+     2. the list that opens under the box
+   ========================================================================== */
+
+.hb-multi-select {
+	position: relative; /* the list is placed under it */
+}
+
+/* ---------- 1. The box ---------- */
+
+/* It is a <button>: take the browser's button look away. */
+.hb-multi-select .hb-field__body {
+	width: 100%;
+	border: 0;
+	font: inherit;
+	text-align: start;
+	cursor: pointer;
+
+	/* A field is 28px tall. Here that is only the smallest height:
+	   4px + one row of 20px tags + 4px. More tags make the box taller. */
+	height: auto;
+	min-height: 28px;
+	padding-block: 4px;
+}
+.hb-multi-select.hb-field--big .hb-field__body {
+	min-height: 48px;
+	padding-block: 6px;
+}
+
+/* The tags: 4px apart, wrapping to new lines when they do not fit. */
+.hb-multi-select__tags {
+	flex: 1;
+	min-width: 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+}
+.hb-multi-select__placeholder {
+	color: var(--field-placeholder);
+	font: var(--text-body-c);
+}
+
+/* While the list is open the box keeps its "focus" look
+   (the same values as .hb-field:focus-within in field.css). */
+.hb-multi-select--open {
+	--field-line: var(--boring-blue-50);
+	--field-line-width: 2px;
+	--field-placeholder: var(--uncolorful-grey-disabled);
+}
+.hb-multi-select--open.hb-field--error {
+	--field-line: var(--traffic-light-red-50);
+}
+
+/* ---------- 2. The list ---------- */
+
+/* Right under the box, at least as wide as the box, above the page content. */
+.hb-multi-select__list {
+	position: absolute;
+	top: calc(100% + 4px);
+	inset-inline-start: 0;
+	z-index: 20;
+	min-width: 100%;
+}
+/* A long list scrolls inside instead of running off the page. */
+.hb-multi-select__list .hb-menu {
+	max-height: 280px;
+	overflow-y: auto;
+}
+/* Checkbox rows get a little room at the sides. */
+.hb-multi-select__list .hb-check {
+	margin: 0 4px;
+	padding-inline-end: 12px;
+	white-space: nowrap;
+}

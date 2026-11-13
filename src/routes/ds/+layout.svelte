@@ -19,7 +19,10 @@
 	const menu = [
 		{ group: 'Foundations', items: ['Colours', 'Typography', 'Icons', 'Radius and shadows'] },
 		{ group: 'Basics', items: ['Button', 'Loader'] },
-		{ group: 'Forms', items: ['TextInput', 'Select', 'Checkbox', 'Radio', 'Switch', 'Slider'] },
+		{
+			group: 'Forms',
+			items: ['TextInput', 'Select', 'MultiSelect', 'Checkbox', 'Radio', 'Switch', 'Slider']
+		},
 		{
 			group: 'Navigation',
 			items: ['Tabs', 'Chip', 'Segmented', 'FilterChip', 'SearchChip', 'Menu', 'Tree']

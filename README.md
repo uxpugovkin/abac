@@ -128,7 +128,7 @@ npm run package      # builds dist/
 | radius variables, shadow styles        | `tokens/sizes.css`                             |
 | icons                                  | `Icon` (105 icons), `Loader`                   |
 | button                                 | `Button` (also covers icon-button)             |
-| input                                  | `TextInput`, `Select`                          |
+| input                                  | `TextInput`, `Select`, `MultiSelect`           |
 | checkbox, radio-button, switch, slider | `Checkbox`, `Radio`, `Switch`, `Slider`        |
 | tabs                                   | `Tabs`                                         |
 | chips                                  | `Chip`, `Segmented`, `FilterChip`              |
