@@ -319,6 +319,6 @@
 		top: 21px; /* 8px padding + where the first line of 12px text sits */
 	}
 	.guide--row {
-		top: 73px; /* the 49px two-line header + where the first text line of the row sits */
+		top: 72px; /* the 49px two-line header + where the first text line of the row sits */
 	}
 </style>

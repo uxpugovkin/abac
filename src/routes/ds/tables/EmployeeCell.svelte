@@ -22,7 +22,7 @@
 	<Tag colour={statusColour[row.status]} size="s">{row.status}</Tag>
 {:else if column.key === 'skills'}
 	<div class="hb-table__tags">
-		{#each row.skills as skill}<Tag>{skill}</Tag>{/each}
+		{#each row.skills as skill}<Tag size="s">{skill}</Tag>{/each}
 	</div>
 {:else if column.key === 'score'}
 	{formatScore(row.score)}
