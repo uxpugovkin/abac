@@ -63,7 +63,7 @@
 <Demo
 	title="Table"
 	figma="table"
-	about="Describe the columns, hand over the rows. Click a header to sort, click a row to select it."
+	about="Describe the columns, hand over the rows. Click a header to sort, click a row to select it. Rules for using tables: see Guidelines → Tables in the side menu."
 >
 	<Table
 		{columns}

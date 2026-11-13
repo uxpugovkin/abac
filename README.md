@@ -61,6 +61,17 @@ src/
    or remember things — the page does that.
 6. **Readable beats clever.** If a simpler version is a few lines longer, take the simpler version.
 
+## Guidelines
+
+Some components come with written rules for how to use them. They live next to the component
+and are shown in the docs.
+
+| Topic  | File                                     | Docs page    |
+| ------ | ---------------------------------------- | ------------ |
+| Tables | `src/lib/components/table/GUIDELINES.md` | `/ds/tables` |
+
+Read the guidelines before building a screen that uses that component.
+
 ## Themes and right-to-left
 
 Set the theme on `<html>` (or on any wrapper):

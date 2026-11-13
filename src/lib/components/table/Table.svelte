@@ -4,6 +4,8 @@
 	and the table draws itself.
 
 	Figma:  habibi-library → page "table"
+	Rules:  read GUIDELINES.md (next to this file) before designing a screen with a table.
+	        It says when to use a table, where buttons and filters go, how selection works…
 
 	Use — the simplest table:
 		<Table

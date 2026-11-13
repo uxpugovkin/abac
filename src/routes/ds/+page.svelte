@@ -71,6 +71,10 @@
 				<a class="hb-text-body-c" href="#{item.toLowerCase().replaceAll(' ', '-')}">{item}</a>
 			{/each}
 		{/each}
+
+		<!-- Longer write-ups that have their own page. -->
+		<div class="hb-text-body-e-bold side__group">Guidelines</div>
+		<a class="hb-text-body-c" href={resolve('/ds/tables')}>Tables</a>
 	</nav>
 
 	<main class="content">
