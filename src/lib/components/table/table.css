@@ -157,8 +157,10 @@
 	top: calc(var(--table-sticky-top, 0px) + var(--table-toolbar-height, 0px));
 	z-index: 2;
 
+	/* 10px + one 16px text line + 9px + the 1px line = 36px:
+	   a one-line label sits exactly in the middle. */
 	height: 36px;
-	padding: 8px 12px;
+	padding: 10px 12px 9px;
 	border-bottom: 1px solid var(--uncolorful-grey-border);
 	background: var(--table-surface);
 	color: var(--uncolorful-grey-secondary);
@@ -189,8 +191,10 @@
 /* ---------- 3. Body cells and rows (Figma "cell") ---------- */
 
 .hb-table td {
+	/* 10px + one 16px text line + 10px = 36px: one-line rows are centred exactly.
+	   A text that wraps simply adds lines below; the row grows with it. */
 	height: 36px;
-	padding: 8px 12px;
+	padding: 10px 12px;
 	color: var(--uncolorful-grey-primary);
 	font: var(--text-body-d);
 	/* Cells of one row line up on the text baseline (guidelines 1.3). */
@@ -412,4 +416,11 @@
 .hb-table__tags {
 	display: flex;
 	gap: 4px;
+}
+/* Tags in cells: use size "s". Such a tag is 18px tall, 2px more than a text line.
+   Its text sits on the row's baseline and the extra 2px stick out below the line,
+   instead of making the row taller (the checkbox and the avatar do the same). */
+.hb-table td .hb-tag--s,
+.hb-table td .hb-tag--xs {
+	margin-bottom: -2px;
 }
