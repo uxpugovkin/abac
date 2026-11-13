@@ -27,12 +27,13 @@
 	────────────────────────────────────────────────────────────────────────────
 		key        which field of a row to show                                   (required)
 		label      the header text                                                (required)
-		width      width in px. Columns without it share the room that is left
+		width      a number = width in px;  a text = any CSS width, e.g. "25%".
+		           Columns without it share the room that is left
 		sortable   true = the header can be clicked to sort
 		align      "end" = stick to the far side (good for numbers)
 		wrap       true = long text wraps to more lines instead of being cut with "…"
 		           a number = wraps, but to at most that many lines (wrap: 2)
-		pinned     true = stays in place when the table scrolls sideways (needs a width)
+		pinned     true = stays in place when the table scrolls sideways (needs a width in px)
 		children   a list of columns UNDER this one (makes a two-level header).
 		           A column with children only needs `label` and `children`.
 
@@ -68,12 +69,16 @@
 		minHeight       px. The rows area is never shorter than this, so the page does not
 		                jump when a search or a filter leaves only a few rows
 		maxHeight       px. Taller tables scroll inside; the header stays on top
+		minWidth        px. The table fills the room it gets, but is never narrower than this:
+		                in a smaller place it scrolls sideways instead of squeezing its columns
 		pageScroll      true = the table does NOT scroll by itself: it is as big as its content and
 		                scrolls together with the page (or the box) around it. Its header then sticks
 		                to the top of that page, pinned columns to its side, the summary to its bottom.
 		                If something is already stuck at the top (a toolbar), say how tall it is:
 		                    style="--table-sticky-top: 56px"   on the table or any parent
 		summary         snippet for the summary row under the table, e.g. two <span>s
+		                (the first sits at the start, the last at the end).
+		                It is always visible; the sideways scrollbar sits below it
 
 	────────────────────────────────────────────────────────────────────────────
 	Kept simple on purpose: the table never changes your data. Sorting, filtering
@@ -108,6 +113,7 @@
 		allRows = undefined,
 		minHeight = 0,
 		maxHeight = 0,
+		minWidth = 0,
 		pageScroll = false,
 		summary,
 		class: extraClass = ''
@@ -228,12 +234,15 @@
 			class:hb-table--grouped={grouped}
 			class:hb-table--clickable={onrowclick}
 			class:hb-table--hover={onrowclick || actions || selectable}
+			style:min-width={minWidth ? `${minWidth}px` : undefined}
 		>
 			<!-- Column widths. One <col> per column of cells, in the same order as the cells below. -->
 			<colgroup>
 				{#if selectable}<col style:width="{CHECK_WIDTH}px" />{/if}
 				{#each leaves as column}
-					<col style:width={column.width ? `${column.width}px` : undefined} />
+					<col
+						style:width={typeof column.width === 'number' ? `${column.width}px` : column.width}
+					/>
 				{/each}
 				{#if actions}<col style:width="{actionsWidth}px" />{/if}
 			</colgroup>
@@ -363,9 +372,10 @@
 				{/if}
 			</tbody>
 		</table>
-	</div>
 
-	{#if summary}
-		<div class="hb-table__summary">{@render summary()}</div>
-	{/if}
+		<!-- Inside the scrolling part, stuck to its bottom: the scrollbar comes after it. -->
+		{#if summary}
+			<div class="hb-table__summary">{@render summary()}</div>
+		{/if}
+	</div>
 </div>

@@ -6,7 +6,7 @@
 
 	Use:
 		<TableExample title="Employees" selectable summary />
-		<TableExample wide pinned actions={['edit', 'download', 'delete']} maxHeight={330} />
+		<TableExample wide pinned actions={['edit', 'download', 'delete']} viewport />
 
 	Props (all optional):
 		title             heading above the table, e.g. "Employees"
@@ -24,7 +24,8 @@
 		Table
 		hide              keys of columns to leave out, e.g. ['office']
 		wide              true = the columns are wider than the example, so the table scrolls sideways
-		narrow            true = smaller columns, for the small page inside the app window (AppFrame)
+		narrow            true = for the small page inside the app window (AppFrame): the table may
+		                  get narrower there before it starts to scroll sideways
 		pinned            true = the Employee column is pinned
 		longTexts         true = the "wrap and cut" example: long header, long name, long department,
 		                  and two purple lines that show the shared text baseline
@@ -36,7 +37,6 @@
 		viewport          for the SCROLLING examples: the example box plays the browser window.
 		                  true = it scrolls sideways; a number = it is that many px tall and also
 		                  scrolls up-down. Title and toolbar stick to its top, the table header under them
-		maxHeight         px. Rows scroll inside the table (not used by the guide any more)
 		minHeight         px. Keeps the height when a search leaves few rows
 		summary           true = summary row
 -->
@@ -82,7 +82,6 @@
 		actionsWidth = 0,
 		limit = 0,
 		viewport = false,
-		maxHeight = 0,
 		minHeight = 0,
 		summary = false
 	} = $props();
@@ -111,32 +110,20 @@
 
 	/* ---------- Columns ---------- */
 
-	// Column widths in px, exactly as in Figma.
-	//   normal     together 1184px: the inner width of an example box
-	//   wide       wider than the box, so the table scrolls sideways
-	//   narrow     for the small page inside the app window
-	//   longTexts  the "wrap and cut" example
+	// Column widths.
+	//   normal     shares of the table width, close to Figma (260 of 1184px = 22%…).
+	//              The table fills the example box. Skills has no width: it takes what is left.
+	//   longTexts  the "wrap and cut" example: a slimmer first column, so its long texts wrap
+	//   wide       px, exactly as in Figma: wider than the box, so the table scrolls sideways
+	//
+	// The table never gets narrower than 872px (see minWidth below): that is a 904px
+	// example box without its padding. In a smaller box it scrolls sideways.
 	let widths = $derived(
 		{
-			normal: {
-				fullName: selectable ? 260 : 288,
-				status: 130,
-				skills: 210,
-				department: 180,
-				office: 180,
-				score: 196
-			},
-			wide: { fullName: 260, status: 130, skills: 300, department: 240, office: 240, score: 260 },
-			narrow: { fullName: 220, status: 110, skills: 190, department: 130, office: 110, score: 174 },
-			longTexts: {
-				fullName: 230,
-				status: 130,
-				skills: 210,
-				department: 150,
-				office: 180,
-				score: 256
-			}
-		}[longTexts ? 'longTexts' : wide ? 'wide' : narrow ? 'narrow' : 'normal']
+			normal: { fullName: '22%', status: '10%', department: '14%', office: '12%', score: '18%' },
+			longTexts: { fullName: '19%', status: '11%', department: '13%', office: '15%', score: '22%' },
+			wide: { fullName: 260, status: 130, skills: 300, department: 240, office: 240, score: 260 }
+		}[longTexts ? 'longTexts' : wide ? 'wide' : 'normal']
 	);
 
 	let columns = $derived(
@@ -327,7 +314,7 @@
 				{selectable}
 				bind:selection
 				allRows={paged ? matching : undefined}
-				{maxHeight}
+				minWidth={wide ? 0 : narrow ? 620 : 872}
 				pageScroll={!!viewport}
 				{minHeight}
 				{actionsWidth}
@@ -429,12 +416,10 @@
 	/* ---------- The scrolling examples: the box is the "browser window" ---------- */
 	.viewport {
 		overflow: auto;
-		/* Fill the bordered card up to its top and bottom edge (it has 16px of padding). */
-		margin-block: -16px;
-		/* Keep room for the scrollbar at all times, and put it in the card's side
-		   padding, so the table inside stays 1184px wide like in the other examples. */
-		scrollbar-gutter: stable;
-		margin-inline-end: -14px;
+		/* Fill the bordered card up to its top, bottom and far edge (it has 16px of padding),
+		   so the scrollbars sit at the edges of the card, like in a real window. */
+		margin: -16px;
+		margin-inline-start: 0;
 	}
 	.viewport .stuck {
 		position: sticky;

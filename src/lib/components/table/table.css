@@ -28,11 +28,24 @@
 	--table-surface: var(--uncolorful-grey-surface);
 }
 
-/* (Add class="hb-scroll" to any other scrolling box to give it the same scrollbars.) */
-/* The scrollbars of the table: a thin grey pill on a pale track (Figma "scrollbar-h").
-   Drawn by us, so they are always visible and people can see that there is more.
-   Chrome, Edge and Safari use the ::-webkit-scrollbar rules; Firefox does not know
-   them and gets the two standard properties instead. */
+/* The part that scrolls. Sideways when the columns do not fit (see `minWidth`),
+   and up-down when you give the table a maxHeight. With a minHeight it keeps
+   its size when there are only a few rows.
+   It is a grid of two rows: the table, and the summary row at the very bottom. */
+.hb-table-scroll {
+	overflow: auto;
+	display: grid;
+	grid-template-rows: 1fr auto;
+}
+
+/* The scrollbars: a thin grey pill on a pale track (Figma "scrollbar-h"), with 4px
+   of air on both sides of the track. Drawn by us, so they are always visible and
+   people can see that there is more.
+   Add class="hb-scroll" to any other scrolling box to give it the same scrollbars.
+
+   How it is built: the scrollbar is 20px thick = 4px air + 12px track + 4px air.
+   The air is a transparent border; "background-clip: padding-box" keeps the colour
+   out of it. (Firefox does not know these rules and gets a plain thin scrollbar.) */
 @supports not selector(::-webkit-scrollbar) {
 	.hb-table-scroll,
 	.hb-scroll {
@@ -42,32 +55,29 @@
 }
 .hb-table-scroll::-webkit-scrollbar,
 .hb-scroll::-webkit-scrollbar {
-	width: 12px;
-	height: 12px;
+	width: 20px;
+	height: 20px;
 }
 .hb-table-scroll::-webkit-scrollbar-track,
-.hb-table-scroll::-webkit-scrollbar-corner,
-.hb-scroll::-webkit-scrollbar-track,
-.hb-scroll::-webkit-scrollbar-corner {
+.hb-scroll::-webkit-scrollbar-track {
+	border: 4px solid transparent; /* the air */
 	border-radius: var(--radius-full);
-	background: var(--uncolorful-grey-background);
+	background: var(--uncolorful-grey-background) padding-box;
 }
 .hb-table-scroll::-webkit-scrollbar-thumb,
 .hb-scroll::-webkit-scrollbar-thumb {
-	/* A 6px pill: the 3px border in the track colour makes it look thinner than the track. */
-	border: 3px solid var(--uncolorful-grey-background);
+	/* A 6px pill in the middle of the 12px track: 4px air + 3px of track on each side. */
+	border: 7px solid transparent;
 	border-radius: var(--radius-full);
-	background: var(--uncolorful-grey-disabled);
+	background: var(--uncolorful-grey-disabled) padding-box;
 }
-
-/* The part that scrolls. Sideways when the columns are wider than the frame,
-   and up-down when you give the table a maxHeight. With a minHeight it keeps
-   its size when there are only a few rows. */
-.hb-table-scroll {
-	overflow: auto;
+.hb-table-scroll::-webkit-scrollbar-corner,
+.hb-scroll::-webkit-scrollbar-corner {
+	background: transparent;
 }
 
 .hb-table {
+	align-self: start; /* a short table stays at the top of a taller scrolling part */
 	width: 100%;
 	/* Columns keep the widths you give them instead of following their content. */
 	table-layout: fixed;
@@ -76,8 +86,12 @@
 	border-spacing: 0;
 }
 
-/* Summary row: sits under the scrolling part, so it is always visible. */
+/* Summary row: stuck to the bottom of the scrolling part, so it is always visible
+   and the sideways scrollbar sits below it. */
 .hb-table__summary {
+	position: sticky;
+	bottom: 0;
+	z-index: 6; /* above the rows and pinned cells that scroll under it */
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -85,21 +99,25 @@
 	min-height: 36px;
 	padding: 0 12px;
 	border-top: 1px solid var(--uncolorful-grey-border);
+	background: var(--table-surface);
 	color: var(--uncolorful-grey-secondary);
 	font: var(--text-body-d);
 }
+/* The row is as wide as the whole table. When the table scrolls sideways, its first
+   and last piece stay at the two sides of the visible part. */
+.hb-table__summary > :first-child {
+	position: sticky;
+	inset-inline-start: 12px;
+}
+.hb-table__summary > :last-child {
+	position: sticky;
+	inset-inline-end: 12px;
+}
 
 /* `pageScroll`: the table does not scroll by itself. It grows to its full size and
-   the page (or the box) around it scrolls. The summary sticks to the bottom of that page. */
+   the page (or the box) around it scrolls. */
 .hb-table-frame--page-scroll .hb-table-scroll {
 	overflow: visible;
-}
-.hb-table-frame--page-scroll .hb-table__summary {
-	position: sticky;
-	bottom: 0;
-	inset-inline-start: 0;
-	z-index: 2;
-	background: var(--table-surface);
 }
 
 /* ---------- 2. Header cells (Figma "column-title") ---------- */
@@ -295,6 +313,9 @@
 	z-index: 1;
 	padding: 0;
 	overflow: visible;
+	/* Not on the text baseline like other cells: the buttons have no text, and
+	   lining them up with the texts would push the whole row down. */
+	vertical-align: top;
 }
 /* The buttons. Hidden until the row is hovered (or reached with the keyboard). */
 .hb-table__actions {
