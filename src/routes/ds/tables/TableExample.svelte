@@ -31,6 +31,10 @@
 		                  and two purple lines that show the shared text baseline
 		selectable        true = checkbox column
 		paged             true = 5 rows per page, with a pager in the summary row
+		picked            which rows are ticked at the start: a list of ids, e.g. [2, 3, 5],
+		                  or "all" = every row that the starting search and filters leave
+		choiceShown       true = the "Rows on this page / All rows in the table" list is always
+		                  on screen (the pagination example). Needs `paged`
 		actions           icon names of the row actions, e.g. ['delete']
 		actionsWidth      px. Puts the actions in their own column
 		limit             show only the first N people (most examples need just a few rows)
@@ -49,6 +53,7 @@
 		FilterChip,
 		SearchChip,
 		Menu,
+		MenuItem,
 		Checkbox,
 		EmptyState
 	} from '#lib';
@@ -78,6 +83,8 @@
 		longTexts = false,
 		selectable = false,
 		paged = false,
+		picked = [],
+		choiceShown = false,
 		actions = [],
 		actionsWidth = 0,
 		limit = 0,
@@ -102,7 +109,15 @@
 	let menuOpen = $state(filterMenu); // the list behind the "tune" button (starts open in its own example)
 	let sortKey = $state('score');
 	let sortDirection = $state('desc');
-	let selection = $state([]); // ids of the ticked rows
+	// ids of the ticked rows
+	// svelte-ignore state_referenced_locally
+	let selection = $state(
+		picked === 'all'
+			? filterEmployees(limit ? employees.slice(0, limit) : employees, search, filters).map(
+					(person) => person.id
+				)
+			: [...picked]
+	);
 	let page = $state(0);
 	let stickyHeight = $state(0); // how tall the stuck title + toolbar are (scrolling examples)
 	// How wide the window is inside (without its scrollbar): the stuck part is this wide.
@@ -302,6 +317,21 @@
 		<div class="region">
 			<!-- Two thin lines across the header and the first row: they show that all
 			     texts of a row sit on one baseline (guidelines 1.3). -->
+			<!-- Guide-only trick: a copy of the table's own "which rows?" list that never closes,
+			     so the example always shows it. It sits exactly where the real one opens. -->
+			{#if choiceShown}
+				<div class="choice">
+					<Menu label="Which rows to select">
+						<MenuItem onclick={() => (selection = rows.map((person) => person.id))}
+							>Rows on this page</MenuItem
+						>
+						<MenuItem onclick={() => (selection = matching.map((person) => person.id))}
+							>All rows in the table</MenuItem
+						>
+					</Menu>
+				</div>
+			{/if}
+
 			{#if longTexts}<span class="guide guide--header"></span><span class="guide guide--row"
 				></span>{/if}
 
@@ -455,6 +485,14 @@
 		margin: 0 4px;
 		padding-inline-end: 12px;
 		white-space: nowrap;
+	}
+
+	/* The always-open list of the pagination example: right under the header checkbox. */
+	.choice {
+		position: absolute;
+		top: 36px; /* the height of the table header */
+		inset-inline-start: 0;
+		z-index: 7;
 	}
 
 	.pager {

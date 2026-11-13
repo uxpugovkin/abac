@@ -250,25 +250,9 @@
 .hb-table th.hb-table__cell--pinned {
 	z-index: 3;
 }
-/* The last pinned column gets a line on its far side, and a soft shadow next to it.
-   The shadow is ONE strip per cell that fades sideways only, so the cells of all
-   rows join into one even shadow (a normal box-shadow would show a band per row). */
+/* The last pinned column gets a line on its far side. */
 .hb-table .hb-table__cell--pinned-last {
 	border-inline-end: 1px solid var(--uncolorful-grey-border);
-	overflow: visible; /* the strip sits just outside the cell */
-}
-.hb-table .hb-table__cell--pinned-last::after {
-	content: '';
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	inset-inline-start: calc(100% + 1px);
-	width: 12px;
-	background: linear-gradient(to right, #0000000f, transparent);
-	pointer-events: none;
-}
-[dir='rtl'] .hb-table .hb-table__cell--pinned-last::after {
-	background: linear-gradient(to left, #0000000f, transparent);
 }
 
 /* ---------- 5. Checkbox column (Figma "cell-bulk", guidelines 7) ---------- */
@@ -352,21 +336,6 @@
 .hb-table th.hb-table__actions-cell {
 	z-index: 3;
 }
-/* The same soft shadow as a pinned column, mirrored: it falls on the columns before it. */
-.hb-table .hb-table__actions-cell--column::after {
-	content: '';
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	inset-inline-end: calc(100% + 1px);
-	width: 12px;
-	background: linear-gradient(to left, #0000000f, transparent);
-	pointer-events: none;
-}
-[dir='rtl'] .hb-table .hb-table__actions-cell--column::after {
-	background: linear-gradient(to right, #0000000f, transparent);
-}
-
 /* ---------- 7. Two-level header (columns with `children`) ----------
    The header becomes a grey band, and columns are separated by thin lines. */
 

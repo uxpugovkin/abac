@@ -35,6 +35,8 @@
 		5.2: actionsFloating,
 		5.3: actionsPinned,
 		6.1: selectStart,
+		6.2: selectSome,
+		6.3: selectAll,
 		6.4: selectAndFilter,
 		6.5: selectAndPages
 	};
@@ -216,12 +218,28 @@
 	<TableExample title="Employees" selectable limit={10} />
 {/snippet}
 
+<!-- `picked` ticks rows at the start, so each example opens in the state its rule describes. -->
+{#snippet selectSome()}
+	<TableExample title="Employees" selectable summary limit={10} picked={[2, 3, 5]} />
+{/snippet}
+
+{#snippet selectAll()}
+	<TableExample title="Employees" selectable summary limit={10} picked="all" />
+{/snippet}
+
 {#snippet selectAndFilter()}
-	<TableExample selectable summary limit={10} minHeight={400} />
+	<TableExample
+		selectable
+		summary
+		limit={10}
+		filters={{ Department: 'Engineering' }}
+		picked="all"
+		minHeight={400}
+	/>
 {/snippet}
 
 {#snippet selectAndPages()}
-	<TableExample title="Employees" selectable paged />
+	<TableExample title="Employees" selectable paged choiceShown />
 {/snippet}
 
 <style>
