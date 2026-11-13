@@ -31,8 +31,7 @@
 		narrow            true = for the small page inside the app window (AppFrame): the table may
 		                  get narrower there before it starts to scroll sideways
 		pinned            true = the Employee column is pinned
-		longTexts         true = the "wrap and cut" example: long header, long name, long department,
-		                  and two purple lines that show the shared text baseline
+		longTexts         true = the "wrap and cut" example: long header, long name, long department
 		selectable        true = checkbox column
 		picked            which rows are ticked at the start: a list of ids, e.g. [2, 3, 5],
 		                  or "all" = every row that the starting filters leave
@@ -97,8 +96,8 @@
 						? { ...column, label: 'Very long column name that needs two lines', wrap: true }
 						: { ...column, pinned };
 				}
-				// …and Department may take two lines before it is cut with "…".
-				if (column.key === 'department' && longTexts) return { ...column, wrap: 2 };
+				// …and so does Department: it is cut with "…" after three lines.
+				if (column.key === 'department' && longTexts) return { ...column, wrap: true };
 				return column;
 			})
 	);
@@ -117,7 +116,8 @@
 				? {
 						...person,
 						fullName: 'Alexandria Montgomery-Fitzgerald Villanueva',
-						department: 'Platform Reliability Engineering and Operations'
+						department:
+							'Platform Reliability Engineering, Operations, Developer Experience and Internal Tooling'
 					}
 				: person
 		)
@@ -252,17 +252,10 @@
 	</Window>
 {:else}
 	<!-- All other examples do not scroll, so the toolbar simply sits above the table.
-	     That leaves the table alone in its box, which the two overlays below need. -->
+	     That leaves the table alone in its box, which the always-open list below needs. -->
 	<div class="above">{@render toolbar()}</div>
 
 	<div class="region">
-		<!-- Guide-only trick: two thin lines across the header and the first row. They show
-		     that all texts of a row sit on one baseline (guidelines 1.3). -->
-		{#if longTexts}
-			<span class="guide guide--header"></span>
-			<span class="guide guide--row"></span>
-		{/if}
-
 		<!-- Guide-only trick: a copy of the table's own "which rows?" list that never closes,
 		     so the example always shows it. It sits exactly where the real one opens. -->
 		{#if choiceShown}
@@ -288,7 +281,7 @@
 		margin-bottom: 12px;
 	}
 	.region {
-		position: relative; /* the two overlays are placed inside it */
+		position: relative; /* the always-open list is placed inside it */
 		min-width: 0;
 	}
 
@@ -304,21 +297,5 @@
 		top: 36px; /* the height of the table header */
 		inset-inline-start: 0;
 		z-index: 7;
-	}
-
-	/* The baseline guides of the "wrap and cut" example. */
-	.guide {
-		position: absolute;
-		inset-inline: 0;
-		z-index: 4;
-		height: 1px;
-		background: var(--accent-9);
-		pointer-events: none;
-	}
-	.guide--header {
-		top: 23px; /* 10px padding + where the first line of 12px text sits */
-	}
-	.guide--row {
-		top: 75px; /* the 52px two-line header + 10px padding + where the first text line sits */
 	}
 </style>

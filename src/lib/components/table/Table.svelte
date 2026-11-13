@@ -31,8 +31,8 @@
 		           Columns without it share the room that is left
 		sortable   true = the header can be clicked to sort
 		align      "end" = stick to the far side (good for numbers)
-		wrap       true = long text wraps to more lines instead of being cut with "…"
-		           a number = wraps, but to at most that many lines (wrap: 2)
+		wrap       true = long text wraps instead of being cut with "…" right away.
+		           In a row it takes at most 3 lines; what is left after that is cut
 		pinned     true = stays in place when the table scrolls sideways (needs a width in px)
 
 	────────────────────────────────────────────────────────────────────────────
@@ -342,13 +342,7 @@
 								class:hb-table__cell--pinned-last={column.key === lastPinnedKey}
 								style:inset-inline-start={column.pinned ? `${pinnedAt[column.key]}px` : undefined}
 							>
-								<!-- wrap: 2 → the text may take two lines, then it is cut with "…". -->
-								<div
-									class:hb-table__clamp={typeof column.wrap === 'number'}
-									style:-webkit-line-clamp={typeof column.wrap === 'number'
-										? column.wrap
-										: undefined}
-								>
+								<div>
 									<!-- Your own drawing if you gave a `cell` snippet, otherwise just the value. -->
 									{#if cell}{@render cell(row, column)}{:else}{row[column.key] ?? ''}{/if}
 								</div>

@@ -191,14 +191,14 @@
 /* ---------- 3. Body cells and rows (Figma "cell") ---------- */
 
 .hb-table td {
-	/* 10px + one 16px text line + 10px = 36px: one-line rows are centred exactly.
-	   A text that wraps simply adds lines below; the row grows with it. */
+	/* A row is 36px tall, and everything in it sits in the middle of that height.
+	   6px above and below leave 24px inside: a text line (16px), a tag of any size,
+	   a checkbox (20px) or an avatar (24px) all fit without making the row taller. */
 	height: 36px;
-	padding: 10px 12px;
+	padding: 6px 12px;
 	color: var(--uncolorful-grey-primary);
 	font: var(--text-body-d);
-	/* Cells of one row line up on the text baseline (guidelines 1.3). */
-	vertical-align: baseline;
+	vertical-align: middle;
 }
 
 /* Long text is cut with "…" (guidelines 1.3)… */
@@ -211,15 +211,21 @@
 }
 /* (Each body cell holds one <div> around its content; it does the cutting.) */
 .hb-table td > div {
-	/* "clip" cuts only sideways. Up and down nothing is cut, so an avatar that is
-	   a bit taller than the text line stays whole. */
-	overflow-x: clip;
-	overflow-y: visible;
+	overflow: hidden;
 	text-overflow: ellipsis;
 }
 /* …unless the column says the text is important: then it wraps (column.wrap). */
 .hb-table .hb-table__cell--wrap {
 	white-space: normal;
+}
+/* In a row it wraps to at most 3 lines; what is left is cut with "…".
+   (These four lines are the standard way to say "at most 3 lines" in CSS.) */
+.hb-table td.hb-table__cell--wrap > div,
+.hb-table td.hb-table__cell--wrap .hb-table__person span {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 3;
+	overflow: hidden;
 }
 /* A sortable header that wraps: its text may wrap too, and stays at the start. */
 .hb-table .hb-table__cell--wrap .hb-table__sort {
@@ -228,12 +234,6 @@
 }
 .hb-table .hb-table__cell--wrap .hb-table__sort span {
 	white-space: normal;
-}
-/* column.wrap = 2: wraps, but only to that many lines, then "…". */
-.hb-table td > div.hb-table__clamp {
-	display: -webkit-box;
-	-webkit-box-orient: vertical;
-	overflow: hidden;
 }
 
 /* The "nothing to show" row (the `empty` snippet): centred, and it never highlights. */
@@ -289,28 +289,28 @@
 
 /* ---------- 5. Checkbox column (Figma "cell-bulk", guidelines 7) ---------- */
 
-/* A 32px column: 12px of room, then the 20px box.
-   The cell keeps the padding, font and baseline alignment of every other cell, so it
-   has the same (empty) first text line as they do. The box hangs on that line, centred
-   on it. That way the box always sits next to the FIRST text line of the row — also
-   when a cell wraps, or when a tag makes the row a little taller. */
+/* A 32px column: 12px of room, then the 20px box. */
 .hb-table .hb-table__check-cell {
 	padding-inline: 12px 0;
 	/* The "select all" menu opens out of this cell, so nothing may be cut off here. */
 	overflow: visible;
 }
 .hb-table__check {
-	display: inline-flex;
-	/* The box is 20px, a text line is 16px. The -2px margins let it stick out 2px above
-	   and below the line instead of making the line (and the row) taller. */
-	vertical-align: top;
-	margin-block: -2px;
+	display: flex;
 	padding: 0;
 	border: 0;
 	border-radius: var(--radius-xs);
 	background: transparent;
 	color: var(--uncolorful-grey-primary);
 	cursor: pointer;
+}
+/* In the header the box sits next to the FIRST line of the labels, also when a label
+   wraps. The box is 20px, a text line is 16px: the -2px margins let it stick out 2px
+   above and below that line instead of making the line (and the header) taller. */
+.hb-table th .hb-table__check {
+	display: inline-flex;
+	vertical-align: top;
+	margin-block: -2px;
 }
 /* Ticked (or partly ticked) boxes are blue. */
 .hb-table__check[aria-checked='true'],
@@ -334,8 +334,9 @@
 	z-index: 1;
 	padding: 0;
 	overflow: visible;
-	/* Not on the text baseline like other cells: the buttons have no text, and
-	   lining them up with the texts would push the whole row down. */
+}
+/* (In the header this cell is empty; it only needs to stay at the top like the labels.) */
+.hb-table th.hb-table__actions-cell {
 	vertical-align: top;
 }
 /* The buttons. Hidden until the row is hovered (or reached with the keyboard). */
@@ -354,10 +355,12 @@
 }
 
 /* Overlay style (the default): the cell has no width of its own; the buttons
-   float over the end of the row, covering what is under them. */
+   float over the end of the row, from its top to its bottom, covering what is under them. */
 .hb-table__actions-cell--overlay .hb-table__actions {
 	position: absolute;
 	top: 0;
+	bottom: 0;
+	height: auto;
 	inset-inline-end: 0;
 	background: var(--boring-blue-90);
 	border-start-end-radius: var(--radius-m);
@@ -399,28 +402,23 @@
 
 /* Avatar + name (Figma "cell-avatar"). Use inside your own cell:
        <div class="hb-table__person"><Avatar size="xs" /> <span>Jane Cooper</span></div>
-   The avatar is placed "on top" of the cell instead of in the line of text. That way
-   the name behaves like any other text: same baseline as the other cells, can wrap,
-   can be cut — and the 24px avatar does not make the 16px line taller. */
+   The name is cut with "…" like any other text, or wraps if the column has `wrap`. */
 .hb-table__person {
-	position: relative;
-	padding-inline-start: 32px; /* 24px avatar + 8px gap */
+	display: flex;
+	align-items: center;
+	gap: 8px;
 }
 .hb-table__person .hb-avatar {
-	position: absolute;
-	top: -4px; /* centres the 24px avatar on the first 16px line */
-	inset-inline-start: 0;
+	flex: none;
+}
+.hb-table__person span {
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 /* Several tags in one cell. Use inside your own cell. */
 .hb-table__tags {
 	display: flex;
 	gap: 4px;
-}
-/* Tags in cells: use size "s". Such a tag is 18px tall, 2px more than a text line.
-   Its text sits on the row's baseline and the extra 2px stick out below the line,
-   instead of making the row taller (the checkbox and the avatar do the same). */
-.hb-table td .hb-tag--s,
-.hb-table td .hb-tag--xs {
-	margin-bottom: -2px;
 }
