@@ -4,8 +4,9 @@
 	and the table draws itself.
 
 	Figma:  habibi-library → pages "table" and "Tables Guide"
-	Rules:  read GUIDELINES.md (next to this file) before designing a screen with a table.
+	Rules:  read guidelines.js (next to this file) before designing a screen with a table.
 	        It says when to use a table, where buttons and filters go, how selection works…
+	        The same rules, with a live example under each, are on the docs page /ds/tables.
 
 	────────────────────────────────────────────────────────────────────────────
 	THE SIMPLEST TABLE
@@ -16,8 +17,8 @@
 				{ key: 'fullName', label: 'Full name' }
 			]}
 			rows={[
-				{ login: 'walker85@acme.corp', fullName: 'Brenda Cooper' },
-				{ login: 'const.b.e@acme.corp', fullName: 'Constantin Polski' }
+				{ id: 1, login: 'walker85@acme.corp', fullName: 'Brenda Cooper' },
+				{ id: 2, login: 'const.b.e@acme.corp', fullName: 'Constantin Polski' }
 			]}
 		/>
 
@@ -30,6 +31,7 @@
 		sortable   true = the header can be clicked to sort
 		align      "end" = stick to the far side (good for numbers)
 		wrap       true = long text wraps to more lines instead of being cut with "…"
+		           a number = wraps, but to at most that many lines (wrap: 2)
 		pinned     true = stays in place when the table scrolls sideways (needs a width)
 		children   a list of columns UNDER this one (makes a two-level header).
 		           A column with children only needs `label` and `children`.
@@ -42,10 +44,11 @@
 		rows            the data: a list of objects. Each object is one row
 		rowKey          name of the field that tells rows apart (unique in every row).  Default "id"
 		cell            snippet to draw a cell yourself (tags, avatars…). Gets (row, column)
+		empty           snippet shown instead of the rows when there are none (e.g. an EmptyState)
 
 	Sorting  — the table shows the arrow and reports clicks; the PAGE sorts the rows
 		sortKey         key of the column the rows are sorted by
-		sortDirection   "asc" | "desc".  Default "asc"
+		sortDirection   "asc" (small → big, arrow up) | "desc" (big → small, arrow down).  Default "asc"
 		onsort          called with the column key when a sortable header is clicked
 
 	Rows
@@ -62,8 +65,9 @@
 		                Then the header checkbox asks "Rows on this page / All rows in the table"
 
 	Size and scrolling
+		minHeight       px. The rows area is never shorter than this, so the page does not
+		                jump when a search or a filter leaves only a few rows
 		maxHeight       px. Taller tables scroll inside; the header stays on top
-		resizable       true = column widths can be dragged in the header
 		summary         snippet for the summary row under the table, e.g. two <span>s
 
 	────────────────────────────────────────────────────────────────────────────
@@ -86,6 +90,7 @@
 		rows = [],
 		rowKey = 'id',
 		cell,
+		empty,
 		sortKey = '',
 		sortDirection = 'asc',
 		onsort,
@@ -96,14 +101,13 @@
 		selectable = false,
 		selection = $bindable([]),
 		allRows = undefined,
+		minHeight = 0,
 		maxHeight = 0,
-		resizable = false,
 		summary,
 		class: extraClass = ''
 	} = $props();
 
 	const CHECK_WIDTH = 28; // width of the checkbox column, px
-	const MIN_WIDTH = 48; // a column cannot be dragged narrower than this, px
 
 	/* ---------- Columns ----------
 	   "Leaf" columns are the ones that actually hold cells: plain columns, and
@@ -112,12 +116,8 @@
 	let grouped = $derived(columns.some((column) => column.children));
 	let leaves = $derived(columns.flatMap((column) => column.children ?? [column]));
 
-	// Widths changed by dragging:  { 'column-key': 180, … }.  Empty until someone drags.
-	let dragged = $state({});
-
-	function widthOf(column) {
-		return dragged[column.key] ?? column.width;
-	}
+	// How many columns of cells there are in total (used by the "empty" row).
+	let columnCount = $derived(leaves.length + (selectable ? 1 : 0) + (actions ? 1 : 0));
 
 	/* ---------- Pinned columns ----------
 	   Each pinned column sits right after the pinned ones before it.
@@ -129,7 +129,7 @@
 		for (const column of leaves) {
 			if (!column.pinned) continue;
 			result[column.key] = distance;
-			distance += widthOf(column) ?? 0;
+			distance += column.width ?? 0;
 		}
 		return result;
 	});
@@ -174,7 +174,7 @@
 		menuOpen = false;
 	}
 
-	// Guidelines 7.4: when the rows change (for example a filter was changed),
+	// Guidelines 6.4: when the rows change (for example a filter was changed),
 	// rows that are no longer in the table are dropped from the selection.
 	// Rows that newly appear are simply not ticked.
 	$effect(() => {
@@ -182,62 +182,6 @@
 		const stillThere = selection.filter((key) => available.includes(key));
 		if (stillThere.length !== selection.length) selection = stillThere;
 	});
-
-	/* ---------- Column resizing ---------- */
-
-	let tableElement;
-	let drag = $state(null); // what is being dragged right now, or null
-
-	// Width of a column as it is drawn right now, read from the page.
-	function drawnWidth(column) {
-		return tableElement.querySelector(`th[data-key="${column.key}"]`).getBoundingClientRect().width;
-	}
-
-	function startResize(event, column, parent) {
-		// 1. Freeze every column at the width it has on screen, so that columns
-		//    without a set width do not jump when one of them changes.
-		for (const leaf of leaves) dragged[leaf.key] = drawnWidth(leaf);
-
-		// 2. Remember where we started.
-		const siblings = parent?.children ?? [];
-		drag = {
-			column,
-			// Dragging a child moves the border between it and its neighbour (guidelines 6.3).
-			neighbour: parent ? siblings[siblings.indexOf(column) + 1] : undefined,
-			startX: event.clientX,
-			startWidths: { ...dragged },
-			// In right-to-left pages, dragging to the left makes a column wider.
-			direction: getComputedStyle(tableElement).direction === 'rtl' ? -1 : 1
-		};
-		event.currentTarget.setPointerCapture(event.pointerId);
-	}
-
-	function moveResize(event) {
-		if (!drag) return;
-		const moved = (event.clientX - drag.startX) * drag.direction;
-		const start = drag.startWidths;
-		const { column, neighbour } = drag;
-
-		if (column.children) {
-			// A parent column: its children grow or shrink in proportion (guidelines 6.2).
-			const total = column.children.reduce((sum, child) => sum + start[child.key], 0);
-			const scale = Math.max(total + moved, MIN_WIDTH * column.children.length) / total;
-			for (const child of column.children) dragged[child.key] = start[child.key] * scale;
-		} else if (neighbour) {
-			// A child column: what it gains, its neighbour loses. The parent keeps its width.
-			const both = start[column.key] + start[neighbour.key];
-			const width = Math.min(Math.max(start[column.key] + moved, MIN_WIDTH), both - MIN_WIDTH);
-			dragged[column.key] = width;
-			dragged[neighbour.key] = both - width;
-		} else {
-			// A plain column: it just gets wider or narrower.
-			dragged[column.key] = Math.max(start[column.key] + moved, MIN_WIDTH);
-		}
-	}
-
-	function stopResize() {
-		drag = null;
-	}
 </script>
 
 <!-- Clicking anywhere else closes the "this page / all rows" menu. -->
@@ -245,12 +189,11 @@
 
 <!-- ─── One header cell. `parent` is set for the children of a grouped column. ─── -->
 {#snippet headerCell(column, parent)}
-	{@const isLastChild = parent && parent.children.at(-1) === column}
 	<th
-		data-key={column.key}
 		colspan={column.children?.length}
 		rowspan={grouped && !column.children && !parent ? 2 : undefined}
 		class:hb-table__cell--end={column.align === 'end'}
+		class:hb-table__cell--wrap={column.wrap}
 		class:hb-table__cell--pinned={column.pinned}
 		class:hb-table__cell--pinned-last={column.key === lastPinnedKey}
 		style:inset-inline-start={column.pinned ? `${pinnedAt[column.key]}px` : undefined}
@@ -259,36 +202,22 @@
 			<button class="hb-table__sort" type="button" onclick={() => onsort?.(column.key)}>
 				<span>{column.label}</span>
 				{#if column.key === sortKey}
-					<Icon name={sortDirection === 'asc' ? 'arrow-down' : 'arrow-up'} size={16} />
+					<Icon name={sortDirection === 'asc' ? 'arrow-up' : 'arrow-down'} size={16} />
 				{/if}
 			</button>
 		{:else}
 			{column.label}
 		{/if}
-
-		<!-- The last child has no handle of its own: its edge belongs to the parent. -->
-		{#if resizable && !isLastChild}
-			<span
-				class="hb-table__resize"
-				class:hb-table__resize--dragging={drag?.column === column}
-				role="separator"
-				aria-orientation="vertical"
-				aria-label="Resize column {column.label}"
-				onpointerdown={(event) => startResize(event, column, parent)}
-				onpointermove={moveResize}
-				onpointerup={stopResize}
-				onpointercancel={stopResize}
-			>
-				<span></span><span></span><span></span>
-			</span>
-		{/if}
 	</th>
 {/snippet}
 
 <div class="hb-table-frame {extraClass}">
-	<div class="hb-table-scroll" style:max-height={maxHeight ? `${maxHeight}px` : undefined}>
+	<div
+		class="hb-table-scroll"
+		style:min-height={minHeight ? `${minHeight}px` : undefined}
+		style:max-height={maxHeight ? `${maxHeight}px` : undefined}
+	>
 		<table
-			bind:this={tableElement}
 			class="hb-table"
 			class:hb-table--grouped={grouped}
 			class:hb-table--clickable={onrowclick}
@@ -298,7 +227,7 @@
 			<colgroup>
 				{#if selectable}<col style:width="{CHECK_WIDTH}px" />{/if}
 				{#each leaves as column}
-					<col style:width={widthOf(column) ? `${widthOf(column)}px` : undefined} />
+					<col style:width={column.width ? `${column.width}px` : undefined} />
 				{/each}
 				{#if actions}<col style:width="{actionsWidth}px" />{/if}
 			</colgroup>
@@ -393,8 +322,16 @@
 								class:hb-table__cell--pinned-last={column.key === lastPinnedKey}
 								style:inset-inline-start={column.pinned ? `${pinnedAt[column.key]}px` : undefined}
 							>
-								<!-- Your own drawing if you gave a `cell` snippet, otherwise just the value. -->
-								{#if cell}{@render cell(row, column)}{:else}{row[column.key] ?? ''}{/if}
+								<!-- wrap: 2 → the text may take two lines, then it is cut with "…". -->
+								<div
+									class:hb-table__clamp={typeof column.wrap === 'number'}
+									style:-webkit-line-clamp={typeof column.wrap === 'number'
+										? column.wrap
+										: undefined}
+								>
+									<!-- Your own drawing if you gave a `cell` snippet, otherwise just the value. -->
+									{#if cell}{@render cell(row, column)}{:else}{row[column.key] ?? ''}{/if}
+								</div>
 							</td>
 						{/each}
 
@@ -411,6 +348,13 @@
 						{/if}
 					</tr>
 				{/each}
+
+				<!-- No rows: one wide cell with whatever the page wants to say. -->
+				{#if rows.length === 0 && empty}
+					<tr class="hb-table__empty">
+						<td colspan={columnCount}>{@render empty()}</td>
+					</tr>
+				{/if}
 			</tbody>
 		</table>
 	</div>

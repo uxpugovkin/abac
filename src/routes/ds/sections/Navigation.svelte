@@ -1,6 +1,6 @@
 <!-- DOCS: Tabs, Chip, Segmented, FilterChip, Menu, Tree. -->
 <script>
-	import { Tabs, Chip, Segmented, FilterChip, Menu, MenuItem, Tree } from '#lib';
+	import { Tabs, Chip, Segmented, FilterChip, SearchChip, Menu, MenuItem, Tree } from '#lib';
 	import Demo from '../Demo.svelte';
 
 	let tab = $state('attributes');
@@ -8,6 +8,8 @@
 	let locked = $state(false);
 	let view = $state('read');
 	let status = $state('Active');
+	let query = $state('');
+	let nameQuery = $state('Cooper');
 	let sort = $state('name');
 	let node = $state('users');
 </script>
@@ -59,6 +61,16 @@
 	/>
 	<FilterChip name="Last sync" />
 	<FilterChip name="Disabled" disabled />
+</Demo>
+
+<Demo
+	title="SearchChip"
+	figma="Tables Guide → Search and filter"
+	about="The search of a table toolbar: a small button, then a box to type in, then a blue chip. Click it, type, press Enter."
+>
+	<SearchChip bind:value={query} />
+	<SearchChip value="Cooper" placeholder="Search by name" />
+	<span class="hb-text-body-c">Searching for: {query || 'nothing yet'}</span>
 </Demo>
 
 <Demo

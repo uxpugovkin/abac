@@ -26,6 +26,7 @@
 @import './components/slider/slider.css';
 @import './components/tabs/tabs.css';
 @import './components/chip/chip.css';
+@import './components/search-chip/search-chip.css';
 @import './components/menu/menu.css';
 @import './components/tree/tree.css';
 @import './components/tag/tag.css';

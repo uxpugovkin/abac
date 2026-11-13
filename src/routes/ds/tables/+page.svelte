@@ -1,105 +1,291 @@
 <!--
 	TABLE GUIDELINES  —  /ds/tables
-	Shows the rules for working with tables.
+	Every rule for working with tables, with a live example under it.
 
-	The text is NOT written here. It lives in one place:
-		src/lib/components/table/GUIDELINES.md
-	This page only reads that file and shows it nicely. To change a rule, edit the .md file.
+	Where things live:
+	  - the TEXT of the rules      src/lib/components/table/guidelines.js   (edit rules there)
+	  - the EXAMPLES               this file, one snippet per rule, listed in `examples` below
+	  - the example table itself   ./TableExample.svelte  (the "Employees" table from Figma)
+
+	To give a rule an example: write a snippet at the bottom of this file and add
+	a line to `examples` with the rule's id.
 -->
 <script>
-	import { resolve } from '$app/paths';
-	import { marked } from 'marked';
-	import { Button } from '#lib';
+	import { tableGuidelines } from '#lib/components/table/guidelines.js';
+	import { Button, Tabs } from '#lib';
+	import TableExample from './TableExample.svelte';
+	import AppFrame from './AppFrame.svelte';
 
-	// "?raw" means: give me the file's text as it is.
-	import guidelines from '#lib/components/table/GUIDELINES.md?raw';
+	// rule id → the snippet that shows it. Rules without a line here have no example.
+	const examples = {
+		1.1: anatomy,
+		1.2: sorting,
+		1.3: wrapAndCut,
+		2.1: scrollDown,
+		2.2: scrollSideways,
+		2.3: scrollBoth,
+		3.2: filterTags,
+		3.3: searchAll,
+		3.4: searchOne,
+		3.5: moreFilters,
+		4.1: buttonInHeader,
+		4.2: buttonInToolbar,
+		4.3: iconButton,
+		5.1: actionsColumn,
+		5.2: actionsFloating,
+		5.3: actionsPinned,
+		6.1: selectStart,
+		6.4: selectAndFilter,
+		6.5: selectAndPages
+	};
 
-	// Turn the Markdown text into HTML once.
-	const html = marked.parse(guidelines);
+	let tab = $state('a'); // for the "Button placement" examples
+	const tabs = [
+		{ id: 'a', label: 'Tab A' },
+		{ id: 'b', label: 'Tab B' },
+		{ id: 'c', label: 'Tab C' }
+	];
 </script>
 
 <svelte:head>
 	<title>Table guidelines · Habibi UI</title>
 </svelte:head>
 
-<header class="bar">
-	<Button mode="ghost" icon="arrow-left" href={resolve('/ds')} label="Back to the design system" />
-	<strong class="hb-text-body-b-bold">Habibi UI · Guidelines</strong>
-</header>
+<article class="guide">
+	{#each tableGuidelines as chapter, index}
+		<header class="chapter">
+			<h2 class="hb-text-display-b">{chapter.title}</h2>
+			<p class="hb-text-body-b">{chapter.about}</p>
+		</header>
 
-<!-- {@html} is safe here: the text comes from our own file, not from a visitor. -->
-<article class="guide">{@html html}</article>
+		{#each chapter.rules as rule}
+			<section class="rule" id="rule-{rule.id}">
+				<div class="rule__text">
+					<span class="rule__number hb-text-body-d-bold">{rule.id}</span>
+					<h3 class="hb-text-h3">{rule.title}</h3>
+					{#each rule.text as line}
+						<p class="hb-text-body-b">{line}</p>
+					{/each}
+					{#if rule.code}
+						<p class="rule__code hb-text-body-d">
+							<strong>In code:</strong> <code>{rule.code}</code>
+						</p>
+					{/if}
+				</div>
+
+				{#if examples[rule.id]}
+					<div class="rule__example">{@render examples[rule.id]()}</div>
+				{/if}
+			</section>
+		{/each}
+	{/each}
+</article>
+
+<!-- ════════════════════════ THE EXAMPLES ════════════════════════
+     One snippet per rule, in the order of the rules. -->
+
+<!-- 1. Tables -->
+{#snippet anatomy()}
+	<TableExample title="Employees" annotate selectable summary maxHeight={230} />
+{/snippet}
+
+{#snippet sorting()}
+	<TableExample title="Employees" selectable summary maxHeight={300} />
+{/snippet}
+
+{#snippet wrapAndCut()}
+	<TableExample title="Employees" longTexts selectable summary maxHeight={260} />
+{/snippet}
+
+<!-- 2. Scrolling -->
+{#snippet scrollDown()}
+	<TableExample maxHeight={400} />
+{/snippet}
+
+{#snippet scrollSideways()}
+	<TableExample wide pinned />
+{/snippet}
+
+{#snippet scrollBoth()}
+	<TableExample wide pinned selectable maxHeight={400} />
+{/snippet}
+
+<!-- 3. Search and filter -->
+{#snippet filterTags()}
+	<TableExample
+		selectable
+		shown={['Status', 'Skills', 'Department', 'Office', 'Tetris score']}
+		filters={{
+			Status: 'Active',
+			Skills: 'Go, API, SQL',
+			Department: 'Engineering',
+			Office: 'Berlin',
+			'Tetris score': '> 20,000'
+		}}
+		minHeight={220}
+	/>
+{/snippet}
+
+{#snippet searchAll()}
+	<TableExample search="Cooper" minHeight={330} />
+{/snippet}
+
+{#snippet searchOne()}
+	<TableExample
+		searchPlaceholder="Search by name"
+		search="Cooper"
+		minHeight={220}
+		maxHeight={220}
+	/>
+{/snippet}
+
+{#snippet moreFilters()}
+	<TableExample title="Employees" filterMenu maxHeight={360} minHeight={360} />
+{/snippet}
+
+<!-- 4. Button placement -->
+{#snippet buttonInHeader()}
+	<AppFrame>
+		<div class="page-header">
+			<h4 class="hb-text-h2">Page</h4>
+			<Button appearance="accent" mode="primary">Add row</Button>
+		</div>
+		<TableExample maxHeight={330} />
+	</AppFrame>
+{/snippet}
+
+{#snippet buttonInToolbar()}
+	<AppFrame>
+		<div class="page-header"><h4 class="hb-text-h2">Page</h4></div>
+		<div class="page-tabs"><Tabs {tabs} bind:active={tab} /></div>
+		<TableExample maxHeight={300}>
+			{#snippet toolbarEnd()}
+				<Button icon="overflow" label="More" />
+				<Button icon="upload" label="Upload" />
+				<Button appearance="accent" mode="primary">Add row</Button>
+			{/snippet}
+		</TableExample>
+	</AppFrame>
+{/snippet}
+
+{#snippet iconButton()}
+	<AppFrame>
+		<div class="page-header"><h4 class="hb-text-h2">Page</h4></div>
+		<div class="page-tabs"><Tabs {tabs} bind:active={tab} /></div>
+		<TableExample maxHeight={300}>
+			{#snippet toolbarEnd()}
+				<Button icon="overflow" label="More" />
+				<Button icon="upload" label="Upload" />
+				<Button appearance="accent" mode="primary" icon="plus" label="Add row" />
+			{/snippet}
+		</TableExample>
+	</AppFrame>
+{/snippet}
+
+<!-- 5. Single-row actions -->
+{#snippet actionsColumn()}
+	<TableExample hide={['office']} actions={['delete']} actionsWidth={48} maxHeight={400} />
+{/snippet}
+
+{#snippet actionsFloating()}
+	<TableExample
+		title="Employees"
+		wide
+		pinned
+		actions={['edit', 'download', 'delete']}
+		maxHeight={400}
+	/>
+{/snippet}
+
+{#snippet actionsPinned()}
+	<TableExample wide pinned actions={['delete']} actionsWidth={48} maxHeight={400} />
+{/snippet}
+
+<!-- 6. Bulk operations -->
+{#snippet selectStart()}
+	<TableExample title="Employees" selectable summary maxHeight={330} />
+{/snippet}
+
+{#snippet selectAndFilter()}
+	<TableExample selectable summary minHeight={330} maxHeight={330} />
+{/snippet}
+
+{#snippet selectAndPages()}
+	<TableExample title="Employees" selectable paged minHeight={220} />
+{/snippet}
 
 <style>
-	.bar {
-		position: sticky;
-		top: 0;
-		z-index: 20;
-		display: flex;
-		align-items: center;
-		gap: 16px;
-		height: 56px;
-		padding: 0 24px;
-		border-bottom: 1px solid var(--uncolorful-grey-border);
-		background: var(--uncolorful-grey-surface);
-	}
-
 	.guide {
-		max-width: 760px;
-		margin: 0 auto;
-		padding: 24px 24px 96px;
-		font: var(--text-body-b);
+		display: flex;
+		flex-direction: column;
+		gap: 48px;
+	}
+	h2,
+	h3,
+	h4,
+	p {
+		margin: 0;
 	}
 
-	/* The HTML inside .guide is made from Markdown, so Svelte cannot see it
-	   ahead of time. ":global" tells Svelte to style it anyway. */
-	.guide :global(h1) {
-		margin: 24px 0 8px;
-		font: var(--text-display-b);
+	/* ---------- Chapter title (the dark banner of each Figma page) ---------- */
+	.chapter {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		margin-top: 48px;
+		padding: 36px 40px 40px;
+		border-radius: var(--radius-l);
+		background: var(--uncolorful-grey-primary);
+		color: var(--uncolorful-grey-surface);
 	}
-	.guide :global(h2) {
-		margin: 56px 0 0;
-		padding-top: 24px;
-		border-top: 1px solid var(--uncolorful-grey-border);
-		font: var(--text-h1);
+	.chapter:first-child {
+		margin-top: 0;
 	}
-	.guide :global(h3) {
-		margin: 32px 0 8px;
-		font: var(--text-h3);
+
+	/* ---------- One rule: its text, then its example ---------- */
+	.rule {
+		display: flex;
+		flex-direction: column;
+		gap: 24px;
+		/* When you jump here from a link, leave room for the sticky top bar. */
 		scroll-margin-top: 72px;
 	}
-	.guide :global(p),
-	.guide :global(ul),
-	.guide :global(ol) {
-		margin: 8px 0;
+	.rule__text {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		max-width: 760px;
 	}
-	.guide :global(li) {
-		margin: 4px 0;
+	.rule__number {
+		color: var(--uncolorful-grey-tertiary);
 	}
-	.guide :global(a) {
-		color: var(--boring-blue-50);
+	.rule__code {
+		color: var(--uncolorful-grey-secondary);
 	}
-	.guide :global(code) {
-		padding: 1px 4px;
-		border-radius: var(--radius-s);
-		background: var(--uncolorful-grey-border);
+	.rule__code code {
 		font: var(--text-code-s);
 	}
-	.guide :global(table) {
-		width: 100%;
-		margin: 16px 0;
-		border-collapse: collapse;
-		font: var(--text-body-c);
+
+	/* The white card the example sits on. */
+	.rule__example {
+		padding: 16px;
+		border-radius: var(--radius-l);
+		background: var(--uncolorful-grey-surface);
+		box-shadow: inset 0 0 0 1px var(--uncolorful-grey-border);
+		overflow: hidden;
 	}
-	.guide :global(th),
-	.guide :global(td) {
-		padding: 8px 12px;
+
+	/* ---------- Bits of the fake pages in "Button placement" ---------- */
+	.page-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		min-height: 32px;
+		margin-bottom: 16px;
+	}
+	.page-tabs {
+		margin-bottom: 16px;
 		border-bottom: 1px solid var(--uncolorful-grey-border);
-		text-align: start;
-		vertical-align: top;
-	}
-	.guide :global(th) {
-		color: var(--uncolorful-grey-secondary);
-		font: var(--text-body-d-bold);
 	}
 </style>

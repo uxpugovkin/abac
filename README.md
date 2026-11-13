@@ -63,12 +63,12 @@ src/
 
 ## Guidelines
 
-Some components come with written rules for how to use them. They live next to the component
-and are shown in the docs.
+Some components come with written rules for how to use them. They live next to the component;
+the docs page shows them with a live example under every rule.
 
 | Topic  | File                                     | Docs page    |
 | ------ | ---------------------------------------- | ------------ |
-| Tables | `src/lib/components/table/GUIDELINES.md` | `/ds/tables` |
+| Tables | `src/lib/components/table/guidelines.js` | `/ds/tables` |
 
 Read the guidelines before building a screen that uses that component.
 
@@ -121,24 +121,24 @@ npm run package      # builds dist/
 
 ## What was moved from Figma
 
-| Figma page                             | In code                                 |
-| -------------------------------------- | --------------------------------------- |
-| colour                                 | `tokens/colours.css` (4 themes)         |
-| typo                                   | `tokens/typography.css`                 |
-| radius variables, shadow styles        | `tokens/sizes.css`                      |
-| icons                                  | `Icon` (105 icons), `Loader`            |
-| button                                 | `Button` (also covers icon-button)      |
-| input                                  | `TextInput`, `Select`                   |
-| checkbox, radio-button, switch, slider | `Checkbox`, `Radio`, `Switch`, `Slider` |
-| tabs                                   | `Tabs`                                  |
-| chips                                  | `Chip`, `Segmented`, `FilterChip`       |
-| avatar, badge, marker, tag             | `Avatar`, `Badge`, `Marker`, `Tag`      |
-| notification, tooltip, skeleton        | `Notification`, `Tooltip`, `Skeleton`   |
-| table                                  | `Table`                                 |
-| splitter                               | `Splitter`                              |
-| Drop List                              | `Menu`, `MenuItem`                      |
-| Empty                                  | `EmptyState`                            |
-| Tree                                   | `Tree`                                  |
+| Figma page                             | In code                                        |
+| -------------------------------------- | ---------------------------------------------- |
+| colour                                 | `tokens/colours.css` (4 themes)                |
+| typo                                   | `tokens/typography.css`                        |
+| radius variables, shadow styles        | `tokens/sizes.css`                             |
+| icons                                  | `Icon` (105 icons), `Loader`                   |
+| button                                 | `Button` (also covers icon-button)             |
+| input                                  | `TextInput`, `Select`                          |
+| checkbox, radio-button, switch, slider | `Checkbox`, `Radio`, `Switch`, `Slider`        |
+| tabs                                   | `Tabs`                                         |
+| chips                                  | `Chip`, `Segmented`, `FilterChip`              |
+| avatar, badge, marker, tag             | `Avatar`, `Badge`, `Marker`, `Tag`             |
+| notification, tooltip, skeleton        | `Notification`, `Tooltip`, `Skeleton`          |
+| table                                  | `Table`                                        |
+| splitter                               | `Splitter`                                     |
+| Drop List                              | `Menu`, `MenuItem`                             |
+| Empty                                  | `EmptyState` (with the monkey mascot, 5 types) |
+| Tree                                   | `Tree`                                         |
 
 **Not moved yet:** Date Picker, Charts, Messages, browser frame, and a few variants
 (split-button, inline-input, combobox, vertical slider, flag and file-type icons).

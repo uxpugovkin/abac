@@ -1,0 +1,37 @@
+/* ==========================================================================
+   SEARCH CHIP — see SearchChip.svelte for how to use it.
+   Figma: habibi-library → page "Tables Guide" → "Search and filter"
+
+   It has three looks:
+     1. closed   a small white button with a magnifier
+     2. typing   a box with a blue outline
+     3. applied  a blue pill showing the searched text and an ×
+   (1) is a Button and (3) reuses the FilterChip look, so only (2) is here.
+   ========================================================================== */
+
+.hb-search-chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	width: 180px;
+	height: 28px;
+	padding: 0 8px;
+	border-radius: var(--radius-m);
+	background: var(--uncolorful-grey-border);
+	box-shadow: inset 0 0 0 2px var(--boring-blue-50);
+	color: var(--uncolorful-grey-secondary);
+}
+
+.hb-search-chip input {
+	flex: 1;
+	min-width: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	background: transparent;
+	color: var(--uncolorful-grey-primary);
+	font: var(--text-body-c);
+}
+.hb-search-chip input::placeholder {
+	color: var(--uncolorful-grey-disabled);
+}

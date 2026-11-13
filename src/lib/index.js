@@ -31,6 +31,7 @@ export { default as Tabs } from './components/tabs/Tabs.svelte';
 export { default as Chip } from './components/chip/Chip.svelte';
 export { default as Segmented } from './components/segmented/Segmented.svelte';
 export { default as FilterChip } from './components/filter-chip/FilterChip.svelte';
+export { default as SearchChip } from './components/search-chip/SearchChip.svelte';
 export { default as Menu } from './components/menu/Menu.svelte';
 export { default as MenuItem } from './components/menu/MenuItem.svelte';
 export { default as Tree } from './components/tree/Tree.svelte';

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   TABLE — see Table.svelte for how to use it, GUIDELINES.md for the rules.
+   TABLE — see Table.svelte for how to use it, guidelines.js for the rules.
    Figma: habibi-library → pages "table" and "Tables Guide"
 
    How this file is organised:
@@ -9,9 +9,8 @@
      4. Pinned columns (stay in place when scrolling sideways)
      5. Checkbox column (bulk selection)
      6. Row actions (buttons that appear on hover)
-     7. Column resize handle
-     8. Two-level header
-     9. Helpers: toolbar above the table, ready-made cell contents
+     7. Two-level header
+     8. Helpers: toolbar above the table, ready-made cell contents
    ========================================================================== */
 
 /* ---------- 1. The frame ---------- */
@@ -30,7 +29,8 @@
 }
 
 /* The part that scrolls. Sideways when the columns are wider than the frame,
-   and up-down when you give the table a maxHeight. */
+   and up-down when you give the table a maxHeight. With a minHeight it keeps
+   its size when there are only a few rows. */
 .hb-table-scroll {
 	overflow: auto;
 }
@@ -111,8 +111,27 @@
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
+/* (Each body cell holds one <div> around its content; it does the cutting.) */
+.hb-table td > div {
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
 /* …unless the column says the text is important: then it wraps (column.wrap). */
-.hb-table td.hb-table__cell--wrap {
+.hb-table .hb-table__cell--wrap {
+	white-space: normal;
+}
+/* column.wrap = 2: wraps, but only to that many lines, then "…". */
+.hb-table__clamp {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+/* The "nothing to show" row (the `empty` snippet): centred, and it never highlights. */
+.hb-table .hb-table__empty td {
+	padding: 0;
+	background: transparent;
+	text-align: center;
 	white-space: normal;
 }
 
@@ -122,7 +141,7 @@
 }
 
 /* Rows highlight under the mouse when there is something to do with them. */
-.hb-table--hover tbody tr:hover td {
+.hb-table--hover tbody tr:not(.hb-table__empty):hover td {
 	background: var(--boring-blue-90);
 }
 .hb-table--clickable tbody tr {
@@ -234,43 +253,7 @@ td.hb-table__actions-cell--column {
 	background: var(--table-surface);
 }
 
-/* ---------- 7. Column resize handle (guidelines 6) ----------
-   A thin strip on the far edge of a header cell. Shows when the mouse is over
-   the header cell; looks like the Splitter. */
-
-.hb-table__resize {
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	inset-inline-end: 0;
-	display: flex;
-	flex-direction: column;
-	align-items: flex-end;
-	justify-content: center;
-	gap: 2px;
-	width: 9px; /* easy to grab… */
-	border-inline-end: 2px solid var(--uncolorful-grey-border); /* …but only 2px are visible */
-	cursor: col-resize;
-	touch-action: none;
-	opacity: 0;
-}
-.hb-table th:hover .hb-table__resize,
-.hb-table__resize--dragging {
-	opacity: 1;
-}
-/* Three grip dots, sitting on the 2px line. */
-.hb-table__resize span {
-	width: 2px;
-	height: 2px;
-	margin-inline-end: -2px;
-	background: var(--uncolorful-grey-tertiary);
-}
-.hb-table__resize:hover,
-.hb-table__resize--dragging {
-	border-inline-end-color: var(--boring-blue-70);
-}
-
-/* ---------- 8. Two-level header (columns with `children`) ----------
+/* ---------- 7. Two-level header (columns with `children`) ----------
    The header becomes a grey band, and columns are separated by thin lines. */
 
 .hb-table--grouped th {
@@ -292,7 +275,7 @@ td.hb-table__actions-cell--column {
 	top: 36px;
 }
 
-/* ---------- 9. Helpers ---------- */
+/* ---------- 8. Helpers ---------- */
 
 /* Toolbar above a table (guidelines 1.1): filters at the start, buttons at the end.
        <div class="hb-table-toolbar">

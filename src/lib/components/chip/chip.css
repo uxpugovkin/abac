@@ -128,3 +128,14 @@
 .hb-chip--disabled .hb-chip__filter-name {
 	color: inherit;
 }
+
+/* ---------- SearchChip ---------- */
+
+/* The open search box has a fixed width, so the toolbar does not jump while typing. */
+.hb-search-chip {
+	width: 220px;
+}
+/* The applied search chip starts with an icon, so it needs less padding at the start. */
+.hb-chip--search {
+	padding-inline-start: 6px;
+}

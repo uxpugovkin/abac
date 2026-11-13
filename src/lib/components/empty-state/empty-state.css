@@ -13,22 +13,11 @@
 	text-align: center;
 }
 
-/* The picture: a 128px rounded square. Shows an icon unless you give your own image. */
+/* The picture: the mascot, 128px. */
 .hb-empty__picture {
-	display: flex;
-	align-items: center;
-	justify-content: center;
 	width: 128px;
 	height: 128px;
-	border-radius: var(--radius-l);
-	background: var(--uncolorful-grey-border);
-	color: var(--uncolorful-grey-tertiary);
-	overflow: hidden;
-}
-.hb-empty__picture img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
+	object-fit: contain;
 }
 
 .hb-empty__text {
