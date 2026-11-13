@@ -67,14 +67,14 @@
 			<button
 				class="hb-tree__row"
 				class:hb-tree__row--selected={node.id === selected}
+				class:hb-tree__row--leaf={!node.children}
 				type="button"
 				aria-expanded={node.children ? !!open[node.id] : undefined}
 				onclick={() => click(node)}
 			>
+				<!-- Only rows with children have an arrow. Other rows start with their text right away. -->
 				{#if node.children}
 					<Icon name={open[node.id] ? 'chevron-up' : 'chevron-down'} size={16} />
-				{:else}
-					<span class="hb-tree__spacer"></span>
 				{/if}
 				<span class="hb-tree__label">{node.label}</span>
 			</button>

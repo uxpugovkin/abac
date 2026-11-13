@@ -84,10 +84,11 @@
 	font: var(--text-body-c-bold);
 }
 
-/* Rows without children have no arrow; this empty space keeps the text aligned. */
-.hb-tree__spacer {
-	flex: none;
-	width: 16px;
+/* Rows without children have no arrow and no empty space instead of it: the text
+   starts where the arrow would be. Under a parent it keeps 4px away from the
+   connecting line, so the line does not touch the first letter. */
+.hb-tree ul .hb-tree__row--leaf {
+	padding-inline-start: 4px;
 }
 
 .hb-tree__label {

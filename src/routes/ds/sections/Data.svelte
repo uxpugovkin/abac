@@ -38,6 +38,14 @@
 
 	/* ---------- Splitter example ---------- */
 	let leftWidth = $state(200);
+	let rightWidth = $state(0); // measured from the page, see bind:clientWidth below
+
+	// The page decides the limits. Here: the left panel stays between 120 and 400 px,
+	// and the right panel never gets narrower than 400 px.
+	function resize(pixels) {
+		const allowed = Math.min(pixels, rightWidth - 400); // how far the right panel lets us go
+		leftWidth = Math.round(Math.min(400, Math.max(120, leftWidth + allowed)));
+	}
 </script>
 
 <Demo
@@ -82,12 +90,15 @@
 	{/each}
 </Demo>
 
-<Demo title="Splitter" figma="splitter" about="Drag the line between the two panels.">
+<Demo
+	title="Splitter"
+	figma="splitter"
+	about="Drag the line between the two panels. Here the left one stays between 120 and 400 px, and the right one keeps at least 400 px."
+>
 	<div class="panels">
 		<div class="panel" style="width: {leftWidth}px">Left · {leftWidth}px</div>
-		<!-- The page decides the limits: here, between 120 and 400 px. -->
-		<Splitter ondrag={(pixels) => (leftWidth = Math.min(400, Math.max(120, leftWidth + pixels)))} />
-		<div class="panel panel--rest">Right</div>
+		<Splitter ondrag={resize} />
+		<div class="panel panel--rest" bind:clientWidth={rightWidth}>Right · {rightWidth}px</div>
 	</div>
 </Demo>
 
