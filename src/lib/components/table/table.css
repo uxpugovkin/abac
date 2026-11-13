@@ -257,17 +257,22 @@
 
 /* ---------- 5. Checkbox column (Figma "cell-bulk", guidelines 7) ---------- */
 
+/* A 32px column: 12px of room, then the 20px box.
+   The cell keeps the padding, font and baseline alignment of every other cell, so it
+   has the same (empty) first text line as they do. The box hangs on that line, centred
+   on it. That way the box always sits next to the FIRST text line of the row — also
+   when a cell wraps, or when a tag makes the row a little taller. */
 .hb-table .hb-table__check-cell {
-	padding: 0;
-	padding-inline-start: 12px;
+	padding-inline: 12px 0;
 	/* The "select all" menu opens out of this cell, so nothing may be cut off here. */
 	overflow: visible;
-	/* The box sits next to the FIRST line of the row, also when a cell wraps to more lines. */
-	padding-top: 10px;
-	vertical-align: top;
 }
 .hb-table__check {
-	display: flex;
+	display: inline-flex;
+	/* The box is 20px, a text line is 16px. The -2px margins let it stick out 2px above
+	   and below the line instead of making the line (and the row) taller. */
+	vertical-align: top;
+	margin-block: -2px;
 	padding: 0;
 	border: 0;
 	border-radius: var(--radius-xs);

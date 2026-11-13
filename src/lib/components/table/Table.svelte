@@ -119,7 +119,7 @@
 		class: extraClass = ''
 	} = $props();
 
-	const CHECK_WIDTH = 28; // width of the checkbox column, px
+	const CHECK_WIDTH = 32; // width of the checkbox column, px
 
 	/* ---------- Columns ----------
 	   "Leaf" columns are the ones that actually hold cells: plain columns, and
@@ -267,7 +267,7 @@
 									toggleAll();
 								}}
 							>
-								<Icon name={checkIcons[headerState]} size={16} />
+								<Icon name={checkIcons[headerState]} size={20} />
 							</button>
 
 							{#if menuOpen}
@@ -324,7 +324,7 @@
 										toggleRow(row);
 									}}
 								>
-									<Icon name={selection.includes(keyOf(row)) ? 'check' : 'uncheck'} size={16} />
+									<Icon name={selection.includes(keyOf(row)) ? 'check' : 'uncheck'} size={20} />
 								</button>
 							</td>
 						{/if}

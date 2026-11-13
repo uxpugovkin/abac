@@ -265,11 +265,9 @@
 				{@render note('Toolbar')}
 				<div class="region">
 					<div class="hb-table-toolbar">
-						<!-- The two small white buttons at the start: all filters, and search. -->
+						<!-- The two small buttons at the start: all filters, and search. -->
 						<span class="tune">
 							<Button
-								appearance="white"
-								mode="primary"
 								icon="tune"
 								label="Filters"
 								onclick={(event) => {

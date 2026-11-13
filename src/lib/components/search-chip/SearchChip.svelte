@@ -83,12 +83,5 @@
 		</button>
 	</span>
 {:else}
-	<Button
-		appearance="white"
-		mode="primary"
-		icon="search"
-		label={placeholder}
-		onclick={() => (isOpen = true)}
-		class={extraClass}
-	/>
+	<Button icon="search" label={placeholder} onclick={() => (isOpen = true)} class={extraClass} />
 {/if}

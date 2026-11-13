@@ -81,12 +81,11 @@
 /* ---------- FilterChip (Figma "filter-tag") ----------
    The pill is a <span> holding two real buttons: the main one, and the ×. */
 
-/* Nothing chosen: white pill with a small arrow. */
+/* Nothing chosen: grey pill with a small arrow. */
 .hb-chip--filter {
 	gap: 2px;
 	padding-inline: 12px 6px;
-	background: var(--uncolorful-grey-surface);
-	box-shadow: var(--shadow-default-s);
+	background: var(--uncolorful-grey-border);
 }
 /* The two buttons inside have no look of their own. */
 .hb-chip--filter button {
