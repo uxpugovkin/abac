@@ -1,28 +1,80 @@
 /* ==========================================================================
-   TABLE — see Table.svelte for how to use it.
-   Figma: habibi-library → page "table" (cell, column-title, cell-status, …)
+   TABLE — see Table.svelte for how to use it, GUIDELINES.md for the rules.
+   Figma: habibi-library → pages "table" and "Tables Guide"
+
+   How this file is organised:
+     1. The frame: scrolling area + summary row
+     2. Header cells
+     3. Body cells and rows
+     4. Pinned columns (stay in place when scrolling sideways)
+     5. Checkbox column (bulk selection)
+     6. Row actions (buttons that appear on hover)
+     7. Column resize handle
+     8. Two-level header
+     9. Helpers: toolbar above the table, ready-made cell contents
    ========================================================================== */
+
+/* ---------- 1. The frame ---------- */
+
+.hb-table-frame {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+
+	/* The colour BEHIND the table. Pinned cells and the pinned header are
+	   painted with it so that scrolling content can slide underneath.
+	   If your table sits on the grey page instead of a white card, set
+	       --table-surface: var(--uncolorful-grey-background)
+	   on the table or any parent. */
+	--table-surface: var(--uncolorful-grey-surface);
+}
+
+/* The part that scrolls. Sideways when the columns are wider than the frame,
+   and up-down when you give the table a maxHeight. */
+.hb-table-scroll {
+	overflow: auto;
+}
 
 .hb-table {
 	width: 100%;
-	border-collapse: collapse;
-	/* Columns keep the widths you give them; long text is cut with "…". */
+	/* Columns keep the widths you give them instead of following their content. */
 	table-layout: fixed;
-	text-align: start;
+	/* "separate" (not "collapse") is needed for pinned cells to keep their lines. */
+	border-collapse: separate;
+	border-spacing: 0;
 }
 
-/* ---------- Header cells (Figma "column-title") ---------- */
+/* Summary row: sits under the scrolling part, so it is always visible. */
+.hb-table__summary {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	min-height: 36px;
+	padding: 0 12px;
+	border-top: 1px solid var(--uncolorful-grey-border);
+	color: var(--uncolorful-grey-secondary);
+	font: var(--text-body-d);
+}
+
+/* ---------- 2. Header cells (Figma "column-title") ---------- */
 
 .hb-table th {
+	/* The header stays at the top while the rows scroll under it. */
+	position: sticky;
+	top: 0;
+	z-index: 2;
+
 	height: 36px;
 	padding: 8px 12px;
 	border-bottom: 1px solid var(--uncolorful-grey-border);
+	background: var(--table-surface);
 	color: var(--uncolorful-grey-secondary);
 	font: var(--text-body-d-bold);
 	text-align: start;
 }
 
-/* A header you can click to sort is a button that fills the cell. */
+/* A header you can click to sort is a button. */
 .hb-table__sort {
 	display: inline-flex;
 	align-items: center;
@@ -35,21 +87,23 @@
 	font: inherit;
 	cursor: pointer;
 }
-/* The little arrow that shows which column is sorted. */
+/* The little arrow that shows which column the rows are sorted by. */
 .hb-table__sort .hb-icon {
 	color: var(--boring-blue-50);
 }
 
-/* ---------- Body cells (Figma "cell") ---------- */
+/* ---------- 3. Body cells and rows (Figma "cell") ---------- */
 
 .hb-table td {
 	height: 36px;
 	padding: 8px 12px;
 	color: var(--uncolorful-grey-primary);
 	font: var(--text-body-d);
+	/* Cells of one row line up on the text baseline (guidelines 1.3). */
+	vertical-align: baseline;
 }
 
-/* Long text is cut with "…" instead of wrapping (Figma "truncate = True"). */
+/* Long text is cut with "…" (guidelines 1.3)… */
 .hb-table th,
 .hb-table td,
 .hb-table__sort span {
@@ -57,38 +111,230 @@
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
+/* …unless the column says the text is important: then it wraps (column.wrap). */
+.hb-table td.hb-table__cell--wrap {
+	white-space: normal;
+}
 
-/* ---------- Rows ---------- */
+/* Numbers and other things that read better on the far side (column.align = "end"). */
+.hb-table .hb-table__cell--end {
+	text-align: end;
+}
 
-/* Rows react to the mouse only when the table is clickable. */
+/* Rows highlight under the mouse when there is something to do with them. */
+.hb-table--hover tbody tr:hover td {
+	background: var(--boring-blue-90);
+}
 .hb-table--clickable tbody tr {
 	cursor: pointer;
 }
-.hb-table--clickable tbody tr:hover {
-	background: var(--uncolorful-grey-border);
-}
-.hb-table tbody tr.hb-table__row--selected {
+.hb-table tbody tr.hb-table__row--selected td {
 	background: var(--boring-blue-90);
 }
+/* The highlight has rounded ends. */
+.hb-table tbody td:first-child {
+	border-start-start-radius: var(--radius-m);
+	border-end-start-radius: var(--radius-m);
+}
+.hb-table tbody td:last-child {
+	border-start-end-radius: var(--radius-m);
+	border-end-end-radius: var(--radius-m);
+}
 
-/* ---------- Ready-made cell contents ----------
-   Use these classes inside your own cells. */
+/* ---------- 4. Pinned columns (guidelines 2.2) ----------
+   A pinned cell is "sticky": it stays at the side while the rest scrolls.
+   Table.svelte sets how far from the side each one sits. */
 
-/* Avatar + name + caption (Figma "cell-avatar"). */
-.hb-table__person {
+.hb-table .hb-table__cell--pinned {
+	position: sticky;
+	z-index: 1;
+	background: var(--table-surface);
+}
+/* A pinned header cell is sticky in both directions, and on top of everything. */
+.hb-table th.hb-table__cell--pinned {
+	z-index: 3;
+}
+/* The last pinned column gets a line and a soft shadow on its far side. */
+.hb-table .hb-table__cell--pinned-last {
+	border-inline-end: 1px solid var(--uncolorful-grey-border);
+	box-shadow: 6px 0 12px -6px #00000014;
+}
+[dir='rtl'] .hb-table .hb-table__cell--pinned-last {
+	box-shadow: -6px 0 12px -6px #00000014;
+}
+
+/* ---------- 5. Checkbox column (Figma "cell-bulk", guidelines 7) ---------- */
+
+.hb-table .hb-table__check-cell {
+	padding: 0;
+	padding-inline-start: 12px;
+	/* The "select all" menu opens out of this cell, so nothing may be cut off here. */
+	overflow: visible;
+	vertical-align: middle;
+}
+.hb-table__check {
+	display: flex;
+	padding: 0;
+	border: 0;
+	border-radius: var(--radius-xs);
+	background: transparent;
+	color: var(--uncolorful-grey-primary);
+	cursor: pointer;
+}
+/* Ticked (or partly ticked) boxes are blue. */
+.hb-table__check[aria-checked='true'],
+.hb-table__check[aria-checked='mixed'] {
+	color: var(--boring-blue-50);
+}
+/* The small menu under the header checkbox: "Rows on this page / All rows". */
+.hb-table__check-menu {
+	position: absolute;
+	top: 100%;
+	inset-inline-start: 0;
+	z-index: 5;
+}
+
+/* ---------- 6. Row actions (guidelines 5) ---------- */
+
+/* The actions cell is pinned to the far side of the table. */
+.hb-table .hb-table__actions-cell {
+	position: sticky;
+	inset-inline-end: 0;
+	z-index: 1;
+	padding: 0;
+	overflow: visible;
+}
+/* The buttons. Hidden until the row is hovered (or reached with the keyboard). */
+.hb-table__actions {
 	display: flex;
 	align-items: center;
-	gap: 8px;
+	justify-content: flex-end;
+	gap: 0;
+	height: 36px;
+	padding-inline: 12px 6px;
+	visibility: hidden;
 }
-.hb-table__person-text {
+.hb-table tr:hover .hb-table__actions,
+.hb-table tr:focus-within .hb-table__actions {
+	visibility: visible;
+}
+
+/* Overlay style (the default): the cell has no width of its own; the buttons
+   float over the end of the row, covering what is under them. */
+.hb-table__actions-cell--overlay .hb-table__actions {
+	position: absolute;
+	top: 0;
+	inset-inline-end: 0;
+	background: var(--boring-blue-90);
+	border-start-end-radius: var(--radius-m);
+	border-end-end-radius: var(--radius-m);
+}
+/* Column style (when you give actionsWidth): a real column, pinned to the far side. */
+td.hb-table__actions-cell--column {
+	background: var(--table-surface);
+}
+
+/* ---------- 7. Column resize handle (guidelines 6) ----------
+   A thin strip on the far edge of a header cell. Shows when the mouse is over
+   the header cell; looks like the Splitter. */
+
+.hb-table__resize {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	inset-inline-end: 0;
 	display: flex;
 	flex-direction: column;
+	align-items: flex-end;
+	justify-content: center;
 	gap: 2px;
-	min-width: 0;
+	width: 9px; /* easy to grab… */
+	border-inline-end: 2px solid var(--uncolorful-grey-border); /* …but only 2px are visible */
+	cursor: col-resize;
+	touch-action: none;
+	opacity: 0;
 }
-.hb-table__caption {
-	color: var(--uncolorful-grey-secondary);
-	font: var(--text-body-e);
-	letter-spacing: 0.04em;
-	text-transform: uppercase;
+.hb-table th:hover .hb-table__resize,
+.hb-table__resize--dragging {
+	opacity: 1;
+}
+/* Three grip dots, sitting on the 2px line. */
+.hb-table__resize span {
+	width: 2px;
+	height: 2px;
+	margin-inline-end: -2px;
+	background: var(--uncolorful-grey-tertiary);
+}
+.hb-table__resize:hover,
+.hb-table__resize--dragging {
+	border-inline-end-color: var(--boring-blue-70);
+}
+
+/* ---------- 8. Two-level header (columns with `children`) ----------
+   The header becomes a grey band, and columns are separated by thin lines. */
+
+.hb-table--grouped th {
+	background: var(--uncolorful-grey-background);
+	border-inline-end: 1px solid var(--uncolorful-grey-border);
+}
+.hb-table--grouped th:last-child {
+	border-inline-end: 0;
+}
+/* Labels of columns without children sit in the first row, next to the parents' labels. */
+.hb-table--grouped th {
+	vertical-align: top;
+}
+.hb-table--grouped th.hb-table__check-cell {
+	vertical-align: middle;
+}
+/* The second header row sits right under the first one. */
+.hb-table--grouped thead tr:nth-child(2) th {
+	top: 36px;
+}
+
+/* ---------- 9. Helpers ---------- */
+
+/* Toolbar above a table (guidelines 1.1): filters at the start, buttons at the end.
+       <div class="hb-table-toolbar">
+           …search and FilterChips…
+           <div class="hb-table-toolbar__end">…up to 3 Buttons…</div>
+       </div>
+   Filters wrap to a new line when they do not fit (guidelines 3.2). */
+.hb-table-toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 12px;
+}
+.hb-table-toolbar__end {
+	display: flex;
+	gap: 8px;
+	margin-inline-start: auto;
+}
+
+/* Avatar + name (Figma "cell-avatar"). Use inside your own cell:
+       <div class="hb-table__person"><Avatar size="xs" /> <span>Jane Cooper</span></div> */
+.hb-table__person {
+	display: flex;
+	/* The NAME decides the baseline, so it lines up with the other cells of the row… */
+	align-items: baseline;
+	gap: 8px;
+	/* …and the avatar, 8px taller than the text, may poke out without making the row taller. */
+	margin-block: -4px;
+}
+.hb-table__person .hb-avatar {
+	align-self: center;
+}
+.hb-table__person > :last-child {
+	/* As tall as the avatar, so the two are centred on each other. */
+	line-height: 24px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+/* Several tags in one cell. Use inside your own cell. */
+.hb-table__tags {
+	display: flex;
+	gap: 4px;
 }

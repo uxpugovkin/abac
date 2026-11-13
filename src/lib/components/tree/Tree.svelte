@@ -39,6 +39,8 @@
 
 	// Which nodes are open right now:  { 'some-id': true, … }
 	// Starts from the `open: true` flags in the data.
+	// (Only the starting value of `nodes` is used here, on purpose — hence the ignore.)
+	// svelte-ignore state_referenced_locally
 	let open = $state(collectOpen(nodes));
 
 	function collectOpen(list, result = {}) {

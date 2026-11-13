@@ -29,7 +29,7 @@
 			group: 'Status',
 			items: ['Tag', 'Badge', 'Marker', 'Notification', 'Tooltip', 'Skeleton', 'Avatar']
 		},
-		{ group: 'Data', items: ['Table', 'EmptyState', 'Splitter'] }
+		{ group: 'Data', items: ['Table', 'Table · wide', 'Table · grouped', 'EmptyState', 'Splitter'] }
 	];
 
 	let theme = $state('light');

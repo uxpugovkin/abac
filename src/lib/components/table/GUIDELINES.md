@@ -214,22 +214,31 @@ The header checkbox selects all **filtered** rows. If the person then changes th
 
 [Figma](https://www.figma.com/design/8FWSbY8d6RouJYeI2acNsl/habibi-library?node-id=40008180-13876)
 
-## What the code can do today
+## How to do it in code
 
-Which rules the design system already covers, and what a prototype has to add itself.
+Every rule above, and the `Table` option (or the building block) that covers it.
+All options are explained at the top of `Table.svelte`; live examples are on the `/ds` page.
 
-| Rule                                 | Today                                                              |
-| ------------------------------------ | ------------------------------------------------------------------ |
-| 1.1 Title, toolbar                   | Build from `TextInput`, `FilterChip`, `Button` above the `Table`   |
-| 1.1 Summary row                      | Not built yet                                                      |
-| 1.2 Sorting and its arrow            | `Table`: `sortable`, `sortKey`, `sortDirection`, `onsort`          |
-| 1.3 Cut long text with "…"           | `Table` does this in every cell                                    |
-| 1.3 Wrap important text              | Not built yet (every cell is cut)                                  |
-| 2.x Pinned toolbar, summary, columns | Not built yet                                                      |
-| 3.x Filter tags, search              | `FilterChip`, `TextInput` (the page keeps the filter values)       |
-| 3.5 "More filters" dropdown          | Build from `Button` + `Menu`                                       |
-| 4.x Add-row button                   | `Button` (placement is up to the page)                             |
-| 5.x Row actions on hover             | Not built yet (can be drawn by hand with the `cell` snippet)       |
-| 6.x Column resize, two-level headers | Not built yet                                                      |
-| 7.x Row checkboxes, select all       | Not built yet (`Checkbox` exists; `Table` has no selection column) |
-| 7.5 Pagination                       | Not built yet                                                      |
+| Rule                                    | In code                                                                                  |
+| --------------------------------------- | ---------------------------------------------------------------------------------------- |
+| 1.1 Title                               | A heading above the table (`class="hb-text-h3"`)                                         |
+| 1.1 Toolbar                             | `<div class="hb-table-toolbar">` with `TextInput`, `FilterChip`, `Button` inside         |
+| 1.1 Summary row                         | `Table`: the `summary` snippet                                                           |
+| 1.2 Sorting and its arrow               | `Table`: column `sortable`, plus `sortKey`, `sortDirection`, `onsort` (the page sorts)   |
+| 1.3 Baseline alignment                  | `Table` does this by itself                                                              |
+| 1.3 Cut long text / wrap important text | Cut is the default; column `wrap: true` makes it wrap                                    |
+| 2.1 Pinned toolbar and summary          | `Table`: `maxHeight` — rows scroll inside, header and summary stay                       |
+| 2.2, 2.3 Pinned columns                 | Column `pinned: true` (give it a `width`)                                                |
+| 3.x Search and filter tags              | `TextInput` and `FilterChip` in the toolbar (the page filters the rows)                  |
+| 3.5 "More filters"                      | `Button` + `Menu` in the toolbar                                                         |
+| 4.x Add-row button                      | `Button` in the page header or in the toolbar's `hb-table-toolbar__end`                  |
+| 5.1, 5.3 Actions column                 | `Table`: the `actions` snippet + `actionsWidth`                                          |
+| 5.2 Actions floating over the row       | `Table`: the `actions` snippet (without `actionsWidth`)                                  |
+| 6.1 Column width                        | `Table`: `resizable`                                                                     |
+| 6.2, 6.3 Two-level header               | Column `children: [...]`; with `resizable` the parent and child rules work by themselves |
+| 7.1–7.3 Row checkboxes, select all      | `Table`: `selectable` + `bind:selection` (rows need an `id`, see `rowKey`)               |
+| 7.4 Selection and filters               | `Table` does this by itself when `rows` change                                           |
+| 7.5 Selection and pagination            | `Table`: `allRows` (all rows of all pages) — the header checkbox then asks which to pick |
+
+Not in the design system (there is no drawn component for them in Figma yet):
+a pager ("Page 1 of 3", next / previous), and the "table settings" panel behind the gear button.
