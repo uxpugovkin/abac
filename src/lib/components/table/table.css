@@ -28,6 +28,32 @@
 	--table-surface: var(--uncolorful-grey-surface);
 }
 
+/* The scrollbars of the table: a thin grey pill on a pale track (Figma "scrollbar-h").
+   Drawn by us, so they are always visible and people can see that there is more.
+   Chrome, Edge and Safari use the ::-webkit-scrollbar rules; Firefox does not know
+   them and gets the two standard properties instead. */
+@supports not selector(::-webkit-scrollbar) {
+	.hb-table-scroll {
+		scrollbar-width: thin;
+		scrollbar-color: var(--uncolorful-grey-disabled) var(--uncolorful-grey-background);
+	}
+}
+.hb-table-scroll::-webkit-scrollbar {
+	width: 12px;
+	height: 12px;
+}
+.hb-table-scroll::-webkit-scrollbar-track,
+.hb-table-scroll::-webkit-scrollbar-corner {
+	border-radius: var(--radius-full);
+	background: var(--uncolorful-grey-background);
+}
+.hb-table-scroll::-webkit-scrollbar-thumb {
+	/* A 6px pill: the 3px border in the track colour makes it look thinner than the track. */
+	border: 3px solid var(--uncolorful-grey-background);
+	border-radius: var(--radius-full);
+	background: var(--uncolorful-grey-disabled);
+}
+
 /* The part that scrolls. Sideways when the columns are wider than the frame,
    and up-down when you give the table a maxHeight. With a minHeight it keeps
    its size when there are only a few rows. */
@@ -72,6 +98,8 @@
 	color: var(--uncolorful-grey-secondary);
 	font: var(--text-body-d-bold);
 	text-align: start;
+	/* Header texts line up on their first line, also when one of them wraps. */
+	vertical-align: baseline;
 }
 
 /* A header you can click to sort is a button. */
@@ -113,15 +141,26 @@
 }
 /* (Each body cell holds one <div> around its content; it does the cutting.) */
 .hb-table td > div {
-	overflow: hidden;
+	/* "clip" cuts only sideways. Up and down nothing is cut, so an avatar that is
+	   a bit taller than the text line stays whole. */
+	overflow-x: clip;
+	overflow-y: visible;
 	text-overflow: ellipsis;
 }
 /* …unless the column says the text is important: then it wraps (column.wrap). */
 .hb-table .hb-table__cell--wrap {
 	white-space: normal;
 }
+/* A sortable header that wraps: its text may wrap too, and stays at the start. */
+.hb-table .hb-table__cell--wrap .hb-table__sort {
+	align-items: baseline;
+	text-align: start;
+}
+.hb-table .hb-table__cell--wrap .hb-table__sort span {
+	white-space: normal;
+}
 /* column.wrap = 2: wraps, but only to that many lines, then "…". */
-.hb-table__clamp {
+.hb-table td > div.hb-table__clamp {
 	display: -webkit-box;
 	-webkit-box-orient: vertical;
 	overflow: hidden;
@@ -173,13 +212,25 @@
 .hb-table th.hb-table__cell--pinned {
 	z-index: 3;
 }
-/* The last pinned column gets a line and a soft shadow on its far side. */
+/* The last pinned column gets a line on its far side, and a soft shadow next to it.
+   The shadow is ONE strip per cell that fades sideways only, so the cells of all
+   rows join into one even shadow (a normal box-shadow would show a band per row). */
 .hb-table .hb-table__cell--pinned-last {
 	border-inline-end: 1px solid var(--uncolorful-grey-border);
-	box-shadow: 6px 0 12px -6px #00000014;
+	overflow: visible; /* the strip sits just outside the cell */
 }
-[dir='rtl'] .hb-table .hb-table__cell--pinned-last {
-	box-shadow: -6px 0 12px -6px #00000014;
+.hb-table .hb-table__cell--pinned-last::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	inset-inline-start: calc(100% + 1px);
+	width: 12px;
+	background: linear-gradient(to right, #0000000f, transparent);
+	pointer-events: none;
+}
+[dir='rtl'] .hb-table .hb-table__cell--pinned-last::after {
+	background: linear-gradient(to left, #0000000f, transparent);
 }
 
 /* ---------- 5. Checkbox column (Figma "cell-bulk", guidelines 7) ---------- */
@@ -189,7 +240,9 @@
 	padding-inline-start: 12px;
 	/* The "select all" menu opens out of this cell, so nothing may be cut off here. */
 	overflow: visible;
-	vertical-align: middle;
+	/* The box sits next to the FIRST line of the row, also when a cell wraps to more lines. */
+	padding-top: 10px;
+	vertical-align: top;
 }
 .hb-table__check {
 	display: flex;
@@ -297,23 +350,18 @@ td.hb-table__actions-cell--column {
 }
 
 /* Avatar + name (Figma "cell-avatar"). Use inside your own cell:
-       <div class="hb-table__person"><Avatar size="xs" /> <span>Jane Cooper</span></div> */
+       <div class="hb-table__person"><Avatar size="xs" /> <span>Jane Cooper</span></div>
+   The avatar is placed "on top" of the cell instead of in the line of text. That way
+   the name behaves like any other text: same baseline as the other cells, can wrap,
+   can be cut — and the 24px avatar does not make the 16px line taller. */
 .hb-table__person {
-	display: flex;
-	/* The NAME decides the baseline, so it lines up with the other cells of the row… */
-	align-items: baseline;
-	gap: 8px;
-	/* …and the avatar, 8px taller than the text, may poke out without making the row taller. */
-	margin-block: -4px;
+	position: relative;
+	padding-inline-start: 32px; /* 24px avatar + 8px gap */
 }
 .hb-table__person .hb-avatar {
-	align-self: center;
-}
-.hb-table__person > :last-child {
-	/* As tall as the avatar, so the two are centred on each other. */
-	line-height: 24px;
-	overflow: hidden;
-	text-overflow: ellipsis;
+	position: absolute;
+	top: -4px; /* centres the 24px avatar on the first 16px line */
+	inset-inline-start: 0;
 }
 
 /* Several tags in one cell. Use inside your own cell. */

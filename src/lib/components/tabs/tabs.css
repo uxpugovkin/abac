@@ -5,7 +5,7 @@
 
 .hb-tabs {
 	display: flex;
-	gap: 12px;
+	gap: var(--tabs-gap, 12px); /* set --tabs-gap on a parent to space them differently */
 }
 
 .hb-tab {

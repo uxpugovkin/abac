@@ -23,9 +23,11 @@
 
 		Table
 		hide              keys of columns to leave out, e.g. ['office']
-		wide              true = every column has a fixed width, so the table scrolls sideways
+		wide              true = the columns are wider than the example, so the table scrolls sideways
+		narrow            true = smaller columns, for the small page inside the app window (AppFrame)
 		pinned            true = the Employee column is pinned
-		longTexts         true = the "wrap and cut" example: long header, long name, long department
+		longTexts         true = the "wrap and cut" example: long header, long name, long department,
+		                  and two purple lines that show the shared text baseline
 		selectable        true = checkbox column
 		paged             true = 5 rows per page, with a pager in the summary row
 		actions           icon names of the row actions, e.g. ['delete']
@@ -67,6 +69,7 @@
 		toolbarEnd,
 		hide = [],
 		wide = false,
+		narrow = false,
 		pinned = false,
 		longTexts = false,
 		selectable = false,
@@ -99,24 +102,51 @@
 
 	/* ---------- Columns ---------- */
 
-	// Widths as in Figma. Without `wide` they are a bit smaller, so the table fits its card
-	// (when the card is wider than all columns together, they share the extra room).
+	// Column widths in px, exactly as in Figma.
+	//   normal     together 1184px: the inner width of an example box
+	//   wide       wider than the box, so the table scrolls sideways
+	//   narrow     for the small page inside the app window
+	//   longTexts  the "wrap and cut" example
+	let widths = $derived(
+		{
+			normal: {
+				fullName: selectable ? 260 : 288,
+				status: 130,
+				skills: 210,
+				department: 180,
+				office: 180,
+				score: 196
+			},
+			wide: { fullName: 260, status: 130, skills: 300, department: 240, office: 240, score: 260 },
+			narrow: { fullName: 220, status: 110, skills: 190, department: 130, office: 110, score: 174 },
+			longTexts: {
+				fullName: 230,
+				status: 130,
+				skills: 210,
+				department: 150,
+				office: 180,
+				score: 256
+			}
+		}[longTexts ? 'longTexts' : wide ? 'wide' : narrow ? 'narrow' : 'normal']
+	);
+
 	let columns = $derived(
 		[
-			{ key: 'fullName', label: 'Employee', width: wide ? 260 : 200, sortable: true, pinned },
-			{ key: 'status', label: 'Status', width: wide ? 130 : 100, sortable: true },
-			{ key: 'skills', label: 'Skills', width: wide ? 210 : 180 },
-			{ key: 'department', label: 'Department', width: wide ? 180 : 150, sortable: true },
-			{ key: 'office', label: 'Office', width: wide ? 180 : 110, sortable: true },
-			{ key: 'score', label: 'Tetris score', width: wide ? 196 : 160, sortable: true, align: 'end' }
+			{ key: 'fullName', label: 'Employee', sortable: true, pinned },
+			{ key: 'status', label: 'Status', sortable: true },
+			{ key: 'skills', label: 'Skills' },
+			{ key: 'department', label: 'Department', sortable: true },
+			{ key: 'office', label: 'Office', sortable: true },
+			{ key: 'score', label: 'Tetris score', sortable: true, align: 'end' }
 		]
 			.filter((column) => !hide.includes(column.key))
-			// The "wrap and cut" example: the first column is narrow, and its header and names wrap.
-			// Department may take two lines, then it is cut with "…".
+			.map((column) => ({ ...column, width: widths[column.key] }))
+			// The "wrap and cut" example: the header and the names of the first column wrap,
+			// and Department may take two lines before it is cut with "…".
 			.map((column) => {
 				if (!longTexts) return column;
 				if (column.key === 'fullName')
-					return { ...column, label: 'Very long column name', width: 150, wrap: true };
+					return { ...column, label: 'Very long column name that needs two lines', wrap: true };
 				if (column.key === 'department') return { ...column, wrap: 2 };
 				return column;
 			})
@@ -176,102 +206,133 @@
 <!-- Clicking anywhere else closes the "tune" list. -->
 <svelte:window onclick={() => (menuOpen = false)} />
 
+<!-- The purple label next to a part. Only drawn in the "Anatomy" example. -->
+{#snippet note(label)}
+	{#if annotate}
+		<span class="note">
+			<span class="note__pill hb-text-body-d-bold">{label}</span>
+			<span class="note__line"></span>
+		</span>
+	{/if}
+{/snippet}
+
 <div class="example" class:example--annotate={annotate}>
 	{#if title}
-		<div class="part" data-label="Title"><h4 class="hb-text-h3">{title}</h4></div>
+		<div class="part">
+			{@render note('Title')}
+			<div class="region"><h4 class="hb-text-h3">{title}</h4></div>
+		</div>
 	{/if}
 
 	{#if toolbar}
-		<div class="part" data-label="Toolbar">
-			<div class="hb-table-toolbar">
-				<!-- The two small white buttons at the start: all filters, and search. -->
-				<span class="tune">
-					<Button
-						appearance="white"
-						mode="primary"
-						icon="tune"
-						label="Filters"
-						onclick={(event) => {
-							event.stopPropagation(); // do not let the window handler close what we just opened
-							if (filterMenu) menuOpen = !menuOpen;
-						}}
-					/>
-					{#if menuOpen}
-						<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
-						<div class="tune__menu" onclick={(event) => event.stopPropagation()}>
-							<Menu label="Filters to show">
-								{#each allFilters as name}
-									<Checkbox checked={chips.includes(name)} onchange={() => toggleChip(name)}
-										>{name}</Checkbox
-									>
-								{/each}
-							</Menu>
-						</div>
-					{/if}
-				</span>
-				<span class="search"><SearchChip bind:value={query} placeholder={searchPlaceholder} /></span
-				>
+		<div class="part">
+			{@render note('Toolbar')}
+			<div class="region">
+				<div class="hb-table-toolbar">
+					<!-- The two small white buttons at the start: all filters, and search. -->
+					<span class="tune">
+						<Button
+							appearance="white"
+							mode="primary"
+							icon="tune"
+							label="Filters"
+							onclick={(event) => {
+								event.stopPropagation(); // do not let the window handler close what we just opened
+								if (filterMenu) menuOpen = !menuOpen;
+							}}
+						/>
+						{#if menuOpen}
+							<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
+							<div class="tune__menu" onclick={(event) => event.stopPropagation()}>
+								<Menu label="Filters to show">
+									{#each allFilters as name}
+										<Checkbox checked={chips.includes(name)} onchange={() => toggleChip(name)}
+											>{name}</Checkbox
+										>
+									{/each}
+								</Menu>
+							</div>
+						{/if}
+					</span>
+					<SearchChip bind:value={query} placeholder={searchPlaceholder} />
 
-				<!-- Filter chips. In these examples a click simply sets a ready-made value. -->
-				{#each chips as name}
-					<FilterChip
-						{name}
-						value={values[name]}
-						onclick={() => (values[name] = filterPresets[name])}
-						onclear={() => (values[name] = '')}
-					/>
-				{/each}
-				{#if anyFilter}<Button mode="ghost" onclick={reset}>Reset</Button>{/if}
+					<!-- Filter chips. In these examples a click simply sets a ready-made value. -->
+					{#each chips as name}
+						<FilterChip
+							{name}
+							value={values[name]}
+							onclick={() => (values[name] = filterPresets[name])}
+							onclear={() => (values[name] = '')}
+						/>
+					{/each}
+					{#if anyFilter}<Button mode="ghost" onclick={reset}>Reset</Button>{/if}
 
-				<div class="hb-table-toolbar__end">
-					{#if toolbarEnd}
-						{@render toolbarEnd()}
-					{:else}
-						<Button icon="download" label="Download" />
-						<Button icon="settings" label="Table settings" />
-					{/if}
+					<div class="hb-table-toolbar__end">
+						{#if toolbarEnd}
+							{@render toolbarEnd()}
+						{:else}
+							<Button icon="download" label="Download" />
+							<Button icon="settings" label="Table settings" />
+						{/if}
+					</div>
 				</div>
 			</div>
 		</div>
 	{/if}
 
-	<div class="part" data-label="Table body">
-		<Table
-			{columns}
-			{rows}
-			{sortKey}
-			{sortDirection}
-			onsort={sortBy}
-			{selectable}
-			bind:selection
-			allRows={paged ? matching : undefined}
-			{maxHeight}
-			{minHeight}
-			{actionsWidth}
-			actions={actions.length ? rowActions : undefined}
-			summary={summary || paged ? summaryRow : undefined}
-			empty={nothingFound}
-		>
-			{#snippet cell(row, column)}
-				{#if column.key === 'fullName'}
-					<div class="hb-table__person">
-						<Avatar src={row.photo} name={row.fullName} size="xs" />
-						<span>{row.fullName}</span>
-					</div>
-				{:else if column.key === 'status'}
-					<Tag colour={statusColour[row.status]} size="s">{row.status}</Tag>
-				{:else if column.key === 'skills'}
-					<div class="hb-table__tags">
-						{#each row.skills as skill}<Tag>{skill}</Tag>{/each}
-					</div>
-				{:else if column.key === 'score'}
-					{formatScore(row.score)}
-				{:else}
-					{row[column.key]}
-				{/if}
-			{/snippet}
-		</Table>
+	<div class="part">
+		{@render note('Table body')}
+		<div class="region">
+			<!-- Two thin lines across the header and the first row: they show that all
+			     texts of a row sit on one baseline (guidelines 1.3). -->
+			{#if longTexts}<span class="guide guide--header"></span><span class="guide guide--row"
+				></span>{/if}
+
+			<Table
+				{columns}
+				{rows}
+				{sortKey}
+				{sortDirection}
+				onsort={sortBy}
+				{selectable}
+				bind:selection
+				allRows={paged ? matching : undefined}
+				{maxHeight}
+				{minHeight}
+				{actionsWidth}
+				actions={actions.length ? rowActions : undefined}
+				summary={(summary || paged) && !annotate ? summaryRow : undefined}
+				empty={nothingFound}
+			>
+				{#snippet cell(row, column)}
+					{#if column.key === 'fullName'}
+						<div class="hb-table__person">
+							<Avatar src={row.photo} name={row.fullName} size="xs" />
+							<span>{row.fullName}</span>
+						</div>
+					{:else if column.key === 'status'}
+						<Tag colour={statusColour[row.status]} size="s">{row.status}</Tag>
+					{:else if column.key === 'skills'}
+						<div class="hb-table__tags">
+							{#each row.skills as skill}<Tag>{skill}</Tag>{/each}
+						</div>
+					{:else if column.key === 'score'}
+						{formatScore(row.score)}
+					{:else}
+						{row[column.key]}
+					{/if}
+				{/snippet}
+			</Table>
+		</div>
 	</div>
+
+	<!-- In the "Anatomy" example the summary row is its own part, so it gets its own label. -->
+	{#if annotate}
+		<div class="part">
+			{@render note('Summary row')}
+			<div class="region"><div class="hb-table__summary">{@render summaryRow()}</div></div>
+		</div>
+	{/if}
 </div>
 
 <!-- The buttons of one row. -->
@@ -283,9 +344,9 @@
 
 <!-- The summary row. With pages, it also holds the pager. -->
 {#snippet summaryRow()}
-	<span class="part part--inline" data-label="Summary row">
-		{matching.length} employees{#if selectable}&nbsp;· {selection.length} selected{/if}
-	</span>
+	<span
+		>{matching.length} employees{#if selectable}&nbsp;· {selection.length} selected{/if}</span
+	>
 	{#if paged}
 		<span class="pager">
 			Page {page + 1} of {lastPage + 1}
@@ -318,7 +379,15 @@
 
 <style>
 	h4 {
-		margin: 0 0 12px;
+		margin: 0;
+	}
+	/* Title, toolbar and table sit 12px apart (the toolbar brings its own 12px). */
+	.part:has(h4) {
+		margin-bottom: 12px;
+	}
+	.region {
+		position: relative; /* the baseline guides are placed inside it */
+		min-width: 0;
 	}
 
 	/* The "tune" button, with its list opening right under it. */
@@ -338,11 +407,6 @@
 		padding-inline-end: 12px;
 		white-space: nowrap;
 	}
-	/* A bit more air between the two white buttons and the filter chips (as in Figma). */
-	.search {
-		display: inline-flex;
-		margin-inline-end: 12px;
-	}
 
 	.pager {
 		display: flex;
@@ -350,65 +414,67 @@
 		gap: 4px;
 	}
 
+	/* ---------- Baseline guides of the "wrap and cut" example ---------- */
+	.guide {
+		position: absolute;
+		inset-inline: 0;
+		z-index: 4;
+		height: 1px;
+		background: var(--accent-9);
+		pointer-events: none;
+	}
+	.guide--header {
+		top: 21px; /* 8px padding + where the first line of 12px text sits */
+	}
+	.guide--row {
+		top: 73px; /* the 49px two-line header + where the first text line of the row sits */
+	}
+
 	/* ---------- The purple labels of the "Anatomy" example ----------
-	   Every part of the table gets an outline and a pill with its name. */
+	   As in Figma: every part is a row of [label ─] [outlined box], 8px apart.
+	   The boxes never touch, and the labels sit in their own column on the side. */
 	.example--annotate {
-		padding-inline-start: 140px;
-		--label: var(--accent-8);
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
 	}
 	.example--annotate .part {
-		position: relative;
-		margin-bottom: 8px;
+		display: flex;
+		align-items: center;
+		margin: 0;
+	}
+	.example--annotate .region {
+		flex: 1;
 		padding: 4px;
 		border-radius: var(--radius-s);
-		outline: 1px solid var(--label);
+		outline: 1px solid var(--accent-9);
+		outline-offset: -1px;
 	}
-	.example--annotate :global(.hb-table-toolbar),
-	.example--annotate h4 {
+	.example--annotate :global(.hb-table-toolbar) {
 		margin-bottom: 0;
 	}
-	.example--annotate .part::before {
-		content: attr(data-label);
-		position: absolute;
-		top: 50%;
-		inset-inline-end: calc(100% + 16px);
-		transform: translateY(-50%);
+	.example--annotate :global(.hb-table__summary) {
+		border-top: 0;
+	}
+
+	/* The label: a pill and a short line that reaches the box. */
+	.note {
+		flex: none;
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		width: 172px;
+	}
+	.note__pill {
 		padding: 2px 10px;
 		border-radius: var(--radius-full);
-		background: var(--label);
-		color: var(--pure-0);
-		font: var(--text-body-d-bold);
+		background: var(--accent-9);
+		color: var(--uncolorful-grey-surface);
 		white-space: nowrap;
 	}
-	/* The thin line from the pill to the outline. */
-	.example--annotate .part::after {
-		content: '';
-		position: absolute;
-		top: 50%;
-		inset-inline-end: 100%;
+	.note__line {
 		width: 16px;
 		height: 1px;
-		background: var(--label);
-	}
-	/* The summary row lives inside the table, so its label hangs from the text itself. */
-	.example--annotate .part--inline {
-		position: static;
-		margin: 0;
-		padding: 0;
-		outline: none;
-	}
-	.example--annotate :global(.hb-table__summary) {
-		position: relative;
-		margin-top: 8px;
-		border-top: 0;
-		border-radius: var(--radius-s);
-		outline: 1px solid var(--label);
-		outline-offset: 4px;
-	}
-	.example--annotate .part--inline::before {
-		inset-inline-end: calc(100% + 20px);
-	}
-	.example--annotate .part--inline::after {
-		inset-inline-end: calc(100% + 4px);
+		background: var(--accent-9);
 	}
 </style>

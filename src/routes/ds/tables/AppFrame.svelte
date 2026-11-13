@@ -74,12 +74,13 @@
 	.brand__name {
 		margin-bottom: -4px; /* the two lines of the logo text sit close together, as in Figma */
 	}
+	/* The whole app window — side menu AND page — is one white box.
+	   (The bordered card around it comes from the guidelines page; its 16px of
+	   padding is cancelled here so the app fills the card edge to edge.) */
 	.app {
 		display: flex;
-		/* The example card gives 16px of padding; the app window fills it edge to edge. */
 		margin: -16px;
-		border-radius: var(--radius-l);
-		overflow: hidden;
+		background: var(--uncolorful-grey-surface);
 	}
 
 	/* ---------- Side menu ---------- */
@@ -90,7 +91,6 @@
 		gap: 16px;
 		width: 232px;
 		padding: 16px 8px;
-		background: var(--uncolorful-grey-background);
 		border-inline-end: 1px solid var(--uncolorful-grey-border);
 	}
 	.brand {
@@ -101,8 +101,10 @@
 		color: var(--uncolorful-grey-extra);
 	}
 	.brand .hb-text-body-d,
-	.domain .hb-text-body-d,
 	.profile .hb-text-body-e {
+		color: var(--uncolorful-grey-tertiary);
+	}
+	.domain .hb-text-body-d {
 		color: var(--uncolorful-grey-secondary);
 	}
 	.domain {
@@ -123,7 +125,7 @@
 		display: flex;
 		align-items: center;
 		gap: 8px;
-		height: 32px;
+		height: 36px;
 		padding: 0 12px;
 		border-radius: var(--radius-m);
 	}
