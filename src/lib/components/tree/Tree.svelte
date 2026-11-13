@@ -67,7 +67,6 @@
 			<button
 				class="hb-tree__row"
 				class:hb-tree__row--selected={node.id === selected}
-				class:hb-tree__row--leaf={!node.children}
 				type="button"
 				aria-expanded={node.children ? !!open[node.id] : undefined}
 				onclick={() => click(node)}
