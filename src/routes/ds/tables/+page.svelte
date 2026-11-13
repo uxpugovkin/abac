@@ -14,6 +14,7 @@
 	import { tableGuidelines } from '#lib/components/table/guidelines.js';
 	import { Button, Tabs } from '#lib';
 	import TableExample from './TableExample.svelte';
+	import AnatomyExample from './AnatomyExample.svelte';
 	import AppFrame from './AppFrame.svelte';
 
 	// rule id → the snippet that shows it. Rules without a line here have no example.
@@ -100,7 +101,7 @@
 
 <!-- 1. Tables -->
 {#snippet anatomy()}
-	<TableExample title="Employees" annotate selectable summary limit={5} />
+	<AnatomyExample />
 {/snippet}
 
 {#snippet sorting()}

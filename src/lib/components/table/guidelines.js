@@ -42,7 +42,7 @@ export const tableGuidelines = [
 					'3. Table body — contains columns, rows, cells and the bulk-operation controls.',
 					'4. Summary row — optionally shows the total across all rows of a column, and the like.'
 				],
-				code: 'A heading, then <div class="hb-table-toolbar">, then <Table> with the `summary` snippet.'
+				code: '<Table> with the `toolbar` snippet (a <TableToolbar title="…">) and the `summary` snippet.'
 			},
 			{
 				id: '1.2',
@@ -76,7 +76,7 @@ export const tableGuidelines = [
 					'If there is more data than fits the height of the screen, the toolbar can be pinned to the top edge of the screen and the summary row to the bottom.',
 					'Let the page header, titles and navigation scroll out of view so they do not distract from the table.'
 				],
-				code: '<Table maxHeight={…}>: the rows scroll inside, the header and the summary stay.'
+				code: '<Table pageScroll>: the table scrolls with the page; its toolbar, header and summary stay in view.'
 			},
 			{
 				id: '2.2',
@@ -92,7 +92,7 @@ export const tableGuidelines = [
 				text: [
 					'Both rules work together: the header stays on top and the pinned columns stay at the side.'
 				],
-				code: '`maxHeight` together with a `pinned` column.'
+				code: '`pageScroll` together with a `pinned` column.'
 			}
 		]
 	},
@@ -157,7 +157,7 @@ export const tableGuidelines = [
 				text: [
 					'If the page has tabs, segments, scopes or other content besides the table, the add-row button goes into the table’s toolbar — close to what it acts on.'
 				],
-				code: 'Put the buttons in <div class="hb-table-toolbar__end">.'
+				code: 'Put the buttons in the `end` snippet of <TableToolbar>.'
 			},
 			{
 				id: '4.3',

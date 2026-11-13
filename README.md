@@ -134,7 +134,7 @@ npm run package      # builds dist/
 | chips                                  | `Chip`, `Segmented`, `FilterChip`              |
 | avatar, badge, marker, tag             | `Avatar`, `Badge`, `Marker`, `Tag`             |
 | notification, tooltip, skeleton        | `Notification`, `Tooltip`, `Skeleton`          |
-| table                                  | `Table`                                        |
+| table                                  | `Table`, `TableToolbar`                        |
 | splitter                               | `Splitter`                                     |
 | Drop List                              | `Menu`, `MenuItem`                             |
 | Empty                                  | `EmptyState` (with the monkey mascot, 5 types) |

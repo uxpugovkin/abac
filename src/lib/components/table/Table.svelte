@@ -34,8 +34,6 @@
 		wrap       true = long text wraps to more lines instead of being cut with "…"
 		           a number = wraps, but to at most that many lines (wrap: 2)
 		pinned     true = stays in place when the table scrolls sideways (needs a width in px)
-		children   a list of columns UNDER this one (makes a two-level header).
-		           A column with children only needs `label` and `children`.
 
 	────────────────────────────────────────────────────────────────────────────
 	PROPS — everything except `columns` and `rows` is optional. Turn on what you need.
@@ -66,16 +64,20 @@
 		                Then the header checkbox asks "Rows on this page / All rows in the table"
 
 	Size and scrolling
-		minHeight       px. The rows area is never shorter than this, so the page does not
-		                jump when a search or a filter leaves only a few rows
-		maxHeight       px. Taller tables scroll inside; the header stays on top
 		minWidth        px. The table fills the room it gets, but is never narrower than this:
 		                in a smaller place it scrolls sideways instead of squeezing its columns
-		pageScroll      true = the table does NOT scroll by itself: it is as big as its content and
-		                scrolls together with the page (or the box) around it. Its header then sticks
-		                to the top of that page, pinned columns to its side, the summary to its bottom.
-		                If something is already stuck at the top (a toolbar), say how tall it is:
-		                    style="--table-sticky-top: 56px"   on the table or any parent
+		minHeight       px. The rows area is never shorter than this, so the page does not
+		                jump when a search or a filter leaves only a few rows
+		pageScroll      true = for long tables. The table does NOT scroll by itself: it is as big
+		                as its content and scrolls together with the page (or the box) around it.
+		                While it scrolls, the toolbar and the header stay at the top of that page,
+		                pinned columns at its side, the summary at its bottom.
+		                If the page has something of its own stuck at the top (a page header),
+		                say how tall it is:  style="--table-sticky-top: 56px"  on any parent
+
+	Around the table
+		toolbar         snippet for what sits above the table: usually a <TableToolbar>
+		                (see TableToolbar.svelte). With `pageScroll` it stays on top
 		summary         snippet for the summary row under the table, e.g. two <span>s
 		                (the first sits at the start, the last at the end).
 		                It is always visible; the sideways scrollbar sits below it
@@ -111,25 +113,25 @@
 		selectable = false,
 		selection = $bindable([]),
 		allRows = undefined,
-		minHeight = 0,
-		maxHeight = 0,
 		minWidth = 0,
+		minHeight = 0,
 		pageScroll = false,
+		toolbar,
 		summary,
 		class: extraClass = ''
 	} = $props();
 
 	const CHECK_WIDTH = 32; // width of the checkbox column, px
 
-	/* ---------- Columns ----------
-	   "Leaf" columns are the ones that actually hold cells: plain columns, and
-	   the children of grouped columns. One leaf = one <col> in the table. */
-
-	let grouped = $derived(columns.some((column) => column.children));
-	let leaves = $derived(columns.flatMap((column) => column.children ?? [column]));
-
 	// How many columns of cells there are in total (used by the "empty" row).
-	let columnCount = $derived(leaves.length + (selectable ? 1 : 0) + (actions ? 1 : 0));
+	let columnCount = $derived(columns.length + (selectable ? 1 : 0) + (actions ? 1 : 0));
+
+	/* ---------- Sizes the table measures by itself (only used with `pageScroll`) ----------
+	   frameWidth      how wide the visible place of the table is. The toolbar is made
+	                   this wide, so it does not grow with a table that is wider than the page.
+	   toolbarHeight   how tall the toolbar is. The header sticks right under it. */
+	let frameWidth = $state(0);
+	let toolbarHeight = $state(0);
 
 	/* ---------- Pinned columns ----------
 	   Each pinned column sits right after the pinned ones before it.
@@ -138,15 +140,15 @@
 	let pinnedAt = $derived.by(() => {
 		const result = {};
 		let distance = selectable ? CHECK_WIDTH : 0;
-		for (const column of leaves) {
+		for (const column of columns) {
 			if (!column.pinned) continue;
 			result[column.key] = distance;
 			distance += column.width ?? 0;
 		}
 		return result;
 	});
-	let hasPinned = $derived(leaves.some((column) => column.pinned));
-	let lastPinnedKey = $derived(leaves.findLast((column) => column.pinned)?.key);
+	let hasPinned = $derived(columns.some((column) => column.pinned));
+	let lastPinnedKey = $derived(columns.findLast((column) => column.pinned)?.key);
 
 	/* ---------- Bulk selection ---------- */
 
@@ -199,11 +201,9 @@
 <!-- Clicking anywhere else closes the "this page / all rows" menu. -->
 <svelte:window onclick={() => (menuOpen = false)} />
 
-<!-- ─── One header cell. `parent` is set for the children of a grouped column. ─── -->
-{#snippet headerCell(column, parent)}
+<!-- ─── One header cell. ─── -->
+{#snippet headerCell(column)}
 	<th
-		colspan={column.children?.length}
-		rowspan={grouped && !column.children && !parent ? 2 : undefined}
 		class:hb-table__cell--end={column.align === 'end'}
 		class:hb-table__cell--wrap={column.wrap}
 		class:hb-table__cell--pinned={column.pinned}
@@ -223,22 +223,39 @@
 	</th>
 {/snippet}
 
-<div class="hb-table-frame {extraClass}" class:hb-table-frame--page-scroll={pageScroll}>
+<!-- ─── What sits above the table (the `toolbar` snippet). ─── -->
+{#snippet top()}
 	<div
-		class="hb-table-scroll"
-		style:min-height={minHeight ? `${minHeight}px` : undefined}
-		style:max-height={maxHeight ? `${maxHeight}px` : undefined}
+		class="hb-table__top"
+		bind:clientHeight={toolbarHeight}
+		style:width={pageScroll ? `${frameWidth}px` : undefined}
 	>
+		{@render toolbar()}
+	</div>
+{/snippet}
+
+<div
+	class="hb-table-frame {extraClass}"
+	class:hb-table-frame--page-scroll={pageScroll}
+	bind:clientWidth={frameWidth}
+	style:--table-toolbar-height={pageScroll && toolbar ? `${toolbarHeight}px` : undefined}
+>
+	<!-- Normally the toolbar sits above the part that scrolls sideways… -->
+	{#if toolbar && !pageScroll}{@render top()}{/if}
+
+	<div class="hb-table-scroll" style:min-height={minHeight ? `${minHeight}px` : undefined}>
+		<!-- …with `pageScroll` it sits inside, next to the table, and sticks to the top of the page. -->
+		{#if toolbar && pageScroll}{@render top()}{/if}
+
 		<table
 			class="hb-table"
-			class:hb-table--grouped={grouped}
 			class:hb-table--clickable={onrowclick}
 			style:min-width={minWidth ? `${minWidth}px` : undefined}
 		>
 			<!-- Column widths. One <col> per column of cells, in the same order as the cells below. -->
 			<colgroup>
 				{#if selectable}<col style:width="{CHECK_WIDTH}px" />{/if}
-				{#each leaves as column}
+				{#each columns as column}
 					<col
 						style:width={typeof column.width === 'number' ? `${column.width}px` : column.width}
 					/>
@@ -252,7 +269,6 @@
 						<th
 							class="hb-table__check-cell"
 							class:hb-table__cell--pinned={hasPinned}
-							rowspan={grouped ? 2 : undefined}
 							style:inset-inline-start={hasPinned ? '0px' : undefined}
 						>
 							<button
@@ -285,19 +301,9 @@
 							class="hb-table__actions-cell hb-table__actions-cell--{actionsWidth
 								? 'column'
 								: 'overlay'}"
-							rowspan={grouped ? 2 : undefined}
 						></th>
 					{/if}
 				</tr>
-
-				<!-- Second header row: the children of grouped columns. -->
-				{#if grouped}
-					<tr>
-						{#each columns as column}
-							{#each column.children ?? [] as child}{@render headerCell(child, column)}{/each}
-						{/each}
-					</tr>
-				{/if}
 			</thead>
 
 			<tbody>
@@ -328,7 +334,7 @@
 							</td>
 						{/if}
 
-						{#each leaves as column}
+						{#each columns as column}
 							<td
 								class:hb-table__cell--end={column.align === 'end'}
 								class:hb-table__cell--wrap={column.wrap}
