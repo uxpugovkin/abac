@@ -142,11 +142,11 @@
 
 <!-- minHeight keeps the box the same size when the search leaves one row, or none. -->
 {#snippet searchAll()}
-	<TableExample search="Cooper" limit={10} minHeight={400} />
+	<TableExample searchPinned limit={10} minHeight={400} />
 {/snippet}
 
 {#snippet searchOne()}
-	<TableExample searchPlaceholder="Search by name" search="Cooper" limit={10} minHeight={220} />
+	<TableExample searchPlaceholder="Search by name" searchPinned limit={10} minHeight={400} />
 {/snippet}
 
 {#snippet moreFilters()}

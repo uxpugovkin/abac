@@ -15,6 +15,8 @@
 		Toolbar
 		toolbar           false = no toolbar.  Default true
 		search            starting search text
+		searchPinned      true = the search box is always open and looks focused, so the example
+		                  shows its placeholder (the two search examples)
 		searchPlaceholder hint in the search box.  Default "Search"
 		filters           starting filter values, e.g. { Status: 'Active' }
 		shown             which filter chips are in the toolbar.  Default the first four
@@ -52,6 +54,7 @@
 		Button,
 		FilterChip,
 		SearchChip,
+		TextInput,
 		Menu,
 		MenuItem,
 		Checkbox,
@@ -72,6 +75,7 @@
 		toolbar = true,
 		search = '',
 		searchPlaceholder = 'Search',
+		searchPinned = false,
 		filters = {},
 		shown = ['Status', 'Skills', 'Department', 'Office'],
 		filterMenu = false,
@@ -286,7 +290,20 @@
 								</div>
 							{/if}
 						</span>
-						<SearchChip bind:value={query} placeholder={searchPlaceholder} />
+						{#if searchPinned}
+							<!-- Guide-only trick: the open search box, drawn as if the cursor were in it.
+							     (A real SearchChip closes when you click elsewhere.) It does search. -->
+							<span class="hb-search-chip search-pinned">
+								<TextInput
+									icon="search"
+									placeholder={searchPlaceholder}
+									bind:value={query}
+									aria-label={searchPlaceholder}
+								/>
+							</span>
+						{:else}
+							<SearchChip bind:value={query} placeholder={searchPlaceholder} />
+						{/if}
 
 						<!-- Filter chips. In these examples a click simply sets a ready-made value. -->
 						{#each chips as name}
@@ -498,6 +515,14 @@
 		top: 36px; /* the height of the table header */
 		inset-inline-start: 0;
 		z-index: 7;
+	}
+
+	/* The pinned search box wears the "focus" look of a field all the time:
+	   the same three values as .hb-field:focus-within in field.css. */
+	.search-pinned :global(.hb-field) {
+		--field-line: var(--boring-blue-50);
+		--field-line-width: 2px;
+		--field-placeholder: var(--uncolorful-grey-disabled);
 	}
 
 	.pager {
