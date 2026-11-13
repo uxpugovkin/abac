@@ -239,6 +239,7 @@
 	class:example--annotate={annotate}
 	class:viewport
 	class:hb-scroll={viewport}
+	class:viewport--tall={typeof viewport === 'number'}
 	style:height={typeof viewport === 'number' ? `${viewport}px` : undefined}
 	style:--table-sticky-top={viewport ? `${stickyHeight}px` : undefined}
 	bind:clientWidth={windowWidth}
@@ -446,10 +447,14 @@
 	/* ---------- The scrolling examples: the box is the "browser window" ---------- */
 	.viewport {
 		overflow: auto;
-		/* Fill the bordered card up to its top, bottom and far edge (it has 16px of padding),
-		   so the scrollbars sit at the edges of the card, like in a real window. */
-		margin: -16px;
-		margin-inline-start: 0;
+		/* Fill the bordered card up to its top and bottom edge (it has 16px of padding),
+		   so the sideways scrollbar sits at the bottom edge of the card, like in a real window. */
+		margin-block: -16px;
+	}
+	/* With an up-down scrollbar: reach the far edge too, so that scrollbar sits at the edge.
+	   (Without one, the card's own 16px padding stays next to the toolbar.) */
+	.viewport--tall {
+		margin-inline-end: -16px;
 	}
 	.viewport .stuck {
 		position: sticky;
