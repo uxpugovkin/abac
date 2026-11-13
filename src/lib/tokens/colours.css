@@ -1,0 +1,296 @@
+/* ==========================================================================
+   COLOURS
+   --------------------------------------------------------------------------
+   Copied 1:1 from the "colour" variable collection in Figma (habibi-library).
+   Names are the Figma names with "/" replaced by "-":
+       boring-blue/50   →   var(--boring-blue-50)
+
+   There are four themes. Every theme defines the SAME names with different
+   values, so components never need to know which theme is on.
+
+   How to switch theme: set data-theme on <html> (or on any wrapper element):
+       <html data-theme="dark">
+   Values: light (default) · dark · olive · olive-night
+
+   Heads-up: the names describe the ROLE, not the exact hue. In the olive
+   themes "boring-blue" is olive green and "uncreative-green" is purple.
+
+   To change a colour: change it in Figma first, then update the value here.
+   ========================================================================== */
+
+/* ---------- Theme: Light (default) ---------- */
+:root,
+[data-theme='light'] {
+	/* Tells the browser to draw its own controls (scrollbars etc.) light. */
+	color-scheme: light;
+
+	/* Neutrals: text, borders, backgrounds.
+	   extra = strongest text · primary = normal text · secondary / tertiary = quieter text
+	   disabled = disabled things and strong borders · border = hairlines and soft fills
+	   background = page · surface = cards, popups */
+	--uncolorful-grey-extra: #12100e;
+	--uncolorful-grey-primary: #353230;
+	--uncolorful-grey-secondary: #67625d;
+	--uncolorful-grey-tertiary: #9b958d;
+	--uncolorful-grey-disabled: #cdc9c3;
+	--uncolorful-grey-border: #ece9e5;
+	--uncolorful-grey-background: #f8f6f3;
+	--uncolorful-grey-surface: #fffefc;
+
+	/* Main action colour (buttons, links, focus, selection).
+	   50 is the base. 60 = hover, 40 = pressed, 90 / 80 / 70 = soft tints. */
+	--boring-blue-90: #d8e5fd;
+	--boring-blue-80: #9fbdf9;
+	--boring-blue-70: #6f9bf6;
+	--boring-blue-60: #286af1;
+	--boring-blue-50: #0e50d7;
+	--boring-blue-40: #0b3fa7;
+
+	/* Danger and errors. Same scale as boring-blue. */
+	--traffic-light-red-90: #fbe9eb;
+	--traffic-light-red-80: #f3bec4;
+	--traffic-light-red-70: #ec929d;
+	--traffic-light-red-60: #e46776;
+	--traffic-light-red-50: #d9263c;
+	--traffic-light-red-40: #ae1e30;
+
+	/* Warnings. Same scale as boring-blue. */
+	--shitpile-orange-90: #ffede2;
+	--shitpile-orange-80: #fec9a9;
+	--shitpile-orange-70: #fea26e;
+	--shitpile-orange-60: #fa782a;
+	--shitpile-orange-50: #e25d09;
+	--shitpile-orange-40: #bd4205;
+
+	/* Success. Same scale as boring-blue. */
+	--uncreative-green-90: #d2f9e1;
+	--uncreative-green-80: #a4f4c2;
+	--uncreative-green-70: #76efa4;
+	--uncreative-green-60: #17ce5e;
+	--uncreative-green-50: #13a049;
+	--uncreative-green-40: #0d7234;
+
+	/* Nine extra colours for charts, markers and badges. */
+	--accent-1: #e44444;
+	--accent-2: #e4af44;
+	--accent-3: #afe444;
+	--accent-4: #44e444;
+	--accent-5: #44e4af;
+	--accent-6: #44afe4;
+	--accent-7: #4444e4;
+	--accent-8: #af44e4;
+	--accent-9: #e444af;
+
+	/* White and black that never change with the theme. */
+	--pure-0: #ffffff;
+	--pure-100: #000000;
+
+	/* See-through overlays (black in light themes, white in dark ones). */
+	--opacity-01: #00000003;
+	--opacity-16: #00000029;
+	--opacity-72: #000000b8;
+}
+
+/* ---------- Theme: Dark ---------- */
+[data-theme='dark'] {
+	/* Tells the browser to draw its own controls (scrollbars etc.) dark. */
+	color-scheme: dark;
+
+	/* uncolorful-grey */
+	--uncolorful-grey-extra: #e7e4df;
+	--uncolorful-grey-primary: #dbd7d1;
+	--uncolorful-grey-secondary: #c0bbb4;
+	--uncolorful-grey-tertiary: #8d8880;
+	--uncolorful-grey-disabled: #5a554f;
+	--uncolorful-grey-border: #33302c;
+	--uncolorful-grey-background: #0a0908;
+	--uncolorful-grey-surface: #1a1815;
+
+	/* boring-blue */
+	--boring-blue-90: #1b2943;
+	--boring-blue-80: #24385f;
+	--boring-blue-70: #345188;
+	--boring-blue-60: #5d88d9;
+	--boring-blue-50: #91b4f5;
+	--boring-blue-40: #c6dafe;
+
+	/* traffic-light-red */
+	--traffic-light-red-90: #401e1e;
+	--traffic-light-red-80: #5a2828;
+	--traffic-light-red-70: #80393a;
+	--traffic-light-red-60: #cd6665;
+	--traffic-light-red-50: #ee9997;
+	--traffic-light-red-40: #fcccc9;
+
+	/* shitpile-orange */
+	--shitpile-orange-90: #3f2113;
+	--shitpile-orange-80: #582b16;
+	--shitpile-orange-70: #7e3e20;
+	--shitpile-orange-60: #ca6d41;
+	--shitpile-orange-50: #ea9f7d;
+	--shitpile-orange-40: #f9cebc;
+
+	/* uncreative-green */
+	--uncreative-green-90: #15311b;
+	--uncreative-green-80: #184423;
+	--uncreative-green-70: #226133;
+	--uncreative-green-60: #469f5c;
+	--uncreative-green-50: #84c690;
+	--uncreative-green-40: #c1e4c6;
+
+	/* accent */
+	--accent-1: #e27878;
+	--accent-2: #e2bf78;
+	--accent-3: #bfe278;
+	--accent-4: #78e278;
+	--accent-5: #78e2bf;
+	--accent-6: #78bfe2;
+	--accent-7: #7878e2;
+	--accent-8: #bf78e2;
+	--accent-9: #e278bf;
+
+	/* pure */
+	--pure-0: #ffffff;
+	--pure-100: #000000;
+
+	/* opacity */
+	--opacity-01: #ffffff03;
+	--opacity-16: #ffffff29;
+	--opacity-72: #ffffffb8;
+}
+
+/* ---------- Theme: Olive ---------- */
+[data-theme='olive'] {
+	/* Tells the browser to draw its own controls (scrollbars etc.) light. */
+	color-scheme: light;
+
+	/* uncolorful-grey */
+	--uncolorful-grey-extra: #16131f;
+	--uncolorful-grey-primary: #322e42;
+	--uncolorful-grey-secondary: #5f5a72;
+	--uncolorful-grey-tertiary: #918ca3;
+	--uncolorful-grey-disabled: #cbc7d6;
+	--uncolorful-grey-border: #e8e6ef;
+	--uncolorful-grey-background: #f7f6fa;
+	--uncolorful-grey-surface: #ffffff;
+
+	/* boring-blue */
+	--boring-blue-90: #e3e7ca;
+	--boring-blue-80: #b3c72f;
+	--boring-blue-70: #92a60d;
+	--boring-blue-60: #6a7a00;
+	--boring-blue-50: #556200;
+	--boring-blue-40: #424d00;
+
+	/* traffic-light-red */
+	--traffic-light-red-90: #fce8ef;
+	--traffic-light-red-80: #f7bbcf;
+	--traffic-light-red-70: #f18dae;
+	--traffic-light-red-60: #eb5e8d;
+	--traffic-light-red-50: #da1b5b;
+	--traffic-light-red-40: #af1649;
+
+	/* shitpile-orange */
+	--shitpile-orange-90: #fff1d2;
+	--shitpile-orange-80: #fed57c;
+	--shitpile-orange-70: #fab411;
+	--shitpile-orange-60: #de940d;
+	--shitpile-orange-50: #c27809;
+	--shitpile-orange-40: #a25d06;
+
+	/* uncreative-green */
+	--uncreative-green-90: #eddffa;
+	--uncreative-green-80: #d2aef2;
+	--uncreative-green-70: #bc85eb;
+	--uncreative-green-60: #9a49e1;
+	--uncreative-green-50: #8223d5;
+	--uncreative-green-40: #661ba7;
+
+	/* accent */
+	--accent-1: #ff4d8d;
+	--accent-2: #ff7a3d;
+	--accent-3: #ffb800;
+	--accent-4: #cfe000;
+	--accent-5: #7fd93a;
+	--accent-6: #22cbb0;
+	--accent-7: #2563c9;
+	--accent-8: #6d5ce8;
+	--accent-9: #b44ae0;
+
+	/* pure */
+	--pure-0: #ffffff;
+	--pure-100: #000000;
+
+	/* opacity */
+	--opacity-01: #00000003;
+	--opacity-16: #00000029;
+	--opacity-72: #000000b8;
+}
+
+/* ---------- Theme: Olive Night ---------- */
+[data-theme='olive-night'] {
+	/* Tells the browser to draw its own controls (scrollbars etc.) dark. */
+	color-scheme: dark;
+
+	/* uncolorful-grey */
+	--uncolorful-grey-extra: #e6e3ee;
+	--uncolorful-grey-primary: #d8d6e2;
+	--uncolorful-grey-secondary: #bdbac8;
+	--uncolorful-grey-tertiary: #8b859e;
+	--uncolorful-grey-disabled: #59516f;
+	--uncolorful-grey-border: #322d46;
+	--uncolorful-grey-background: #0a080f;
+	--uncolorful-grey-surface: #191721;
+
+	/* boring-blue */
+	--boring-blue-90: #212d06;
+	--boring-blue-80: #2e3e08;
+	--boring-blue-70: #3f5a00;
+	--boring-blue-60: #699600;
+	--boring-blue-50: #8ac500;
+	--boring-blue-40: #a7ee00;
+
+	/* traffic-light-red */
+	--traffic-light-red-90: #520a1c;
+	--traffic-light-red-80: #6f0e26;
+	--traffic-light-red-70: #a20028;
+	--traffic-light-red-60: #ff265c;
+	--traffic-light-red-50: #ff8daa;
+	--traffic-light-red-40: #ffc9d7;
+
+	/* shitpile-orange */
+	--shitpile-orange-90: #3a2407;
+	--shitpile-orange-80: #4f310a;
+	--shitpile-orange-70: #774300;
+	--shitpile-orange-60: #c77100;
+	--shitpile-orange-50: #ff9811;
+	--shitpile-orange-40: #ffcf90;
+
+	/* uncreative-green */
+	--uncreative-green-90: #3e0e6e;
+	--uncreative-green-80: #531294;
+	--uncreative-green-70: #7200e3;
+	--uncreative-green-60: #b468ff;
+	--uncreative-green-50: #d1a4ff;
+	--uncreative-green-40: #e9d3ff;
+
+	/* accent */
+	--accent-1: #ff5b96;
+	--accent-2: #ffb18e;
+	--accent-3: #ffd055;
+	--accent-4: #c5d500;
+	--accent-5: #66eb00;
+	--accent-6: #00cdac;
+	--accent-7: #307fff;
+	--accent-8: #9384ff;
+	--accent-9: #d572ff;
+
+	/* pure */
+	--pure-0: #ffffff;
+	--pure-100: #000000;
+
+	/* opacity */
+	--opacity-01: #ffffff03;
+	--opacity-16: #ffffff29;
+	--opacity-72: #ffffffb8;
+}

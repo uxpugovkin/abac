@@ -1,0 +1,26 @@
+/* ==========================================================================
+   BASE
+   --------------------------------------------------------------------------
+   A few page-wide defaults so every product starts from the same place:
+   page colour, default text style, and a simple focus ring.
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	background: var(--uncolorful-grey-background);
+	color: var(--uncolorful-grey-primary);
+	font: var(--text-body-c);
+	-webkit-font-smoothing: antialiased;
+}
+
+/* Keyboard focus ring. Shown only when moving with the keyboard (Tab key). */
+:focus-visible {
+	outline: 2px solid var(--boring-blue-50);
+	outline-offset: 2px;
+}

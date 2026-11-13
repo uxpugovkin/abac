@@ -1,0 +1,73 @@
+/* ==========================================================================
+   BADGE — see Badge.svelte for how to use it.
+   Figma: habibi-library → page "badge"
+   ========================================================================== */
+
+.hb-badge {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 20px; /* size M: a circle for one digit, a pill for more */
+	height: 20px;
+	padding: 0 6px;
+	border-radius: var(--radius-full);
+	background: var(--badge-colour);
+	color: var(--pure-0);
+	font: var(--text-body-e-bold);
+	letter-spacing: 0.04em;
+}
+.hb-badge--s {
+	min-width: 16px;
+	height: 16px;
+	padding: 0 4px;
+}
+
+/* ---------- Colours ---------- */
+
+.hb-badge--error {
+	--badge-colour: var(--traffic-light-red-50);
+}
+.hb-badge--warning {
+	--badge-colour: var(--shitpile-orange-50);
+}
+.hb-badge--success {
+	--badge-colour: var(--uncreative-green-50);
+}
+.hb-badge--progress {
+	--badge-colour: var(--boring-blue-50);
+}
+/* Neutral is the odd one: white with a thin outline and dark text. */
+.hb-badge--neutral {
+	--badge-colour: var(--pure-0);
+	box-shadow: inset 0 0 0 1px var(--uncolorful-grey-border);
+	color: #353230; /* always dark: the badge stays white in dark themes too */
+}
+
+/* The nine accent colours: colour="accent-1" … "accent-9". */
+.hb-badge--accent-1 {
+	--badge-colour: var(--accent-1);
+}
+.hb-badge--accent-2 {
+	--badge-colour: var(--accent-2);
+}
+.hb-badge--accent-3 {
+	--badge-colour: var(--accent-3);
+}
+.hb-badge--accent-4 {
+	--badge-colour: var(--accent-4);
+}
+.hb-badge--accent-5 {
+	--badge-colour: var(--accent-5);
+}
+.hb-badge--accent-6 {
+	--badge-colour: var(--accent-6);
+}
+.hb-badge--accent-7 {
+	--badge-colour: var(--accent-7);
+}
+.hb-badge--accent-8 {
+	--badge-colour: var(--accent-8);
+}
+.hb-badge--accent-9 {
+	--badge-colour: var(--accent-9);
+}

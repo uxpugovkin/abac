@@ -1,0 +1,168 @@
+/* ==========================================================================
+   FIELD — the shared look of TextInput and Select.
+   Figma: habibi-library → page "input" (text-input, select)
+
+   A field is three rows stacked on top of each other:
+     1. label        "Email"
+     2. body         the grey box you type in (icons can sit at both ends)
+     3. tips         a hint or error on the left, a counter on the right
+
+   States: normal → hover → focus, plus error and disabled.
+   ========================================================================== */
+
+.hb-field {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	min-width: 0;
+
+	/* Colours of the box. The states below only change these variables. */
+	--field-fill: var(--uncolorful-grey-border);
+	--field-line: var(--uncolorful-grey-border);
+	--field-text: var(--uncolorful-grey-primary);
+	--field-quiet: var(--uncolorful-grey-secondary); /* icons, tips */
+	--field-placeholder: var(--uncolorful-grey-tertiary);
+}
+
+/* ---------- 1. Label ---------- */
+
+.hb-field__label {
+	font: var(--text-body-d);
+	color: var(--uncolorful-grey-primary);
+}
+
+/* ---------- 2. Body (the box) ---------- */
+
+.hb-field__body {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	height: 28px;
+	padding: 0 8px;
+	border-radius: var(--radius-m);
+	background: var(--field-fill);
+	color: var(--field-quiet);
+
+	/* The 1px line is an inside shadow so the box never changes size
+	   when the line gets thicker on focus. */
+	box-shadow: inset 0 0 0 var(--field-line-width, 1px) var(--field-line);
+}
+
+/* The real <input> or <select>. It is invisible; the box around it is what you see. */
+.hb-field__input {
+	flex: 1;
+	min-width: 0;
+	height: 100%;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	background: transparent;
+	color: var(--field-text);
+	font: var(--text-body-c);
+}
+.hb-field__input::placeholder {
+	color: var(--field-placeholder);
+}
+
+/* Select only: hide the browser's own arrow, we draw a chevron icon instead. */
+select.hb-field__input {
+	appearance: none;
+	cursor: pointer;
+}
+/* Select with nothing chosen yet shows its placeholder in the quiet colour. */
+select.hb-field__input:invalid {
+	color: var(--field-placeholder);
+}
+.hb-field__chevron {
+	color: var(--uncolorful-grey-primary);
+	pointer-events: none; /* clicks go through to the select underneath */
+}
+
+/* ---------- 3. Tips ---------- */
+
+.hb-field__tips {
+	display: flex;
+	justify-content: space-between;
+	gap: 4px;
+	font: var(--text-body-d);
+	color: var(--field-quiet);
+}
+
+/* ---------- Size: big (Figma "compact = False") ----------
+   A taller box with the label INSIDE it, above the value. */
+
+.hb-field--big .hb-field__body {
+	height: 48px;
+	padding: 0 12px;
+}
+.hb-field__stack {
+	flex: 1;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+}
+.hb-field--big .hb-field__label {
+	color: var(--uncolorful-grey-secondary);
+}
+.hb-field--big .hb-field__input {
+	height: 20px;
+}
+
+/* ---------- States ---------- */
+
+/* Hover: blue line. */
+.hb-field:hover {
+	--field-line: var(--boring-blue-50);
+}
+
+/* Focus (typing): thicker blue line, lighter placeholder. */
+.hb-field:focus-within {
+	--field-line: var(--boring-blue-50);
+	--field-line-width: 2px;
+	--field-placeholder: var(--uncolorful-grey-disabled);
+}
+
+/* Error: everything turns red… */
+.hb-field--error {
+	--field-fill: var(--traffic-light-red-90);
+	--field-line: var(--traffic-light-red-80);
+	--field-text: var(--traffic-light-red-50);
+	--field-quiet: var(--traffic-light-red-60);
+	--field-placeholder: var(--traffic-light-red-60);
+}
+.hb-field--error:hover {
+	--field-line: var(--traffic-light-red-50);
+}
+.hb-field--error .hb-field__label,
+.hb-field--error .hb-field__tips {
+	color: var(--traffic-light-red-50);
+}
+/* …but while typing, the box goes back to normal with a red line,
+   so the text is easy to read while you fix it. */
+.hb-field--error:focus-within {
+	--field-fill: var(--uncolorful-grey-border);
+	--field-line: var(--traffic-light-red-50);
+	--field-text: var(--uncolorful-grey-primary);
+	--field-quiet: var(--uncolorful-grey-secondary);
+	--field-placeholder: var(--uncolorful-grey-disabled);
+}
+.hb-field--error:focus-within .hb-field__label {
+	color: var(--uncolorful-grey-primary);
+}
+
+/* Disabled: pale, with a dashed line. Does not react to the mouse. */
+.hb-field--disabled {
+	--field-fill: var(--uncolorful-grey-background);
+	--field-text: var(--uncolorful-grey-tertiary);
+	--field-quiet: var(--uncolorful-grey-tertiary);
+	pointer-events: none;
+}
+.hb-field--disabled .hb-field__label,
+.hb-field--disabled .hb-field__chevron {
+	color: var(--uncolorful-grey-tertiary);
+}
+.hb-field--disabled .hb-field__body {
+	box-shadow: none;
+	outline: 1px dashed var(--uncolorful-grey-disabled);
+	outline-offset: -1px;
+}

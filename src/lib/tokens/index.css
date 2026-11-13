@@ -1,0 +1,23 @@
+/* ==========================================================================
+   TOKENS — the foundations of the design system
+   --------------------------------------------------------------------------
+   Import this ONE file to get everything: fonts, colours (all themes),
+   sizes, text styles and page defaults.
+
+       import 'habibi-ui/tokens';        ← in another product
+       import '#lib/tokens/index.css';   ← inside this repo
+
+   Tokens are plain CSS, so they work in any framework — or with none.
+   ========================================================================== */
+
+/* Font files (shipped with the package, no internet needed).
+   400 = Regular, 500 = Medium ("Bold" in Figma), 600 = SemiBold (headers). */
+@import '@fontsource/ibm-plex-sans/400.css';
+@import '@fontsource/ibm-plex-sans/500.css';
+@import '@fontsource/ibm-plex-sans/600.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+
+@import './colours.css';
+@import './sizes.css';
+@import './typography.css';
+@import './base.css';

@@ -1,0 +1,40 @@
+/* ==========================================================================
+   ALL STYLES IN ONE FILE — for products that do NOT use Svelte.
+   --------------------------------------------------------------------------
+   Svelte products don't need this file: every component already brings its
+   own CSS. This file is for plain HTML, React, Vue, Angular…
+
+       import 'habibi-ui/styles';
+
+   Then write the same HTML the components write, for example:
+       <button class="hb-btn hb-btn--accent hb-btn--primary hb-btn--s">
+           <span class="hb-btn__label">Save</span>
+       </button>
+
+   To see which HTML and classes a component uses, open its .svelte file.
+   When you add a component, add its CSS file to this list too.
+   ========================================================================== */
+
+@import './tokens/index.css';
+
+@import './components/icon/icon.css';
+@import './components/button/button.css';
+@import './components/loader/loader.css';
+@import './components/field/field.css';
+@import './components/checkbox/check.css';
+@import './components/switch/switch.css';
+@import './components/slider/slider.css';
+@import './components/tabs/tabs.css';
+@import './components/chip/chip.css';
+@import './components/menu/menu.css';
+@import './components/tree/tree.css';
+@import './components/tag/tag.css';
+@import './components/badge/badge.css';
+@import './components/marker/marker.css';
+@import './components/notification/notification.css';
+@import './components/tooltip/tooltip.css';
+@import './components/skeleton/skeleton.css';
+@import './components/avatar/avatar.css';
+@import './components/table/table.css';
+@import './components/empty-state/empty-state.css';
+@import './components/splitter/splitter.css';

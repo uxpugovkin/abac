@@ -1,0 +1,20 @@
+/* LOADER — see Loader.svelte for how to use it. */
+
+.hb-loader {
+	display: inline-flex;
+	color: var(--boring-blue-50);
+	animation: hb-loader-spin 0.8s linear infinite;
+}
+
+@keyframes hb-loader-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+/* People who asked their device for less motion get a slow spin. */
+@media (prefers-reduced-motion: reduce) {
+	.hb-loader {
+		animation-duration: 3s;
+	}
+}

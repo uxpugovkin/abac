@@ -1,0 +1,109 @@
+/* ==========================================================================
+   TYPOGRAPHY
+   --------------------------------------------------------------------------
+   Copied from the text styles in Figma (habibi-library, page "typo").
+
+   Two ways to use a text style:
+
+   1. In HTML, add the class:
+          <h1 class="hb-text-h1">Users</h1>
+
+   2. In CSS, use the variable with the `font` property:
+          .my-thing { font: var(--text-body-c); }
+
+   The variable holds weight, size, line height and font family in one go:
+          --text-body-c: 400 14px/20px …   means   regular, 14px text, 20px line
+
+   Naming: Figma "Body C/Bold" → --text-body-c-bold / .hb-text-body-c-bold
+   "Bold" in Figma is the Medium weight (500). Headers are SemiBold (600).
+   ========================================================================== */
+
+:root {
+	/* ---------- Font families ----------
+	   Figma variable "fonts". To try another font, change --fonts here
+	   (Figma also has modes for Segoe UI, Roboto and SF Pro). */
+	--fonts: 'IBM Plex Sans', system-ui, sans-serif;
+	--fonts-code: 'IBM Plex Mono', ui-monospace, monospace;
+
+	/* ---------- Headers ---------- */
+	--text-display-a: 600 76px/84px var(--fonts); /* + uppercase, see class below */
+	--text-display-b: 600 52px/64px var(--fonts);
+	--text-h1: 600 28px/32px var(--fonts);
+	--text-h2: 600 24px/32px var(--fonts);
+	--text-h3: 600 20px/28px var(--fonts);
+
+	/* ---------- Body ---------- */
+	--text-body-a: 400 20px/28px var(--fonts);
+	--text-body-a-bold: 500 20px/28px var(--fonts);
+	--text-body-b: 400 16px/24px var(--fonts);
+	--text-body-b-bold: 500 16px/24px var(--fonts);
+	--text-body-c: 400 14px/20px var(--fonts); /* the default text size */
+	--text-body-c-bold: 500 14px/20px var(--fonts);
+	--text-body-d: 400 12px/16px var(--fonts);
+	--text-body-d-bold: 500 12px/16px var(--fonts);
+	--text-body-e: 400 10px/12px var(--fonts); /* + uppercase, see class below */
+	--text-body-e-bold: 500 10px/12px var(--fonts);
+
+	/* ---------- Code ---------- */
+	--text-code-s: 400 12px/20px var(--fonts-code);
+}
+
+/* ---------- Classes (one per Figma text style) ---------- */
+
+.hb-text-display-a {
+	font: var(--text-display-a);
+	letter-spacing: 0.03em;
+	text-transform: uppercase;
+}
+.hb-text-display-b {
+	font: var(--text-display-b);
+}
+.hb-text-h1 {
+	font: var(--text-h1);
+}
+.hb-text-h2 {
+	font: var(--text-h2);
+}
+.hb-text-h3 {
+	font: var(--text-h3);
+}
+
+.hb-text-body-a {
+	font: var(--text-body-a);
+}
+.hb-text-body-a-bold {
+	font: var(--text-body-a-bold);
+}
+.hb-text-body-b {
+	font: var(--text-body-b);
+}
+.hb-text-body-b-bold {
+	font: var(--text-body-b-bold);
+}
+.hb-text-body-c {
+	font: var(--text-body-c);
+}
+.hb-text-body-c-bold {
+	font: var(--text-body-c-bold);
+}
+.hb-text-body-d {
+	font: var(--text-body-d);
+}
+.hb-text-body-d-bold {
+	font: var(--text-body-d-bold);
+}
+
+/* Body E is the tiny ALL-CAPS label style. It always needs the two extra lines. */
+.hb-text-body-e,
+.hb-text-body-e-bold {
+	font: var(--text-body-e);
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+.hb-text-body-e-bold {
+	font: var(--text-body-e-bold);
+}
+
+.hb-text-code-s {
+	font: var(--text-code-s);
+}

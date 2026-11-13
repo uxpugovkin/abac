@@ -1,0 +1,76 @@
+/* ==========================================================================
+   MENU — see Menu.svelte and MenuItem.svelte for how to use them.
+   Figma: habibi-library → page "Drop List" (drop-list + row)
+   ========================================================================== */
+
+/* ---------- The floating card ---------- */
+
+.hb-menu {
+	display: flex;
+	flex-direction: column;
+	min-width: 200px;
+	padding: 4px 0;
+	border-radius: var(--radius-l);
+	background: var(--uncolorful-grey-surface);
+	box-shadow:
+		inset 0 0 0 1px var(--uncolorful-grey-border),
+		var(--shadow-default-l);
+	overflow: hidden; /* keeps row highlights inside the rounded corners */
+}
+
+/* ---------- One row ---------- */
+
+.hb-menu__item {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	width: 100%;
+	padding: 8px 16px;
+	border: 0;
+	background: transparent;
+	color: var(--uncolorful-grey-primary);
+	font: var(--text-body-b);
+	text-align: start;
+	cursor: pointer;
+}
+.hb-menu__item:hover {
+	background: var(--uncolorful-grey-border);
+}
+.hb-menu__item:active {
+	background: var(--uncolorful-grey-disabled);
+}
+
+/* The text column: small label, title, small subtitle. */
+.hb-menu__text {
+	flex: 1;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+}
+.hb-menu__small {
+	color: var(--uncolorful-grey-secondary);
+	font: var(--text-body-d);
+}
+
+/* The tick at the end of the chosen row. */
+.hb-menu__tick {
+	color: var(--boring-blue-50);
+}
+
+.hb-menu__item:disabled {
+	background: transparent;
+	color: var(--uncolorful-grey-tertiary);
+	cursor: not-allowed;
+}
+.hb-menu__item:disabled .hb-menu__small,
+.hb-menu__item:disabled .hb-menu__tick {
+	color: inherit;
+}
+
+/* ---------- A heading between groups of rows ---------- */
+
+.hb-menu__heading {
+	padding: 8px 16px;
+	color: var(--uncolorful-grey-secondary);
+	font: var(--text-body-d);
+}

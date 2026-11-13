@@ -1,0 +1,12 @@
+/* ICON — see Icon.svelte for how to use it. */
+
+.hb-icon {
+	/* Icons take the colour of the text around them.
+	   To recolour an icon, set `color` on it or on its parent. */
+	fill: currentColor;
+
+	/* Never let a flex row squash or stretch an icon. */
+	flex: none;
+	display: inline-block;
+	vertical-align: middle;
+}

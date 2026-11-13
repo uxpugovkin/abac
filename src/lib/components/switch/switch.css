@@ -1,0 +1,97 @@
+/* ==========================================================================
+   SWITCH — see Switch.svelte for how to use it.
+   Figma: habibi-library → page "switch"
+
+   The switch is the real <input type="checkbox"> restyled:
+   the input is the track, and its ::before is the knob that slides.
+   ========================================================================== */
+
+/* The row: [switch] [text] */
+.hb-switch-row {
+	display: inline-flex;
+	align-items: center;
+	gap: 12px;
+	font: var(--text-body-c);
+	color: var(--uncolorful-grey-primary);
+	cursor: pointer;
+}
+
+/* ---------- Track ---------- */
+
+.hb-switch {
+	appearance: none;
+	flex: none;
+	position: relative;
+	width: 36px;
+	height: 20px;
+	margin: 0;
+	border-radius: var(--radius-m);
+	background: var(--uncolorful-grey-disabled);
+	cursor: pointer;
+	transition: background 0.15s;
+}
+.hb-switch:hover {
+	background: var(--uncolorful-grey-secondary);
+}
+
+/* ---------- Knob ---------- */
+
+.hb-switch::before {
+	content: '';
+	position: absolute;
+	top: 4px;
+	inset-inline-start: 4px;
+	width: 12px;
+	height: 12px;
+	border-radius: var(--radius-m);
+	background: var(--uncolorful-grey-surface);
+	transition: inset-inline-start 0.15s;
+}
+
+/* ---------- On ---------- */
+
+.hb-switch:checked {
+	background: var(--boring-blue-50);
+}
+.hb-switch:checked:hover {
+	background: var(--boring-blue-40);
+}
+.hb-switch:checked::before {
+	inset-inline-start: 20px; /* 36 track − 12 knob − 4 gap */
+	background: var(--boring-blue-90);
+}
+
+/* ---------- Size: big (Figma "compact = False") ----------
+   Taller track; the knob is a slab that fills the whole height. */
+
+.hb-switch--big {
+	height: 24px;
+}
+.hb-switch--big::before {
+	top: 0;
+	inset-inline-start: 0;
+	width: 16px;
+	height: 24px;
+	border-radius: var(--radius-s);
+	box-shadow: var(--shadow-default-s);
+}
+.hb-switch--big:checked::before {
+	inset-inline-start: 20px; /* 36 track − 16 knob */
+	box-shadow: var(--shadow-accent-l);
+}
+
+/* ---------- Disabled (same look on and off) ---------- */
+
+.hb-switch:disabled {
+	background: var(--uncolorful-grey-border);
+	box-shadow: inset 0 0 0 1px var(--uncolorful-grey-disabled);
+	cursor: not-allowed;
+}
+.hb-switch:disabled::before {
+	background: var(--uncolorful-grey-disabled);
+	box-shadow: none;
+}
+.hb-switch-row:has(:disabled) {
+	color: var(--uncolorful-grey-tertiary);
+	cursor: not-allowed;
+}

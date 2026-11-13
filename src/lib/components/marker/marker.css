@@ -1,0 +1,80 @@
+/* ==========================================================================
+   MARKER — see Marker.svelte for how to use it.
+   Figma: habibi-library → page "marker"
+   ========================================================================== */
+
+.hb-marker {
+	flex: none;
+	display: inline-block;
+	width: 8px; /* size M */
+	height: 8px;
+	margin: 4px; /* M sits in a 16px box, so it lines up with 16px icons */
+	border-radius: 1px;
+	background: var(--marker-colour);
+	vertical-align: middle;
+}
+.hb-marker--s {
+	width: 6px;
+	height: 6px;
+	margin: 1px;
+}
+.hb-marker--xs {
+	width: 4px;
+	height: 4px;
+	margin: 1px;
+}
+
+.hb-marker--circle {
+	border-radius: var(--radius-full);
+}
+
+/* Outline only (Figma "filled = False"). */
+.hb-marker--outline {
+	background: transparent;
+	box-shadow: inset 0 0 0 1px var(--marker-colour);
+}
+
+/* ---------- Colours ---------- */
+
+.hb-marker--error {
+	--marker-colour: var(--traffic-light-red-50);
+}
+.hb-marker--warning {
+	--marker-colour: var(--shitpile-orange-50);
+}
+.hb-marker--success {
+	--marker-colour: var(--uncreative-green-50);
+}
+.hb-marker--progress {
+	--marker-colour: var(--boring-blue-50);
+}
+.hb-marker--neutral {
+	--marker-colour: var(--uncolorful-grey-secondary);
+}
+.hb-marker--accent-1 {
+	--marker-colour: var(--accent-1);
+}
+.hb-marker--accent-2 {
+	--marker-colour: var(--accent-2);
+}
+.hb-marker--accent-3 {
+	--marker-colour: var(--accent-3);
+}
+.hb-marker--accent-4 {
+	--marker-colour: var(--accent-4);
+}
+.hb-marker--accent-5 {
+	--marker-colour: var(--accent-5);
+}
+.hb-marker--accent-6 {
+	--marker-colour: var(--accent-6);
+}
+.hb-marker--accent-7 {
+	--marker-colour: var(--accent-7);
+}
+.hb-marker--accent-8 {
+	--marker-colour: var(--accent-8);
+}
+.hb-marker--accent-9 {
+	--marker-colour: var(--accent-9);
+}

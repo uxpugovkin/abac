@@ -1,0 +1,96 @@
+/* ==========================================================================
+   SLIDER — see Slider.svelte for how to use it.
+   Figma: habibi-library → page "slider" → "slider-horiz"
+
+   The slider is the browser's own <input type="range"> restyled:
+     - the track is an 8px bar: dark blue up to the value, pale blue after it
+     - the thumb is a thin 2px line with a little breathing room on each side
+
+   --slider-fill (0%–100%) says how far the dark part goes.
+   Slider.svelte sets it from the value.
+   ========================================================================== */
+
+.hb-slider {
+	appearance: none;
+	width: 100%;
+	height: 24px;
+	margin: 0;
+	background: transparent;
+	cursor: pointer;
+
+	--slider-on: var(--boring-blue-50);
+	--slider-off: var(--boring-blue-90);
+}
+
+/* The same rules are written twice below: once for Chrome / Safari / Edge
+   (-webkit-…) and once for Firefox (-moz-…). Browsers ignore a rule if they
+   meet a name they don't know, so the two cannot be merged into one. */
+
+/* ---------- Track ---------- */
+
+.hb-slider::-webkit-slider-runnable-track {
+	height: 8px;
+	border-radius: var(--radius-s);
+	background: linear-gradient(
+		to right,
+		var(--slider-on) var(--slider-fill),
+		var(--slider-off) var(--slider-fill)
+	);
+}
+.hb-slider::-moz-range-track {
+	height: 8px;
+	border-radius: var(--radius-s);
+	background: linear-gradient(
+		to right,
+		var(--slider-on) var(--slider-fill),
+		var(--slider-off) var(--slider-fill)
+	);
+}
+/* In right-to-left pages the dark part starts from the right. */
+[dir='rtl'] .hb-slider::-webkit-slider-runnable-track {
+	background: linear-gradient(
+		to left,
+		var(--slider-on) var(--slider-fill),
+		var(--slider-off) var(--slider-fill)
+	);
+}
+[dir='rtl'] .hb-slider::-moz-range-track {
+	background: linear-gradient(
+		to left,
+		var(--slider-on) var(--slider-fill),
+		var(--slider-off) var(--slider-fill)
+	);
+}
+
+/* ---------- Thumb ----------
+   6px wide: a 2px blue line in the middle, and 2px of page colour on each
+   side that "cuts" the track — just like the gap in Figma. */
+
+.hb-slider::-webkit-slider-thumb {
+	appearance: none;
+	width: 6px;
+	height: 16px;
+	margin-top: -4px; /* centre the 16px thumb on the 8px track */
+	border: 0;
+	border-radius: 0;
+	background:
+		linear-gradient(var(--slider-on), var(--slider-on)) center / 2px 100% no-repeat,
+		var(--slider-gap, var(--uncolorful-grey-background));
+}
+.hb-slider::-moz-range-thumb {
+	width: 6px;
+	height: 16px;
+	border: 0;
+	border-radius: 0;
+	background:
+		linear-gradient(var(--slider-on), var(--slider-on)) center / 2px 100% no-repeat,
+		var(--slider-gap, var(--uncolorful-grey-background));
+}
+
+/* ---------- Disabled ---------- */
+
+.hb-slider:disabled {
+	--slider-on: var(--uncolorful-grey-disabled);
+	--slider-off: var(--uncolorful-grey-border);
+	cursor: not-allowed;
+}

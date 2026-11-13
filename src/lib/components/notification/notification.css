@@ -1,0 +1,51 @@
+/* ==========================================================================
+   NOTIFICATION — see Notification.svelte for how to use it.
+   Figma: habibi-library → page "notification"
+   ========================================================================== */
+
+.hb-notification {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	min-height: 48px;
+	padding: 6px 12px;
+	border-radius: var(--radius-l);
+	background: var(--notification-fill);
+	box-shadow: var(--shadow-default-l);
+	color: var(--uncolorful-grey-primary);
+	font: var(--text-body-b);
+}
+
+/* The icon at the start carries the colour of the type. */
+.hb-notification > .hb-icon {
+	color: var(--notification-icon);
+}
+
+/* The text takes all the free room and pushes the × to the end. */
+.hb-notification__text {
+	flex: 1;
+	min-width: 0;
+}
+
+/* ---------- Types ---------- */
+
+.hb-notification--success {
+	--notification-fill: var(--uncreative-green-90);
+	--notification-icon: var(--uncreative-green-50);
+}
+.hb-notification--info {
+	--notification-fill: var(--boring-blue-90);
+	--notification-icon: var(--boring-blue-50);
+}
+.hb-notification--warning {
+	--notification-fill: var(--shitpile-orange-90);
+	--notification-icon: var(--shitpile-orange-50);
+}
+.hb-notification--error {
+	--notification-fill: var(--traffic-light-red-90);
+	--notification-icon: var(--traffic-light-red-50);
+}
+.hb-notification--neutral {
+	--notification-fill: var(--uncolorful-grey-disabled);
+	--notification-icon: var(--uncolorful-grey-primary);
+}

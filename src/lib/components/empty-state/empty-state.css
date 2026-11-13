@@ -1,0 +1,53 @@
+/* ==========================================================================
+   EMPTY STATE — see EmptyState.svelte for how to use it.
+   Figma: habibi-library → page "Empty"
+   ========================================================================== */
+
+.hb-empty {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 16px;
+	padding: 24px;
+	text-align: center;
+}
+
+/* The picture: a 128px rounded square. Shows an icon unless you give your own image. */
+.hb-empty__picture {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 128px;
+	height: 128px;
+	border-radius: var(--radius-l);
+	background: var(--uncolorful-grey-border);
+	color: var(--uncolorful-grey-tertiary);
+	overflow: hidden;
+}
+.hb-empty__picture img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.hb-empty__text {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	max-width: 312px;
+}
+.hb-empty__title {
+	color: var(--uncolorful-grey-secondary);
+	font: var(--text-body-b-bold);
+}
+.hb-empty__description {
+	color: var(--uncolorful-grey-primary);
+	font: var(--text-body-c);
+}
+
+/* The row of buttons under the text. */
+.hb-empty__actions {
+	display: flex;
+	gap: 4px;
+}

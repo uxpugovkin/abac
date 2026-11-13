@@ -1,0 +1,46 @@
+/* ==========================================================================
+   TABS — see Tabs.svelte for how to use it.
+   Figma: habibi-library → page "tabs"
+   ========================================================================== */
+
+.hb-tabs {
+	display: flex;
+	gap: 12px;
+}
+
+.hb-tab {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	height: 24px;
+	padding: 0 0 4px;
+	border: 0;
+	/* Every tab has a 2px line under it. It is see-through unless the tab is active. */
+	border-bottom: 2px solid transparent;
+	background: transparent;
+	color: var(--uncolorful-grey-primary);
+	font: var(--text-body-c);
+	white-space: nowrap;
+	cursor: pointer;
+}
+.hb-tab:hover {
+	color: var(--boring-blue-70);
+}
+.hb-tab:active {
+	color: var(--boring-blue-40);
+}
+
+/* The tab you are on: blue, bolder, underlined. */
+.hb-tab--active {
+	border-bottom-color: currentColor;
+	color: var(--boring-blue-50);
+	font: var(--text-body-c-bold);
+}
+.hb-tab--active:hover {
+	color: var(--boring-blue-60);
+}
+
+.hb-tab:disabled {
+	color: var(--uncolorful-grey-disabled);
+	cursor: not-allowed;
+}

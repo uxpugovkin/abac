@@ -1,0 +1,55 @@
+/* ==========================================================================
+   CHECK ROW — the shared look of Checkbox and Radio.
+   Figma: habibi-library → pages "checkbox" and "radio-button"
+
+   A row = [icon] [title + optional subtitle]. The whole row is clickable.
+   The real <input> is hidden; the icon shows whether it is on or off.
+   ========================================================================== */
+
+.hb-check {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 4px;
+	border-radius: var(--radius-m);
+	color: var(--uncolorful-grey-primary);
+	cursor: pointer;
+}
+.hb-check:hover {
+	background: var(--uncolorful-grey-border);
+}
+.hb-check:active {
+	background: var(--uncolorful-grey-disabled);
+}
+
+/* The real input: still there for keyboard and screen readers, just not visible. */
+.hb-check__input {
+	position: absolute;
+	opacity: 0;
+	pointer-events: none;
+}
+/* Keyboard focus is shown on the icon. */
+.hb-check__input:focus-visible + .hb-icon {
+	outline: 2px solid var(--boring-blue-50);
+	border-radius: var(--radius-m);
+}
+
+.hb-check__text {
+	display: flex;
+	flex-direction: column;
+	font: var(--text-body-c);
+}
+.hb-check__subtitle {
+	font: var(--text-body-e);
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+/* Disabled: pale and not clickable. */
+.hb-check--disabled {
+	color: var(--uncolorful-grey-tertiary);
+	pointer-events: none;
+}
+.hb-check--disabled .hb-icon {
+	color: var(--uncolorful-grey-disabled);
+}

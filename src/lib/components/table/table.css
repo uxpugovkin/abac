@@ -1,0 +1,94 @@
+/* ==========================================================================
+   TABLE — see Table.svelte for how to use it.
+   Figma: habibi-library → page "table" (cell, column-title, cell-status, …)
+   ========================================================================== */
+
+.hb-table {
+	width: 100%;
+	border-collapse: collapse;
+	/* Columns keep the widths you give them; long text is cut with "…". */
+	table-layout: fixed;
+	text-align: start;
+}
+
+/* ---------- Header cells (Figma "column-title") ---------- */
+
+.hb-table th {
+	height: 36px;
+	padding: 8px 12px;
+	border-bottom: 1px solid var(--uncolorful-grey-border);
+	color: var(--uncolorful-grey-secondary);
+	font: var(--text-body-d-bold);
+	text-align: start;
+}
+
+/* A header you can click to sort is a button that fills the cell. */
+.hb-table__sort {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	max-width: 100%;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	cursor: pointer;
+}
+/* The little arrow that shows which column is sorted. */
+.hb-table__sort .hb-icon {
+	color: var(--boring-blue-50);
+}
+
+/* ---------- Body cells (Figma "cell") ---------- */
+
+.hb-table td {
+	height: 36px;
+	padding: 8px 12px;
+	color: var(--uncolorful-grey-primary);
+	font: var(--text-body-d);
+}
+
+/* Long text is cut with "…" instead of wrapping (Figma "truncate = True"). */
+.hb-table th,
+.hb-table td,
+.hb-table__sort span {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* ---------- Rows ---------- */
+
+/* Rows react to the mouse only when the table is clickable. */
+.hb-table--clickable tbody tr {
+	cursor: pointer;
+}
+.hb-table--clickable tbody tr:hover {
+	background: var(--uncolorful-grey-border);
+}
+.hb-table tbody tr.hb-table__row--selected {
+	background: var(--boring-blue-90);
+}
+
+/* ---------- Ready-made cell contents ----------
+   Use these classes inside your own cells. */
+
+/* Avatar + name + caption (Figma "cell-avatar"). */
+.hb-table__person {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+.hb-table__person-text {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	min-width: 0;
+}
+.hb-table__caption {
+	color: var(--uncolorful-grey-secondary);
+	font: var(--text-body-e);
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}

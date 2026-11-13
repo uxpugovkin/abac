@@ -1,0 +1,130 @@
+/* ==========================================================================
+   CHIP — the shared look of Chip, Segmented and FilterChip.
+   Figma: habibi-library → page "chips" (scope, segment, filter-tag)
+
+   All three are small 28px pills with an optional icon and a text.
+   ========================================================================== */
+
+/* ---------- Base pill ---------- */
+
+.hb-chip {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: 28px;
+	padding: 0 6px;
+	border: 0;
+	border-radius: var(--radius-m);
+	background: transparent;
+	color: var(--uncolorful-grey-primary);
+	font: var(--text-body-c);
+	white-space: nowrap;
+	cursor: pointer;
+}
+.hb-chip__label {
+	padding: 0 4px;
+}
+/* Icon and text sit 2px apart (the label's 4px padding minus these 2px). */
+.hb-chip .hb-icon + .hb-chip__label {
+	margin-inline-start: -2px;
+}
+
+.hb-chip:disabled {
+	color: var(--uncolorful-grey-tertiary);
+	cursor: not-allowed;
+}
+
+/* ---------- Chip (Figma "scope"): a toggle, blue when on ---------- */
+
+.hb-chip--scope:hover {
+	background: var(--uncolorful-grey-border);
+}
+.hb-chip--scope:active {
+	background: var(--uncolorful-grey-disabled);
+}
+.hb-chip--scope.hb-chip--active {
+	background: var(--boring-blue-90);
+	color: var(--boring-blue-50);
+}
+.hb-chip--scope.hb-chip--active:hover {
+	background: var(--boring-blue-80);
+}
+.hb-chip--scope.hb-chip--active:active {
+	background: var(--boring-blue-70);
+	color: var(--boring-blue-40);
+}
+.hb-chip--scope:disabled {
+	background: transparent;
+}
+.hb-chip--scope.hb-chip--active:disabled {
+	background: var(--uncolorful-grey-disabled);
+	color: var(--uncolorful-grey-tertiary);
+}
+
+/* ---------- Segmented (Figma "segment-group"): pills in a grey tray ---------- */
+
+.hb-segmented {
+	display: inline-flex;
+	border-radius: var(--radius-m);
+	background: var(--uncolorful-grey-border);
+}
+/* The chosen segment is a white pill that floats above the tray. */
+.hb-chip--segment.hb-chip--active {
+	background: var(--uncolorful-grey-surface);
+	box-shadow: var(--shadow-default-s);
+}
+.hb-chip--segment.hb-chip--active:disabled {
+	background: var(--uncolorful-grey-disabled);
+	box-shadow: none;
+}
+
+/* ---------- FilterChip (Figma "filter-tag") ----------
+   The pill is a <span> holding two real buttons: the main one, and the ×. */
+
+/* Nothing chosen: white pill with a small arrow. */
+.hb-chip--filter {
+	gap: 2px;
+	padding-inline: 12px 6px;
+	background: var(--uncolorful-grey-surface);
+	box-shadow: var(--shadow-default-s);
+}
+/* The two buttons inside have no look of their own. */
+.hb-chip--filter button {
+	display: inline-flex;
+	align-items: center;
+	gap: 2px;
+	height: 100%;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	cursor: inherit;
+}
+
+/* Something chosen: blue pill showing "Name Value ×". */
+.hb-chip--filter.hb-chip--active {
+	background: var(--boring-blue-50);
+	color: var(--boring-blue-90);
+}
+.hb-chip--filter.hb-chip--active:hover {
+	background: var(--boring-blue-60);
+}
+.hb-chip--filter.hb-chip--active:active {
+	background: var(--boring-blue-40);
+}
+.hb-chip__filter-name {
+	color: var(--boring-blue-80);
+}
+.hb-chip__filter-value {
+	padding-inline-start: 4px;
+}
+
+.hb-chip--filter.hb-chip--disabled {
+	background: var(--uncolorful-grey-disabled);
+	color: var(--uncolorful-grey-tertiary);
+	cursor: not-allowed;
+}
+.hb-chip--disabled .hb-chip__filter-name {
+	color: inherit;
+}

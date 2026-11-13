@@ -1,0 +1,52 @@
+/* ==========================================================================
+   AVATAR — see Avatar.svelte for how to use it.
+   Figma: habibi-library → page "avatar" (avatar + avatar-stack)
+   ========================================================================== */
+
+.hb-avatar {
+	flex: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px; /* size M */
+	height: 40px;
+	border-radius: var(--radius-full);
+	overflow: hidden;
+	/* The grey background shown when there is no photo. Same in every theme, as in Figma. */
+	background: linear-gradient(#d9dbe0, #b8bdc4);
+	color: #12100e;
+}
+.hb-avatar--s {
+	width: 32px;
+	height: 32px;
+}
+.hb-avatar--xs {
+	width: 24px;
+	height: 24px;
+}
+
+.hb-avatar img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover; /* fill the circle, crop what does not fit */
+}
+
+/* ---------- Avatar stack: avatars overlapping in a row ----------
+   Wrap avatars in <div class="hb-avatar-stack">. */
+
+.hb-avatar-stack {
+	display: inline-flex;
+}
+.hb-avatar-stack .hb-avatar {
+	/* A ring in the page colour separates each avatar from the next one. */
+	box-shadow: 0 0 0 2px var(--uncolorful-grey-background);
+}
+.hb-avatar-stack .hb-avatar + .hb-avatar {
+	margin-inline-start: -10px;
+}
+.hb-avatar-stack .hb-avatar--s + .hb-avatar--s {
+	margin-inline-start: -8px;
+}
+.hb-avatar-stack .hb-avatar--xs + .hb-avatar--xs {
+	margin-inline-start: -6px;
+}

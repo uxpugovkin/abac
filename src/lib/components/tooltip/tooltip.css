@@ -1,0 +1,77 @@
+/* ==========================================================================
+   TOOLTIP — see Tooltip.svelte for how to use it.
+   Figma: habibi-library → page "tooltip"
+
+   Pure CSS: the bubble is always in the page, just hidden. It appears when
+   the mouse is over the wrapped thing, or when it has keyboard focus.
+   ========================================================================== */
+
+/* The wrapper around the thing that has a tooltip. */
+.hb-tooltip {
+	position: relative;
+	display: inline-flex;
+}
+
+/* ---------- The bubble ---------- */
+
+.hb-tooltip__bubble {
+	position: absolute;
+	z-index: 10;
+	/* Centred above the wrapped thing, 9px away (5px arrow + 4px air). */
+	bottom: calc(100% + 9px);
+	left: 50%;
+	transform: translateX(-50%);
+
+	display: flex;
+	flex-direction: column;
+	width: max-content;
+	max-width: 240px;
+	padding: 4px 8px;
+	border-radius: var(--radius-s);
+	background: var(--uncolorful-grey-primary);
+	color: var(--uncolorful-grey-surface);
+	font: var(--text-body-d);
+	text-align: start;
+
+	/* Hidden until hover / focus. */
+	visibility: hidden;
+	opacity: 0;
+	transition: opacity 0.1s;
+	pointer-events: none;
+}
+.hb-tooltip:hover .hb-tooltip__bubble,
+.hb-tooltip:focus-within .hb-tooltip__bubble {
+	visibility: visible;
+	opacity: 1;
+}
+
+.hb-tooltip__title {
+	font: var(--text-body-d-bold);
+}
+
+/* ---------- The little arrow (a 10 × 5 triangle) ---------- */
+
+.hb-tooltip__bubble::after {
+	content: '';
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	margin-left: -5px;
+	border: 5px solid transparent;
+	border-bottom: 0;
+	border-top-color: var(--uncolorful-grey-primary);
+}
+
+/* ---------- Placement: below ---------- */
+
+.hb-tooltip--bottom .hb-tooltip__bubble {
+	top: calc(100% + 9px);
+	bottom: auto;
+}
+.hb-tooltip--bottom .hb-tooltip__bubble::after {
+	top: auto;
+	bottom: 100%;
+	border: 5px solid transparent;
+	border-top: 0;
+	border-bottom-color: var(--uncolorful-grey-primary);
+}

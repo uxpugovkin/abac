@@ -1,0 +1,31 @@
+/* ==========================================================================
+   SKELETON — see Skeleton.svelte for how to use it.
+   Figma: habibi-library → page "skeleton"
+
+   Figma has two frames: state 1 (lighter) and state 2 (darker).
+   The bar slowly pulses between the two.
+   ========================================================================== */
+
+.hb-skeleton {
+	display: block;
+	width: 100%;
+	max-width: 100%;
+	height: 10px;
+	margin: 5px 0; /* a 10px bar in a 20px line, so it lines up with body text */
+	border-radius: var(--radius-xs);
+	background: var(--uncolorful-grey-border);
+	animation: hb-skeleton-pulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes hb-skeleton-pulse {
+	to {
+		background: var(--uncolorful-grey-disabled);
+	}
+}
+
+/* People who asked their device for less motion get a still bar. */
+@media (prefers-reduced-motion: reduce) {
+	.hb-skeleton {
+		animation: none;
+	}
+}

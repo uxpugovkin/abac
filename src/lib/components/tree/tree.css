@@ -1,0 +1,61 @@
+/* ==========================================================================
+   TREE — see Tree.svelte for how to use it.
+   Figma: habibi-library → page "Tree" (tree + tree-row)
+   ========================================================================== */
+
+.hb-tree,
+.hb-tree ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+/* Every level deeper is pushed in by 16px, with a thin guide line on its
+   left that runs down from the parent's arrow (centred under it). */
+.hb-tree ul {
+	margin-inline-start: 7.5px;
+	padding-inline-start: 8.5px;
+	border-inline-start: 1px solid var(--uncolorful-grey-border);
+}
+
+/* ---------- One row ---------- */
+
+.hb-tree__row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	width: 100%;
+	height: 24px;
+	padding: 0;
+	border: 0;
+	border-radius: var(--radius-m);
+	background: transparent;
+	color: var(--uncolorful-grey-primary);
+	font: var(--text-body-c);
+	text-align: start;
+	cursor: pointer;
+}
+.hb-tree__row:hover {
+	background: var(--uncolorful-grey-border);
+}
+.hb-tree__row--selected {
+	color: var(--boring-blue-50);
+	font: var(--text-body-c-bold);
+}
+
+/* In right-to-left pages the "closed" arrow points the other way. */
+[dir='rtl'] .hb-tree__arrow-closed {
+	transform: scaleX(-1);
+}
+
+/* Rows without children have no arrow; this empty space keeps the text aligned. */
+.hb-tree__spacer {
+	flex: none;
+	width: 16px;
+}
+
+.hb-tree__label {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}

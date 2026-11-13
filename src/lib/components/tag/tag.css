@@ -1,0 +1,80 @@
+/* ==========================================================================
+   TAG — see Tag.svelte for how to use it.
+   Figma: habibi-library → page "tag"
+
+   Each colour only fills in three variables; the sizes decide the shape.
+   ========================================================================== */
+
+.hb-tag {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	height: 20px; /* size M */
+	padding: 0 6px;
+	border-radius: var(--radius-s);
+	background: var(--tag-fill);
+	box-shadow: inset 0 0 0 1px var(--tag-line);
+	color: var(--tag-text);
+	font: var(--text-body-c);
+	white-space: nowrap;
+}
+
+/* ---------- Sizes ---------- */
+
+/* S: smaller, ALL CAPS. */
+.hb-tag--s {
+	gap: 2px;
+	height: 18px;
+	font: var(--text-body-e);
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+/* XS: no box at all — just a coloured marker and text. */
+.hb-tag--xs {
+	height: 18px;
+	padding: 0;
+	background: transparent;
+	box-shadow: none;
+	font: var(--text-body-d);
+}
+.hb-tag--xs .hb-marker {
+	margin: 0;
+	background: currentColor;
+}
+
+/* ---------- Colours ---------- */
+
+.hb-tag--error {
+	--tag-fill: var(--traffic-light-red-90);
+	--tag-line: var(--traffic-light-red-80);
+	--tag-text: var(--traffic-light-red-50);
+}
+.hb-tag--warning {
+	--tag-fill: var(--shitpile-orange-90);
+	--tag-line: var(--shitpile-orange-80);
+	--tag-text: var(--shitpile-orange-50);
+}
+.hb-tag--success {
+	--tag-fill: var(--uncreative-green-90);
+	--tag-line: var(--uncreative-green-80);
+	--tag-text: var(--uncreative-green-50);
+}
+.hb-tag--progress {
+	--tag-fill: var(--boring-blue-90);
+	--tag-line: var(--boring-blue-80);
+	--tag-text: var(--boring-blue-50);
+}
+.hb-tag--neutral {
+	--tag-fill: var(--uncolorful-grey-background);
+	--tag-line: var(--uncolorful-grey-disabled);
+	--tag-text: var(--uncolorful-grey-primary);
+}
+
+/* ---------- Disabled (same grey look for every colour) ---------- */
+
+.hb-tag--disabled {
+	--tag-fill: var(--uncolorful-grey-background);
+	--tag-line: var(--uncolorful-grey-border);
+	--tag-text: var(--uncolorful-grey-disabled);
+}
