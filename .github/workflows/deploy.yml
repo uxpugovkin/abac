@@ -1,5 +1,5 @@
 # Publishes the site to GitHub Pages every time something is pushed to "main".
-# The site then lives at  https://uxpugovkin.github.io/abac/
+# The site then lives at  https://uxpugovkin.github.io/habibi-ui/
 #
 # One-time setup on GitHub:  repo → Settings → Pages → Source: "GitHub Actions".
 
@@ -32,7 +32,7 @@ jobs:
       - run: npm ci
       - run: npm run build
         env:
-          # The site is served from /abac (the repo name), see vite.config.js.
+          # The site is served from /<repo name>, e.g. /habibi-ui, see vite.config.js.
           BASE_PATH: /${{ github.event.repository.name }}
       - uses: actions/upload-pages-artifact@v3
         with:

@@ -105,7 +105,8 @@ Open any component file to see all of its options — they are listed in the com
 
 ## Add a prototype
 
-Make a folder in `src/routes/`, for example `src/routes/abac/+page.svelte`. It is live at `/abac`.
+Make a folder in `src/routes/`, for example `src/routes/abac/+page.svelte` for the ABAC prototype.
+It is live at `/abac` on the site.
 Import components from `#lib`. If the prototype needs a component that does not exist yet,
 add it to the design system first, then use it.
 
