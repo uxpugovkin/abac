@@ -1,75 +1,27 @@
 /* ==========================================================================
    TREE — see Tree.svelte for how to use it.
-   Figma: habibi-library → page "Tree" (tree + tree-row)
+   Figma: habibi-library → page "Tree" (tree-row + tree)
+
+   The layers are the same as in Figma:
+     row     24px tall, 4px of room at both sides, rounded
+     line    16 × 24px pieces before the arrow, one per level
+     arrow   16px, only on rows with children
+     text    8px of room at both sides
    ========================================================================== */
 
-.hb-tree,
-.hb-tree ul {
+.hb-tree {
 	margin: 0;
 	padding: 0;
 	list-style: none;
 }
 
-/* ---------- Levels and their connecting lines (Figma "tree": types A, B, C) ----------
-   Every level deeper is pushed in by 16px. In that 16px sits a thin line that
-   comes down from the middle of the parent's arrow and turns to the row:
-
-       ⌃ parent
-       ├ ⌃ child            ← a line down + a short branch   (Figma type B)
-       │ └ grandchild       ← the line of "child" keeps going (Figma type A)
-       └ last child         ← a rounded corner, then it stops (Figma type C)
-
-   Both pieces are drawn on the <li>, which holds the row AND everything
-   under it. That is why the line keeps going past open children by itself. */
-.hb-tree ul {
-	padding-inline-start: 16px;
-}
-.hb-tree ul > li {
-	position: relative;
-}
-/* The line down: as tall as the whole <li>, under the middle of the parent's arrow. */
-.hb-tree ul > li::before {
-	content: '';
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	inset-inline-start: -4px;
-	border-inline-start: 1px solid var(--uncolorful-grey-border);
-	pointer-events: none;
-}
-/* The short branch from the line to the edge of the row, at half the row's height. */
-.hb-tree ul > li::after {
-	content: '';
-	position: absolute;
-	top: 12px;
-	inset-inline-start: -4px;
-	width: 4px;
-	border-top: 1px solid var(--uncolorful-grey-border);
-	pointer-events: none;
-}
-/* The last row of a level: the line stops at the row and bends into it. */
-.hb-tree ul > li:last-child::before {
-	bottom: auto;
-	width: 4px;
-	height: 12px;
-	border-bottom: 1px solid var(--uncolorful-grey-border);
-	border-end-start-radius: 3px;
-}
-.hb-tree ul > li:last-child::after {
-	content: none;
-}
-
-/* ---------- One row ---------- */
+/* ---------- One row (Figma "tree-row") ---------- */
 
 .hb-tree__row {
 	display: flex;
 	align-items: center;
-	gap: 8px;
 	width: 100%;
 	height: 24px;
-	/* 4px of room at both sides. You only see it on hover: the grey highlight is
-	   4px wider than the content. Rows without children have no arrow, and no empty
-	   space instead of it: their text starts right after these 4px. */
 	padding: 0 4px;
 	border: 0;
 	border-radius: var(--radius-m);
@@ -86,9 +38,59 @@
 	color: var(--boring-blue-50);
 	font: var(--text-body-c-bold);
 }
+.hb-tree__row .hb-icon {
+	flex: none;
+}
 
-.hb-tree__label {
+.hb-tree__text {
+	flex: 1;
+	min-width: 0;
+	padding: 0 8px;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+}
+
+/* ---------- The line pieces (Figma "tree", types A, B, C, 0) ----------
+   Each piece is 16 × 24px. Its line runs down the middle (8px from the side),
+   which is right under the middle of the parent's arrow.
+
+       ⌃ parent
+       ├ ⌃ child             branch
+       │ └ grandchild        line, then corner
+       └ last child          corner                                         */
+
+.hb-tree__line {
+	flex: none;
+	position: relative;
+	align-self: stretch;
+	width: 16px;
+}
+/* The line down (and, for a corner, the turn). */
+.hb-tree__line::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	inset-inline-start: 8px;
+	border-inline-start: 1px solid var(--uncolorful-grey-border);
+}
+/* The short branch to the row, at half the row's height. */
+.hb-tree__line--branch::after {
+	content: '';
+	position: absolute;
+	top: 12px;
+	inset-inline: 8px 0;
+	border-top: 1px solid var(--uncolorful-grey-border);
+}
+/* Corner: the line stops at half the row's height and bends into the row. */
+.hb-tree__line--corner::before {
+	bottom: 12px;
+	inset-inline-end: 0;
+	border-bottom: 1px solid var(--uncolorful-grey-border);
+	border-end-start-radius: 3px;
+}
+/* Empty piece: it only keeps the place. */
+.hb-tree__line--none::before {
+	content: none;
 }

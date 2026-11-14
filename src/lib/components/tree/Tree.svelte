@@ -31,7 +31,12 @@
 
 	Clicking a row selects it; if it has children, it also opens or closes.
 	An open row shows an arrow up, a closed one an arrow down.
-	Thin lines connect every row to its parent (drawn in tree.css).
+	Rows without children have no arrow.
+
+	How a row is built — the same layers as the Figma component "tree-row":
+		[ line ][ line ]…[ arrow ][ text ]
+		  └ one 16px piece per level, drawn in tree.css. Together the pieces of
+		    all rows form the thin lines that connect every row to its parent.
 -->
 <script>
 	import Icon from '../icon/Icon.svelte';
@@ -53,6 +58,33 @@
 		return result;
 	}
 
+	/* ---------- From a tree to a flat list of rows ----------
+	   The screen shows a plain list: one row per visible node. Each row knows
+	   which line pieces to draw before its arrow, one per level (Figma names in brackets):
+	     'branch'  line down + a short branch to this row       (type B)  ├
+	     'corner'  rounded corner into this row, the line ends  (type C)  └
+	     'line'    a line passing by, to a later row above us   (type A)  │
+	     'none'    empty                                         (type 0)
+	   The last piece belongs to the row itself; the ones before it to its parents. */
+	let rows = $derived(listRows(nodes, [], true));
+
+	function listRows(list, passing, isTop, result = []) {
+		list.forEach((node, index) => {
+			const isLast = index === list.length - 1;
+
+			// Top-level rows have nothing above them to connect to.
+			const lines = isTop ? [] : [...passing, isLast ? 'corner' : 'branch'];
+			result.push({ node, lines });
+
+			// Rows under this one: where we ended they see nothing, otherwise our line passes by.
+			if (node.children && open[node.id]) {
+				const below = isTop ? [] : [...passing, isLast ? 'none' : 'line'];
+				listRows(node.children, below, false, result);
+			}
+		});
+		return result;
+	}
+
 	function click(node) {
 		if (node.children) open[node.id] = !open[node.id];
 		selected = node.id;
@@ -60,9 +92,8 @@
 	}
 </script>
 
-<!-- One level of the tree. It calls itself again for the children of each open node. -->
-{#snippet level(list)}
-	{#each list as node}
+<ul class="hb-tree {extraClass}">
+	{#each rows as { node, lines } (node.id)}
 		<li>
 			<button
 				class="hb-tree__row"
@@ -71,20 +102,15 @@
 				aria-expanded={node.children ? !!open[node.id] : undefined}
 				onclick={() => click(node)}
 			>
-				<!-- Only rows with children have an arrow. Other rows start with their text right away. -->
+				{#each lines as line}<span class="hb-tree__line hb-tree__line--{line}"></span>{/each}
+
+				<!-- Only rows with children have an arrow. -->
 				{#if node.children}
 					<Icon name={open[node.id] ? 'chevron-up' : 'chevron-down'} size={16} />
 				{/if}
-				<span class="hb-tree__label">{node.label}</span>
-			</button>
 
-			{#if node.children && open[node.id]}
-				<ul>{@render level(node.children)}</ul>
-			{/if}
+				<span class="hb-tree__text">{node.label}</span>
+			</button>
 		</li>
 	{/each}
-{/snippet}
-
-<ul class="hb-tree {extraClass}">
-	{@render level(nodes)}
 </ul>
