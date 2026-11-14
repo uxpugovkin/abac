@@ -18,10 +18,11 @@
 		title             heading above the toolbar, e.g. "Employees"
 
 		Toolbar
-		filters           starting filter values, e.g. { Status: 'Active' }
-		shown             which filter tags are in the toolbar.  Default the first four
+		filters           ids of the filters that start switched on, e.g. ['department']
+		shown             which filter tags are in the toolbar, e.g. ['status', 'office'].
+		                  Default the first four
 		filterMenu        true = the list of all filters starts open
-		searchPlaceholder hint in the search box.  Default "Search"
+		searchByName      true = the search box says "Search by name" instead of "Search"
 		searchPinned      true = the search box is always open and looks focused
 		toolbarEnd        snippet for the buttons at the end of the toolbar
 
@@ -51,7 +52,9 @@
 -->
 <script>
 	import { Table, Button, Menu, MenuItem, EmptyState } from '#lib';
-	import { employees, formatScore, filterEmployees, sortEmployees } from '../employees.js';
+	import { getEmployees, formatScore, filterEmployees, sortEmployees } from '../employees.js';
+	import { content } from '../content.js';
+	import { pick, examples, directionOf } from '../examples.svelte.js';
 	import { columnsWith, columnWidths } from './columns.js';
 	import ExampleToolbar from './ExampleToolbar.svelte';
 	import EmployeeCell from './EmployeeCell.svelte';
@@ -59,10 +62,10 @@
 
 	let {
 		title = '',
-		filters = {},
+		filters = [],
 		shown = undefined,
 		filterMenu = false,
-		searchPlaceholder = 'Search',
+		searchByName = false,
 		searchPinned = false,
 		toolbarEnd,
 		hide = [],
@@ -84,6 +87,14 @@
 
 	const PAGE_SIZE = 5;
 
+	const t = pick(content.tables); // the example texts, in the current language
+	const tableTexts = pick(content.tableTexts); // the words the Table writes itself
+	const notFound = pick(content.emptyStates['not-found']);
+	const employees = getEmployees();
+
+	// Arrows point the way the text runs: in Arabic "next page" points to the left.
+	const rightToLeft = directionOf(examples.lang) === 'rtl';
+
 	/* ---------- Columns ---------- */
 
 	let columns = $derived(
@@ -92,9 +103,7 @@
 			.map((column) => {
 				if (column.key === 'fullName') {
 					// The "wrap and cut" example: the header and the names of the first column wrap.
-					return longTexts
-						? { ...column, label: 'Very long column name that needs two lines', wrap: true }
-						: { ...column, pinned };
+					return longTexts ? { ...column, label: t.longColumn, wrap: true } : { ...column, pinned };
 				}
 				// …and so does Department: it is cut with "…" after three lines.
 				if (column.key === 'department' && longTexts) return { ...column, wrap: true };
@@ -113,12 +122,7 @@
 	let people = $derived(
 		(limit ? employees.slice(0, limit) : employees).map((person) =>
 			longTexts && person.id === 1
-				? {
-						...person,
-						fullName: 'Alexandria Montgomery-Fitzgerald Villanueva',
-						department:
-							'Platform Reliability Engineering, Operations, Developer Experience and Internal Tooling'
-					}
+				? { ...person, fullName: t.longName, department: t.longDepartment }
 				: person
 		)
 	);
@@ -127,7 +131,7 @@
 	   (Only the starting values come from the props, on purpose — hence the ignores.) */
 	let query = $state('');
 	// svelte-ignore state_referenced_locally
-	let values = $state({ ...filters }); // filter name → chosen value
+	let filtersOn = $state([...filters]); // ids of the filters that are on
 	let sortKey = $state('score');
 	let sortDirection = $state('desc');
 	let page = $state(0);
@@ -138,7 +142,7 @@
 	);
 
 	let matching = $derived(
-		sortEmployees(filterEmployees(people, query, values), sortKey, sortDirection)
+		sortEmployees(filterEmployees(people, query, filtersOn), sortKey, sortDirection)
 	);
 	let rows = $derived(paged ? matching.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE) : matching);
 	let lastPage = $derived(Math.max(0, Math.ceil(matching.length / PAGE_SIZE) - 1));
@@ -157,7 +161,7 @@
 
 	function reset() {
 		query = '';
-		values = {};
+		filtersOn = [];
 	}
 </script>
 
@@ -167,10 +171,10 @@
 	<ExampleToolbar
 		{title}
 		bind:query
-		bind:values
+		bind:filtersOn
 		{shown}
 		{filterMenu}
-		{searchPlaceholder}
+		{searchByName}
 		{searchPinned}
 		buttons={toolbarEnd}
 	/>
@@ -195,6 +199,7 @@
 		pageScroll={sticky}
 		summary={summary || paged ? summaryRow : undefined}
 		empty={nothingFound}
+		texts={tableTexts}
 	>
 		{#snippet cell(row, column)}<EmployeeCell {row} {column} />{/snippet}
 	</Table>
@@ -203,42 +208,44 @@
 <!-- The buttons of one row. -->
 {#snippet rowActions(row)}
 	{#each actions as icon}
-		<Button mode="ghost" {icon} label="{icon} {row.fullName}" />
+		<Button mode="ghost" {icon} label="{t.rowActions[icon]} {row.fullName}" />
 	{/each}
 {/snippet}
 
 <!-- The summary row. With pages, it also holds the pager. -->
 {#snippet summaryRow()}
 	<span
-		>{matching.length} employees{#if selectable}&nbsp;· {selection.length} selected{/if}</span
+		>{t.employees(matching.length)}{#if selectable}&nbsp;· {t.selected(selection.length)}{/if}</span
 	>
 	{#if paged}
 		<span class="pager">
-			Page {page + 1} of {lastPage + 1}
+			{t.pageOf(page + 1, lastPage + 1)}
 			<Button
 				mode="ghost"
-				icon="chevron-left"
-				label="Previous page"
+				icon={rightToLeft ? 'chevron-right' : 'chevron-left'}
+				label={t.previousPage}
 				disabled={page === 0}
 				onclick={() => page--}
 			/>
 			<Button
 				mode="ghost"
-				icon="chevron-right"
-				label="Next page"
+				icon={rightToLeft ? 'chevron-left' : 'chevron-right'}
+				label={t.nextPage}
 				disabled={page === lastPage}
 				onclick={() => page++}
 			/>
 		</span>
 	{:else}
-		<span>Total: {formatScore(total)}</span>
+		<span>{t.total} {formatScore(total)}</span>
 	{/if}
 {/snippet}
 
 <!-- Shown inside the table when the search and filters leave no rows. -->
 {#snippet nothingFound()}
-	<EmptyState type="not-found">
-		<Button appearance="accent" mode="primary" icon="close" onclick={reset}>Clear filters</Button>
+	<EmptyState type="not-found" title={notFound.title} description={notFound.description}>
+		<Button appearance="accent" mode="primary" icon="close" onclick={reset}
+			>{notFound.button}</Button
+		>
 	</EmptyState>
 {/snippet}
 
@@ -260,12 +267,12 @@
 		     so the example always shows it. It sits exactly where the real one opens. -->
 		{#if choiceShown}
 			<div class="choice">
-				<Menu label="Which rows to select">
+				<Menu label={tableTexts.whichRows}>
 					<MenuItem onclick={() => (selection = rows.map((person) => person.id))}
-						>Rows on this page</MenuItem
+						>{tableTexts.rowsOnPage}</MenuItem
 					>
 					<MenuItem onclick={() => (selection = matching.map((person) => person.id))}
-						>All rows in the table</MenuItem
+						>{tableTexts.allRows}</MenuItem
 					>
 				</Menu>
 			</div>

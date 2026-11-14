@@ -3,13 +3,15 @@
 	A top bar, a side menu, and the page content next to it.
 
 	The top bar has two switches for checking the design system:
-	  - Theme          changes the colours of the whole site
-	  - Right-to-left  flips ONLY the content area. The bar and the side menu stay
-	                   as they are, so the controls do not jump around.
+	  - Theme            changes the colours of the whole site
+	  - Arabic examples  switches only the EXAMPLES to Arabic, right to left.
+	                     The docs text, the bar and the side menu stay English
+	                     (see examples.svelte.js and content.js).
 
 	To add a page to the side menu, add a line to `menu` or `guides` below.
 -->
 <script>
+	import { examples } from './examples.svelte.js';
 	import { resolve } from '$app/paths';
 	import { Select, Switch, Button } from '#lib';
 
@@ -45,7 +47,12 @@
 	];
 
 	let theme = $state('light');
-	let rtl = $state(false);
+	let arabic = $state(false);
+
+	// The examples read this (see examples.svelte.js).
+	$effect(() => {
+		examples.lang = arabic ? 'ar' : 'en';
+	});
 
 	// The theme goes onto <html>, so the whole site follows (see tokens/colours.css).
 	$effect(() => {
@@ -57,7 +64,7 @@
 	<Button mode="ghost" icon="arrow-left" href={resolve('/')} label="Home" />
 	<strong class="hb-text-body-b-bold">Habibi UI</strong>
 	<span class="bar__space"></span>
-	<Switch bind:checked={rtl}>Right-to-left</Switch>
+	<Switch bind:checked={arabic}>Arabic examples (right-to-left)</Switch>
 	<div class="bar__theme"><Select options={themes} bind:value={theme} aria-label="Theme" /></div>
 </header>
 
@@ -78,8 +85,7 @@
 		{/each}
 	</nav>
 
-	<!-- `dir` on this element only: right-to-left flips the content, nothing else. -->
-	<main class="content" dir={rtl ? 'rtl' : 'ltr'}>
+	<main class="content">
 		{@render children()}
 	</main>
 </div>

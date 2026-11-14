@@ -3,38 +3,42 @@
 	The toolbar of the "Employees" example table: a <TableToolbar> filled with the
 	"all filters" button, the search, the filter tags and two buttons at the end.
 
-	It changes `query` and `values`; the example that uses it filters its rows with them.
+	It changes `query` and `filtersOn`; the example that uses it filters its rows with them.
+	All its words come from ../content.js.
 
 	Use:
-		<ExampleToolbar title="Employees" bind:query bind:values />
+		<ExampleToolbar title="Employees" bind:query bind:filtersOn />
 
 	Props:
-		title              heading above the toolbar (optional)
-		query              the search text.  Use bind:query
-		values             filter name → chosen value, e.g. { Status: 'Active' }.  Use bind:values
-		shown              which filter tags are in the toolbar.  Default the first four
-		filterMenu         true = the list behind the "all filters" button starts open
-		searchPlaceholder  hint in the search box.  Default "Search"
-		searchPinned       true = the search box is always open and looks focused, so the
-		                   example shows its placeholder (the two search examples)
-		buttons            snippet for the buttons at the end.  Default: Download and Settings
+		title          heading above the toolbar (optional)
+		query          the search text.  Use bind:query
+		filtersOn      the ids of the filters that are on, e.g. ['status'].  Use bind:filtersOn
+		shown          which filter tags are in the toolbar.  Default the first four
+		filterMenu     true = the list behind the "all filters" button starts open
+		searchByName   true = the search box says "Search by name" instead of "Search"
+		searchPinned   true = the search box is always open and looks focused, so the
+		               example shows its placeholder (the two search examples)
+		buttons        snippet for the buttons at the end.  Default: Download and Settings
 -->
 <script>
 	import { TableToolbar, Button, FilterChip, SearchChip, TextInput, Menu, Checkbox } from '#lib';
-	import { filterPresets } from '../employees.js';
+	import { filterIds } from '../employees.js';
+	import { content } from '../content.js';
+	import { pick } from '../examples.svelte.js';
 
 	let {
 		title = '',
 		query = $bindable(''),
-		values = $bindable({}),
-		shown = ['Status', 'Skills', 'Department', 'Office'],
+		filtersOn = $bindable([]),
+		shown = ['status', 'skills', 'department', 'office'],
 		filterMenu = false,
-		searchPlaceholder = 'Search',
+		searchByName = false,
 		searchPinned = false,
 		buttons
 	} = $props();
 
-	const allFilters = Object.keys(filterPresets);
+	const t = pick(content.tables); // the example texts, in the current language
+	const placeholder = searchByName ? t.searchByName : t.search;
 
 	// (Only the starting values come from the props, on purpose — hence the ignores.)
 	// svelte-ignore state_referenced_locally
@@ -42,20 +46,25 @@
 	// svelte-ignore state_referenced_locally
 	let menuOpen = $state(filterMenu); // the list behind the "all filters" button
 
-	let anyFilter = $derived(Object.values(values).some(Boolean));
-
 	function reset() {
 		query = '';
-		values = {};
+		filtersOn = [];
+	}
+
+	function switchOn(id) {
+		if (!filtersOn.includes(id)) filtersOn = [...filtersOn, id];
+	}
+	function switchOff(id) {
+		filtersOn = filtersOn.filter((other) => other !== id);
 	}
 
 	// Tick or untick a filter in the list: its tag appears in, or leaves, the toolbar.
-	function toggleChip(name) {
-		if (chips.includes(name)) {
-			chips = chips.filter((other) => other !== name);
-			values[name] = ''; // a filter that is not shown must not keep filtering
+	function toggleChip(id) {
+		if (chips.includes(id)) {
+			chips = chips.filter((other) => other !== id);
+			switchOff(id); // a filter that is not shown must not keep filtering
 		} else {
-			chips = allFilters.filter((other) => chips.includes(other) || other === name); // keep the usual order
+			chips = filterIds.filter((other) => chips.includes(other) || other === id); // keep the usual order
 		}
 	}
 </script>
@@ -68,7 +77,7 @@
 	<span class="tune">
 		<Button
 			icon="tune"
-			label="Filters"
+			label={t.filtersButton}
 			onclick={(event) => {
 				event.stopPropagation(); // do not let the window handler close what we just opened
 				menuOpen = !menuOpen;
@@ -77,10 +86,10 @@
 		{#if menuOpen}
 			<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
 			<div class="tune__menu" onclick={(event) => event.stopPropagation()}>
-				<Menu label="Filters to show">
-					{#each allFilters as name}
-						<Checkbox checked={chips.includes(name)} onchange={() => toggleChip(name)}
-							>{name}</Checkbox
+				<Menu label={t.filtersToShow}>
+					{#each filterIds as id}
+						<Checkbox checked={chips.includes(id)} onchange={() => toggleChip(id)}
+							>{t.filters[id].name}</Checkbox
 						>
 					{/each}
 				</Menu>
@@ -92,34 +101,30 @@
 		<!-- Guide-only trick: the open search box, drawn as if the cursor were in it.
 		     (A real SearchChip closes when you click elsewhere.) It does search. -->
 		<span class="hb-search-chip search-pinned">
-			<TextInput
-				icon="search"
-				placeholder={searchPlaceholder}
-				bind:value={query}
-				aria-label={searchPlaceholder}
-			/>
+			<TextInput icon="search" {placeholder} bind:value={query} aria-label={placeholder} />
 		</span>
 	{:else}
-		<SearchChip bind:value={query} placeholder={searchPlaceholder} />
+		<SearchChip bind:value={query} {placeholder} clearLabel={t.clearSearch} />
 	{/if}
 
-	<!-- Filter tags. In these examples a click simply sets a ready-made value. -->
-	{#each chips as name}
+	<!-- Filter tags. In these examples a click simply switches on a ready-made value. -->
+	{#each chips as id}
 		<FilterChip
-			{name}
-			value={values[name]}
-			onclick={() => (values[name] = filterPresets[name])}
-			onclear={() => (values[name] = '')}
+			name={t.filters[id].name}
+			value={filtersOn.includes(id) ? t.filters[id].value : ''}
+			onclick={() => switchOn(id)}
+			onclear={() => switchOff(id)}
+			clearLabel={t.clear}
 		/>
 	{/each}
-	{#if anyFilter}<Button mode="ghost" onclick={reset}>Reset</Button>{/if}
+	{#if filtersOn.length}<Button mode="ghost" onclick={reset}>{t.reset}</Button>{/if}
 
 	{#snippet end()}
 		{#if buttons}
 			{@render buttons()}
 		{:else}
-			<Button icon="download" label="Download" />
-			<Button icon="settings" label="Table settings" />
+			<Button icon="download" label={t.download} />
+			<Button icon="settings" label={t.tableSettings} />
 		{/if}
 	{/snippet}
 </TableToolbar>

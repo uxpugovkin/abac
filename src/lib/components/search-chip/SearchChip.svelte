@@ -16,6 +16,7 @@
 		value         the text that is being searched for. Use bind:value.
 		              It only changes when the search is applied or cleared — not on every key press
 		placeholder   grey text in the open box.  Default "Search"
+		clearLabel    what the × button is called, for screen readers.  Default "Clear search"
 		open          true = starts with the box open
 
 	The look lives in ../chip/chip.css and ../field/field.css.
@@ -29,6 +30,7 @@
 	let {
 		value = $bindable(''),
 		placeholder = 'Search',
+		clearLabel = 'Clear search',
 		open = false,
 		class: extraClass = ''
 	} = $props();
@@ -78,7 +80,7 @@
 			<Icon name="search" size={20} />
 			<span class="hb-chip__filter-value">{value}</span>
 		</button>
-		<button type="button" aria-label="Clear search" onclick={clear}>
+		<button type="button" aria-label={clearLabel} onclick={clear}>
 			<Icon name="close" size={20} />
 		</button>
 	</span>

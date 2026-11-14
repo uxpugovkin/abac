@@ -2,6 +2,10 @@
 <script>
 	import { Tag, Badge, Marker, Notification, Tooltip, Skeleton, Avatar, Button } from '#lib';
 	import Demo from '../Demo.svelte';
+	import { content } from '../content.js';
+	import { pick } from '../examples.svelte.js';
+
+	const t = pick(content.status); // the example texts, in the current language
 
 	const colours = ['error', 'warning', 'success', 'progress', 'neutral'];
 	const accents = [1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => `accent-${n}`);
@@ -11,14 +15,14 @@
 
 <Demo title="Tag" figma="tag" about="A small label for a status. 5 colours × 3 sizes." column>
 	<div class="row">
-		{#each colours as colour}<Tag {colour} icon="warning">{colour}</Tag>{/each}
-		<Tag colour="success" disabled>disabled</Tag>
+		{#each colours as colour}<Tag {colour} icon="warning">{t.colours[colour]}</Tag>{/each}
+		<Tag colour="success" disabled>{t.disabled}</Tag>
 	</div>
 	<div class="row">
-		{#each colours as colour}<Tag {colour} size="s">{colour}</Tag>{/each}
+		{#each colours as colour}<Tag {colour} size="s">{t.colours[colour]}</Tag>{/each}
 	</div>
 	<div class="row">
-		{#each colours as colour}<Tag {colour} size="xs">{colour}</Tag>{/each}
+		{#each colours as colour}<Tag {colour} size="xs">{t.colours[colour]}</Tag>{/each}
 	</div>
 </Demo>
 
@@ -37,21 +41,21 @@
 </Demo>
 
 <Demo title="Notification" figma="notification" about="Tells the person what just happened." column>
-	<Notification type="success">User was added</Notification>
-	<Notification type="info">Sync started — this can take a minute</Notification>
-	<Notification type="warning">3 attributes have no value</Notification>
+	<Notification type="success">{t.userAdded}</Notification>
+	<Notification type="info">{t.syncStarted}</Notification>
+	<Notification type="warning">{t.noValue}</Notification>
 	{#if showNotification}
 		<Notification type="error" onclose={() => (showNotification = false)}
-			>Could not save. Close me with the ×</Notification
+			>{t.couldNotSave}</Notification
 		>
 	{/if}
-	<Notification type="neutral">Nothing changed</Notification>
+	<Notification type="neutral">{t.nothingChanged}</Notification>
 </Demo>
 
 <Demo title="Tooltip" figma="tooltip" about="A hint on hover. Put the mouse over the buttons.">
-	<Tooltip text="Download as JSON"><Button icon="download" label="Download" /></Tooltip>
-	<Tooltip title="Last sync" text="12.08.2026, 14:30" placement="bottom"
-		><Tag colour="neutral">Last sync 12.08.2026</Tag></Tooltip
+	<Tooltip text={t.downloadJson}><Button icon="download" label={t.download} /></Tooltip>
+	<Tooltip title={t.lastSync} text="12.08.2026, 14:30" placement="bottom"
+		><Tag colour="neutral">{t.lastSyncDate}</Tag></Tooltip
 	>
 </Demo>
 
@@ -71,13 +75,13 @@
 	figma="avatar"
 	about="A round picture of a person, with a placeholder when there is no photo."
 >
-	<Avatar name="Tatiana Pirog" />
-	<Avatar name="Brenda Cooper" size="s" />
-	<Avatar name="Jane Cooper" size="xs" />
+	<Avatar name={t.tatiana} />
+	<Avatar name={t.brenda} size="s" />
+	<Avatar name={t.jane} size="xs" />
 	<div class="hb-avatar-stack" style="--uncolorful-grey-background: var(--uncolorful-grey-surface)">
-		<Avatar name="Anna" />
-		<Avatar name="Boris" />
-		<Avatar name="Clara" />
+		<Avatar name={t.anna} />
+		<Avatar name={t.boris} />
+		<Avatar name={t.clara} />
 	</div>
 </Demo>
 

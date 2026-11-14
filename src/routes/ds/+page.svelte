@@ -14,26 +14,31 @@
 	import Navigation from './sections/Navigation.svelte';
 	import Status from './sections/Status.svelte';
 	import Data from './sections/Data.svelte';
+	import { examples } from './examples.svelte.js';
 </script>
 
 <svelte:head>
 	<title>Design system · Habibi UI</title>
 </svelte:head>
 
-<div class="sections">
-	<h2 class="hb-text-h2">Foundations</h2>
-	<Foundations />
-	<h2 class="hb-text-h2">Basics</h2>
-	<Buttons />
-	<h2 class="hb-text-h2">Forms</h2>
-	<Forms />
-	<h2 class="hb-text-h2">Navigation and choice</h2>
-	<Navigation />
-	<h2 class="hb-text-h2">Status and feedback</h2>
-	<Status />
-	<h2 class="hb-text-h2">Data and layout</h2>
-	<Data />
-</div>
+<!-- When the examples language changes, the sections are made again from scratch,
+     so every example starts over with its texts in the new language. -->
+{#key examples.lang}
+	<div class="sections">
+		<h2 class="hb-text-h2">Foundations</h2>
+		<Foundations />
+		<h2 class="hb-text-h2">Basics</h2>
+		<Buttons />
+		<h2 class="hb-text-h2">Forms</h2>
+		<Forms />
+		<h2 class="hb-text-h2">Navigation and choice</h2>
+		<Navigation />
+		<h2 class="hb-text-h2">Status and feedback</h2>
+		<Status />
+		<h2 class="hb-text-h2">Data and layout</h2>
+		<Data />
+	</div>
+{/key}
 
 <style>
 	.sections {

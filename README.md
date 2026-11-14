@@ -47,6 +47,10 @@ src/
     +page.svelte                home page
     ds/                         the docs page  →  /ds
       sections/                 the examples, one file per group
+      content.js                every text the examples show, English and Arabic side by side
+      examples.svelte.js        the "Arabic examples" switch (only the examples change, not the docs)
+      employees.js              the made-up people of the table examples (ids only, words in content.js)
+      tables/                   the table guidelines  →  /ds/tables
     (your-prototype)/           prototypes go here, one folder each
 ```
 
@@ -101,7 +105,8 @@ Open any component file to see all of its options — they are listed in the com
 1. Make a folder in `src/lib/components/`, with `Name.svelte` and `name.css`.
    Copying a small existing one (for example `badge/`) is the easiest start.
 2. Add one line to `src/lib/index.js`, and the CSS file to `src/lib/styles.css`.
-3. Add a `<Demo>` for it in `src/routes/ds/sections/`, and its name to the menu in `src/routes/ds/+page.svelte`.
+3. Add a `<Demo>` for it in `src/routes/ds/sections/`, and its name to the menu in `src/routes/ds/+layout.svelte`.
+   Put the texts the example shows into `src/routes/ds/content.js`, in English and Arabic.
 
 ## Add a prototype
 

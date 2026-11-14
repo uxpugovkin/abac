@@ -1,16 +1,11 @@
 /*
 	The columns of the "Employees" table that all examples on the guidelines page share.
 	(Guide only — a real page simply writes its own `columns` list.)
+	The column names are in ../content.js.
 */
 
-export const employeeColumns = [
-	{ key: 'fullName', label: 'Employee', sortable: true },
-	{ key: 'status', label: 'Status', sortable: true },
-	{ key: 'skills', label: 'Skills' },
-	{ key: 'department', label: 'Department', sortable: true },
-	{ key: 'office', label: 'Office', sortable: true },
-	{ key: 'score', label: 'Tetris score', sortable: true, align: 'end' }
-];
+import { content } from '../content.js';
+import { pick } from '../examples.svelte.js';
 
 /*
 	Column widths, by column key.
@@ -25,7 +20,15 @@ export const columnWidths = {
 	wide: { fullName: 260, status: 130, skills: 300, department: 240, office: 240, score: 260 }
 };
 
-/* The same columns with one set of widths filled in. */
+/* The columns, named in the current examples language, with one set of widths filled in. */
 export function columnsWith(widths) {
-	return employeeColumns.map((column) => ({ ...column, width: widths[column.key] }));
+	const names = pick(content.tables.columns);
+	return [
+		{ key: 'fullName', label: names.fullName, sortable: true },
+		{ key: 'status', label: names.status, sortable: true },
+		{ key: 'skills', label: names.skills },
+		{ key: 'department', label: names.department, sortable: true },
+		{ key: 'office', label: names.office, sortable: true },
+		{ key: 'score', label: names.score, sortable: true, align: 'end' }
+	].map((column) => ({ ...column, width: widths[column.key] }));
 }

@@ -82,6 +82,14 @@
 		                (the first sits at the start, the last at the end).
 		                It is always visible; the sideways scrollbar sits below it
 
+	Words the table writes itself (only needed for another language)
+		texts           any of these, the rest stay English:
+		                  { selectAll: 'Select all rows',            ← screen readers
+		                    selectRow: 'Select row',                  ← screen readers
+		                    whichRows: 'Which rows to select',        ← screen readers
+		                    rowsOnPage: 'Rows on this page',          ← the list under "select all"
+		                    allRows: 'All rows in the table' }        ← the same list
+
 	────────────────────────────────────────────────────────────────────────────
 	Kept simple on purpose: the table never changes your data. Sorting, filtering
 	and paging happen in the page — the table shows `rows` in the order it gets
@@ -118,8 +126,19 @@
 		pageScroll = false,
 		toolbar,
 		summary,
+		texts = {},
 		class: extraClass = ''
 	} = $props();
+
+	// The words the table writes itself: English, unless `texts` says otherwise.
+	const englishTexts = {
+		selectAll: 'Select all rows',
+		selectRow: 'Select row',
+		whichRows: 'Which rows to select',
+		rowsOnPage: 'Rows on this page',
+		allRows: 'All rows in the table'
+	};
+	let words = $derived({ ...englishTexts, ...texts });
 
 	const CHECK_WIDTH = 32; // width of the checkbox column, px
 
@@ -276,7 +295,7 @@
 								type="button"
 								role="checkbox"
 								aria-checked={headerState}
-								aria-label="Select all rows"
+								aria-label={words.selectAll}
 								onclick={(event) => {
 									event.stopPropagation(); // do not let the window handler close the menu we just opened
 									toggleAll();
@@ -286,9 +305,9 @@
 							</button>
 
 							{#if menuOpen}
-								<Menu class="hb-table__check-menu" label="Which rows to select">
-									<MenuItem onclick={() => selectRows(rows)}>Rows on this page</MenuItem>
-									<MenuItem onclick={() => selectRows(allRows)}>All rows in the table</MenuItem>
+								<Menu class="hb-table__check-menu" label={words.whichRows}>
+									<MenuItem onclick={() => selectRows(rows)}>{words.rowsOnPage}</MenuItem>
+									<MenuItem onclick={() => selectRows(allRows)}>{words.allRows}</MenuItem>
 								</Menu>
 							{/if}
 						</th>
@@ -323,7 +342,7 @@
 									type="button"
 									role="checkbox"
 									aria-checked={selection.includes(keyOf(row)) ? 'true' : 'false'}
-									aria-label="Select row"
+									aria-label={words.selectRow}
 									onclick={(event) => {
 										event.stopPropagation(); // ticking a row is not a click on the row
 										toggleRow(row);

@@ -55,6 +55,7 @@
 </script>
 
 <Demo
+	fixed
 	title="Colours"
 	figma="colour"
 	about="Use them in CSS as var(--name). The values change with the theme — try the switcher at the top."
@@ -76,6 +77,7 @@
 </Demo>
 
 <Demo
+	fixed
 	title="Typography"
 	figma="typo"
 	about="Add the class to any text, or use font: var(--text-…) in CSS."
@@ -90,6 +92,7 @@
 </Demo>
 
 <Demo
+	fixed
 	title="Icons"
 	figma="icons"
 	about={`${iconNames.length} icons. Hover one to see its name.  <Icon name="search" />`}
@@ -102,6 +105,7 @@
 </Demo>
 
 <Demo
+	fixed
 	title="Radius and shadows"
 	figma="variables + effect styles"
 	about="var(--radius-…) and var(--shadow-…)"

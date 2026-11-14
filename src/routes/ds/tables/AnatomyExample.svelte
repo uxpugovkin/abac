@@ -11,21 +11,26 @@
 -->
 <script>
 	import { Table } from '#lib';
-	import { employees, formatScore, filterEmployees, sortEmployees } from '../employees.js';
+	import { getEmployees, formatScore, filterEmployees, sortEmployees } from '../employees.js';
+	import { content } from '../content.js';
+	import { pick } from '../examples.svelte.js';
 	import { columnsWith, columnWidths } from './columns.js';
 	import ExampleToolbar from './ExampleToolbar.svelte';
 	import EmployeeCell from './EmployeeCell.svelte';
 
+	const t = pick(content.tables); // the example texts, in the current language
+	const tableTexts = pick(content.tableTexts); // the words the Table writes itself
 	const columns = columnsWith(columnWidths.normal);
+	const employees = getEmployees();
 
 	let query = $state('');
-	let values = $state({});
+	let filtersOn = $state([]);
 	let sortKey = $state('score');
 	let sortDirection = $state('desc');
 	let selection = $state([]);
 
 	let rows = $derived(
-		sortEmployees(filterEmployees(employees.slice(0, 5), query, values), sortKey, sortDirection)
+		sortEmployees(filterEmployees(employees.slice(0, 5), query, filtersOn), sortKey, sortDirection)
 	);
 	let total = $derived(rows.reduce((sum, person) => sum + person.score, 0));
 
@@ -47,8 +52,8 @@
 	</div>
 {/snippet}
 
-{#snippet title()}<h3 class="hb-table-title">Employees</h3>{/snippet}
-{#snippet toolbar()}<ExampleToolbar bind:query bind:values />{/snippet}
+{#snippet title()}<h3 class="hb-table-title">{t.title}</h3>{/snippet}
+{#snippet toolbar()}<ExampleToolbar bind:query bind:filtersOn />{/snippet}
 {#snippet body()}
 	<Table
 		{columns}
@@ -58,6 +63,7 @@
 		onsort={sortBy}
 		selectable
 		bind:selection
+		texts={tableTexts}
 		minWidth={872}
 	>
 		{#snippet cell(row, column)}<EmployeeCell {row} {column} />{/snippet}
@@ -65,8 +71,8 @@
 {/snippet}
 {#snippet summary()}
 	<div class="hb-table__summary">
-		<span>{rows.length} employees&nbsp;· {selection.length} selected</span>
-		<span>Total: {formatScore(total)}</span>
+		<span>{t.employees(rows.length)}&nbsp;· {t.selected(selection.length)}</span>
+		<span>{t.total} {formatScore(total)}</span>
 	</div>
 {/snippet}
 

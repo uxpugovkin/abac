@@ -22,7 +22,8 @@
 	/* ---------- Font families ----------
 	   Figma variable "fonts". To try another font, change --fonts here
 	   (Figma also has modes for Segoe UI, Roboto and SF Pro). */
-	--fonts: 'IBM Plex Sans', system-ui, sans-serif;
+	--fonts:
+		'IBM Plex Sans', 'IBM Plex Sans Arabic', system-ui, sans-serif; /* the Arabic sister for Arabic text */
 	--fonts-code: 'IBM Plex Mono', ui-monospace, monospace;
 
 	/* ---------- Headers ---------- */

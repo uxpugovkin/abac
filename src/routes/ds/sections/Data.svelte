@@ -3,16 +3,21 @@
 	import { resolve } from '$app/paths';
 	import { Table, Tag, EmptyState, Splitter, Button } from '#lib';
 	import Demo from '../Demo.svelte';
-	import { employees, statusColour, sortEmployees } from '../employees.js';
+	import { getEmployees, statusColour, sortEmployees } from '../employees.js';
+	import { content } from '../content.js';
+	import { pick } from '../examples.svelte.js';
+
+	const t = pick(content.data); // the example texts, in the current language
 
 	/* ---------- Table example: sorting and picking one row ---------- */
 
 	const columns = [
-		{ key: 'fullName', label: 'Full name', sortable: true },
-		{ key: 'department', label: 'Department', sortable: true, width: 160 },
-		{ key: 'status', label: 'Status', width: 120 },
-		{ key: 'office', label: 'Office', width: 120 }
+		{ key: 'fullName', label: t.columns.fullName, sortable: true },
+		{ key: 'department', label: t.columns.department, sortable: true, width: 160 },
+		{ key: 'status', label: t.columns.status, width: 120 },
+		{ key: 'office', label: t.columns.office, width: 120 }
 	];
+	const employees = getEmployees();
 
 	// The page (not the table) owns the sorting and the highlighted row.
 	let sortKey = $state('fullName');
@@ -28,13 +33,15 @@
 	}
 
 	/* ---------- EmptyState example ---------- */
+	// Each type with its icon; the texts come from content.js.
+	const emptyTexts = pick(content.emptyStates);
 	const emptyTypes = [
-		{ type: 'empty', button: 'Create', icon: 'plus' },
-		{ type: 'not-found', button: 'Clear filters', icon: 'close' },
-		{ type: 'error', button: 'Try again', icon: 'refresh' },
-		{ type: 'forbidden', button: 'Request access', icon: 'lock' },
-		{ type: 'maintenance', button: 'Go back', icon: 'arrow-left' }
-	];
+		{ type: 'empty', icon: 'plus' },
+		{ type: 'not-found', icon: 'close' },
+		{ type: 'error', icon: 'refresh' },
+		{ type: 'forbidden', icon: 'lock' },
+		{ type: 'maintenance', icon: 'arrow-left' }
+	].map((item) => ({ ...item, ...emptyTexts[item.type] }));
 
 	/* ---------- Splitter example ---------- */
 	let leftWidth = $state(400);
@@ -64,17 +71,17 @@
 	>
 		{#snippet cell(row, column)}
 			{#if column.key === 'status'}
-				<Tag colour={statusColour[row.status]} size="s">{row.status}</Tag>
+				<Tag colour={statusColour[row.statusId]} size="s">{row.status}</Tag>
 			{:else}
 				{row[column.key]}
 			{/if}
 		{/snippet}
 	</Table>
-	<p class="hb-text-body-c more">
+	{#snippet more()}
 		Checkboxes, pinned columns, row actions, filters and the rest — all with live examples — are in
 		the
-		<a href={resolve('/ds/tables')}>table guidelines</a>.
-	</p>
+		<a class="more" href={resolve('/ds/tables')}>table guidelines</a>.
+	{/snippet}
 </Demo>
 
 <Demo
@@ -83,7 +90,7 @@
 	about="What a screen shows when there is nothing to show. Five situations, each with its own monkey."
 >
 	{#each emptyTypes as item}
-		<EmptyState type={item.type}>
+		<EmptyState type={item.type} title={item.title} description={item.description}>
 			<Button appearance="accent" mode="primary" icon={item.icon}>{item.button}</Button>
 		</EmptyState>
 	{/each}
@@ -95,18 +102,16 @@
 	about="Drag the line between the two panels. Here each panel keeps at least 400 px."
 >
 	<div class="panels">
-		<div class="panel" style="width: {leftWidth}px">Left · {leftWidth}px</div>
-		<Splitter ondrag={resize} />
-		<div class="panel panel--rest" bind:clientWidth={rightWidth}>Right · {rightWidth}px</div>
+		<div class="panel" style="width: {leftWidth}px">{t.first} · {leftWidth}px</div>
+		<Splitter ondrag={resize} label={t.resize} />
+		<div class="panel panel--rest" bind:clientWidth={rightWidth}>
+			{t.second} · {rightWidth}px
+		</div>
 	</div>
 </Demo>
 
 <style>
 	.more {
-		margin: 0;
-		color: var(--uncolorful-grey-secondary);
-	}
-	.more a {
 		color: var(--boring-blue-50);
 	}
 	.panels {

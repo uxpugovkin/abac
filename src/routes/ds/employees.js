@@ -1,21 +1,29 @@
 // Made-up people for the table examples on the docs pages.
 // The same data as the examples in Figma (habibi-library → Tables Guide).
+//
+// The data itself has no words, only ids ('jane', 'engineering', 'berlin'…):
+// what they are called in English or Arabic is in content.js.
+// That way search, filters and sorting work the same in both languages.
 
+import { content } from './content.js';
+import { pick } from './examples.svelte.js';
+
+//  person      status    skills                  department     office    Tetris score
 const people = [
-	['Jane', 'Cooper', 'Active', ['Go', 'API', 'SQL'], 'Engineering', 'Berlin', 20312632728],
-	['Wade', 'Warren', 'Active', ['UX', 'UI', 'Web'], 'Design', 'Lisbon', 2256632728],
-	['Esther', 'Howard', 'Active', ['Go', 'Rust', 'Ops'], 'Engineering', 'Berlin', 2256632728],
-	['Cameron', 'Williamson', 'Active', ['SQL', 'BI', 'ML'], 'Analytics', 'Dubai', 96632728],
-	['Brooklyn', 'Simmons', 'Active', ['Java', 'Go', 'SQL'], 'Engineering', 'Berlin', 96632728],
-	['Leslie', 'Alexander', 'Active', ['Ops', 'API', 'QA'], 'Security', 'Lisbon', 8632728],
-	['Jenny', 'Wilson', 'Active', ['Go', 'API', 'Web'], 'Engineering', 'Dubai', 8632728],
-	['Guy', 'Hawkins', 'Active', ['Go', 'Ops', 'API'], 'Engineering', 'Berlin', 632728],
-	['Robert', 'Fox', 'Active', ['UI', 'iOS', 'Web'], 'Design', 'Berlin', 632728],
-	['Jacob', 'Jones', 'Active', ['Data', 'ML', 'SQL'], 'Analytics', 'Lisbon', 24728],
-	['Kristin', 'Watson', 'Active', ['QA', 'Go', 'API'], 'Engineering', 'Berlin', 24728],
-	['Cody', 'Fisher', 'Active', ['Ops', 'API', 'Go'], 'Security', 'Dubai', 2728],
-	['Savannah', 'Nguyen', 'Active', ['BI', 'Data', 'SQL'], 'Analytics', 'Berlin', 2728],
-	['Devon', 'Lane', 'Active', ['SQL', 'BI'], 'Analytics', 'Berlin', 728]
+	['jane', 'active', ['Go', 'API', 'SQL'], 'engineering', 'berlin', 20312632728],
+	['wade', 'active', ['UX', 'UI', 'Web'], 'design', 'lisbon', 2256632728],
+	['esther', 'active', ['Go', 'Rust', 'Ops'], 'engineering', 'berlin', 2256632728],
+	['cameron', 'active', ['SQL', 'BI', 'ML'], 'analytics', 'dubai', 96632728],
+	['brooklyn', 'active', ['Java', 'Go', 'SQL'], 'engineering', 'berlin', 96632728],
+	['leslie', 'active', ['Ops', 'API', 'QA'], 'security', 'lisbon', 8632728],
+	['jenny', 'active', ['Go', 'API', 'Web'], 'engineering', 'dubai', 8632728],
+	['guy', 'active', ['Go', 'Ops', 'API'], 'engineering', 'berlin', 632728],
+	['robert', 'active', ['UI', 'iOS', 'Web'], 'design', 'berlin', 632728],
+	['jacob', 'active', ['Data', 'ML', 'SQL'], 'analytics', 'lisbon', 24728],
+	['kristin', 'active', ['QA', 'Go', 'API'], 'engineering', 'berlin', 24728],
+	['cody', 'active', ['Ops', 'API', 'Go'], 'security', 'dubai', 2728],
+	['savannah', 'active', ['BI', 'Data', 'SQL'], 'analytics', 'berlin', 2728],
+	['devon', 'active', ['SQL', 'BI'], 'analytics', 'berlin', 728]
 ];
 
 // The photos: ./faces/staff-00.png … staff-14.png (from the Figma file), in the same
@@ -25,65 +33,70 @@ export const photos = Object.keys(photoFiles)
 	.sort()
 	.map((name) => photoFiles[name]);
 
-// Turn each short line above into a row object.
-// `id` must be unique: the Table tells rows apart by it.
-export const employees = people.map(
-	([firstName, lastName, status, skills, department, office, score], index) => ({
+/**
+ * The people as table rows, with their words in the current examples language.
+ * `id` must be unique: the Table tells rows apart by it.
+ * The ids stay next to the words (`officeId`…), for the filters.
+ */
+export function getEmployees() {
+	const names = pick(content.people);
+	const departments = pick(content.departments);
+	const offices = pick(content.offices);
+	const statuses = pick(content.statuses);
+
+	return people.map(([person, status, skills, department, office, score], index) => ({
 		id: index + 1,
-		fullName: `${firstName} ${lastName}`,
-		status,
+		fullName: names[person],
+		status: statuses[status],
+		statusId: status,
 		skills,
-		department,
-		office,
+		department: departments[department],
+		departmentId: department,
+		office: offices[office],
+		officeId: office,
 		score,
 		photo: photos[index]
-	})
-);
+	}));
+}
 
-// Which Tag colour each status gets.
-export const statusColour = { Active: 'success', 'On leave': 'warning', Blocked: 'error' };
+// Which Tag colour each status gets (by status id).
+export const statusColour = { active: 'success', onLeave: 'warning', blocked: 'error' };
 
-// 20312632728 → "20,312,632,728.00"
+// 20312632728 → "20,312,632,728.00" (digits 0–9 in both languages)
 export function formatScore(number) {
 	return number.toLocaleString('en-US', { minimumFractionDigits: 2 });
 }
 
-/* ---------- Filtering and sorting (done by the page, never by the Table) ---------- */
+/* ---------- Filtering and sorting (done by the page, never by the Table) ----------
+   In the examples each filter has one ready-made value: a click switches it on.
+   (A real product would open a list to choose from; the examples keep it short.)
+   What the filters are called, and what their value says, is in content.js. */
 
-// What each filter chip is set to when it is clicked in the examples.
-// (A real product would open a list to choose from; the examples keep it short.)
-export const filterPresets = {
-	Status: 'Active',
-	Skills: 'Go, API, SQL',
-	Department: 'Engineering',
-	Office: 'Berlin',
-	'Tetris score': '> 20,000'
-};
+export const filterIds = ['status', 'skills', 'department', 'office', 'score'];
 
 // Does one person pass one filter?
 const filterChecks = {
-	Status: (person, value) => person.status === value,
-	Skills: (person, value) => value.split(', ').some((skill) => person.skills.includes(skill)),
-	Department: (person, value) => person.department === value,
-	Office: (person, value) => person.office === value,
-	'Tetris score': (person) => person.score > 20000
+	status: (person) => person.statusId === 'active',
+	skills: (person) => ['Go', 'API', 'SQL'].some((skill) => person.skills.includes(skill)),
+	department: (person) => person.departmentId === 'engineering',
+	office: (person) => person.officeId === 'berlin',
+	score: (person) => person.score > 20000
 };
 
 /**
- * The rows that match the search text and every filter that has a value.
- * `filters` looks like { Status: 'Active', Office: '' } — empty means "not set".
+ * The rows that match the search text and every filter that is on.
+ * `filtersOn` is a list of filter ids, e.g. ['status', 'office'].
  */
-export function filterEmployees(rows, search, filters) {
-	return rows.filter((person) => {
-		const matchesSearch = person.fullName.toLowerCase().includes(search.trim().toLowerCase());
-		const matchesFilters = Object.entries(filters).every(
-			([name, value]) => !value || filterChecks[name](person, value)
-		);
-		return matchesSearch && matchesFilters;
-	});
+export function filterEmployees(rows, search, filtersOn) {
+	const text = search.trim().toLowerCase();
+	return rows.filter(
+		(person) =>
+			person.fullName.toLowerCase().includes(text) &&
+			filtersOn.every((filter) => filterChecks[filter](person))
+	);
 }
 
-/** A sorted copy of the rows. Works for texts and for numbers. */
+/** A sorted copy of the rows. Works for texts (in any language) and for numbers. */
 export function sortEmployees(rows, key, direction) {
 	const flip = direction === 'desc' ? -1 : 1;
 	return [...rows].sort((a, b) => {

@@ -13,6 +13,8 @@
 		value      the chosen value as text. Empty = nothing chosen yet
 		onclick    called when the chip is clicked (open your menu here)
 		onclear    called when the × is clicked (reset your filter here)
+		clearLabel what the × is called, for screen readers: "<clearLabel> <name>".
+		           Default "Clear"
 		disabled   true = cannot be clicked
 
 	FilterChip only shows the state. Opening a list of choices and keeping the
@@ -28,6 +30,7 @@
 		value = '',
 		onclick,
 		onclear,
+		clearLabel = 'Clear',
 		disabled = false,
 		class: extraClass = ''
 	} = $props();
@@ -43,7 +46,7 @@
 			<span class="hb-chip__filter-name">{name}</span>
 			<span class="hb-chip__filter-value">{value}</span>
 		</button>
-		<button type="button" {disabled} aria-label="Clear {name}" onclick={onclear}>
+		<button type="button" {disabled} aria-label="{clearLabel} {name}" onclick={onclear}>
 			<Icon name="close" size={20} />
 		</button>
 	{:else}

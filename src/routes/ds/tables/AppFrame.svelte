@@ -14,15 +14,15 @@
 <script>
 	import { Icon, Avatar } from '#lib';
 	import { photos } from '../employees.js';
+	import { content } from '../content.js';
+	import { pick, examples, directionOf } from '../examples.svelte.js';
 
 	let { children } = $props();
 
-	const menu = [
-		{ label: 'Dashboard', icon: 'view-grid' },
-		{ label: 'Users', icon: 'profile', active: true },
-		{ label: 'Model', icon: 'script' },
-		{ label: 'Task Manager', icon: 'wait' }
-	];
+	const t = pick(content.tables.app); // the example texts, in the current language
+
+	// The "collapse menu" arrow points towards the side the menu is on.
+	const collapseIcon = directionOf(examples.lang) === 'rtl' ? 'chevron-right' : 'chevron-left';
 </script>
 
 <div class="app">
@@ -42,14 +42,14 @@
 
 		<div class="domain">
 			<div>
-				<div class="hb-text-body-d">Current domain</div>
+				<div class="hb-text-body-d">{t.currentDomain}</div>
 				<div class="hb-text-body-c">res-domain-144</div>
 			</div>
 			<Icon name="chevron-down" size={20} />
 		</div>
 
 		<nav>
-			{#each menu as item}
+			{#each t.menu as item}
 				<div class="item hb-text-body-c" class:item--active={item.active}>
 					<Icon name={item.icon} size={20} />
 					{item.label}
@@ -58,12 +58,12 @@
 		</nav>
 
 		<div class="profile">
-			<Avatar src={photos[6]} name="Tatiana Pirog" size="s" />
+			<Avatar src={photos[6]} name={t.tatiana} size="s" />
 			<div>
-				<div class="hb-text-body-d">Tatiana Pirog</div>
-				<div class="hb-text-body-e">Super admin</div>
+				<div class="hb-text-body-d">{t.tatiana}</div>
+				<div class="hb-text-body-e">{t.superAdmin}</div>
 			</div>
-			<Icon name="chevron-left" size={20} />
+			<Icon name={collapseIcon} size={20} />
 		</div>
 	</aside>
 

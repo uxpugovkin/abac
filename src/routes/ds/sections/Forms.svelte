@@ -2,18 +2,22 @@
 <script>
 	import { TextInput, Select, MultiSelect, Checkbox, Radio, Switch, Slider } from '#lib';
 	import Demo from '../Demo.svelte';
+	import { content } from '../content.js';
+	import { pick } from '../examples.svelte.js';
+
+	const t = pick(content.forms); // the example texts, in the current language
 
 	// Each example keeps its own value, so you can play with it.
 	let name = $state('');
 	let search = $state('');
-	let login = $state('walker85');
-	let comment = $state('Access elevated');
-	let fullName = $state('Brenda Gray Cooper');
+	let login = $state(t.loginValue);
+	let comment = $state(t.commentValue);
+	let fullName = $state(t.fullNameValue);
 	let type = $state('');
-	let compareWith = $state('constantinopolski.b.e@acme.corp');
+	let compareWith = $state(t.emails[0]);
 	let skills = $state(['Go', 'API', 'SQL']);
 	let offices = $state([]);
-	let roles = $state(['Admin', 'Auditor', 'Editor', 'Viewer', 'Owner']);
+	let roles = $state(['admin', 'auditor', 'editor', 'viewer', 'owner']);
 
 	let agree = $state(true);
 	let updates = $state(false);
@@ -29,36 +33,26 @@
 	about="One line of text. States: hover, focus, error, disabled."
 >
 	<div class="grid">
-		<TextInput label="Label" placeholder="Placeholder" bind:value={name} hint="A hint goes here" />
-		<TextInput icon="search" placeholder="Search attributes" bind:value={search} />
-		<TextInput label="Login" bind:value={login} error="This login is taken" />
-		<TextInput label="Comment" bind:value={comment} maxlength={40} iconEnd="edit" />
-		<TextInput label="Disabled" value="Cannot change this" disabled />
-		<TextInput big label="Full name" bind:value={fullName} />
+		<TextInput label={t.label} placeholder={t.placeholder} bind:value={name} hint={t.hint} />
+		<TextInput icon="search" placeholder={t.searchAttributes} bind:value={search} />
+		<TextInput label={t.login} bind:value={login} error={t.loginTaken} />
+		<TextInput label={t.comment} bind:value={comment} maxlength={40} iconEnd="edit" />
+		<TextInput label={t.disabled} value={t.cannotChange} disabled />
+		<TextInput big label={t.fullName} bind:value={fullName} />
 	</div>
 </Demo>
 
 <Demo title="Select" figma="input → select" about="Pick one option from a list.">
 	<div class="grid">
 		<Select
-			label="Attributes type"
-			placeholder="Choose…"
-			options={['Domain attributes', 'Roles and privileges', 'Delegations']}
+			label={t.attributesType}
+			placeholder={t.choose}
+			options={t.attributeTypes}
 			bind:value={type}
 		/>
-		<Select
-			label="With an error"
-			placeholder="Choose…"
-			options={['One', 'Two']}
-			error="Please choose one"
-		/>
-		<Select label="Disabled" options={['Domain attributes']} value="Domain attributes" disabled />
-		<Select
-			big
-			label="Compare with"
-			options={['constantinopolski.b.e@acme.corp', 'walker85@acme.corp']}
-			bind:value={compareWith}
-		/>
+		<Select label={t.withError} placeholder={t.choose} options={t.oneTwo} error={t.chooseOne} />
+		<Select label={t.disabled} options={t.attributeTypes} value="domain" disabled />
+		<Select big label={t.compareWith} options={t.emails} bind:value={compareWith} />
 	</div>
 </Demo>
 
@@ -69,55 +63,55 @@
 >
 	<div class="grid">
 		<MultiSelect
-			label="Skills"
-			placeholder="Choose…"
-			options={['Go', 'API', 'SQL', 'Rust', 'Ops', 'UX', 'Web']}
+			label={t.skills}
+			placeholder={t.choose}
+			options={t.skillOptions}
 			bind:value={skills}
 		/>
 		<MultiSelect
-			label="Offices"
-			placeholder="Choose…"
+			label={t.offices}
+			placeholder={t.choose}
 			icon="search"
-			options={['Berlin', 'Lisbon', 'Dubai']}
+			options={t.officeOptions}
 			bind:value={offices}
-			hint="Nothing chosen yet"
+			hint={t.nothingChosen}
 		/>
 		<MultiSelect
-			label="With an error"
-			placeholder="Choose…"
-			options={['One', 'Two']}
-			error="Please choose at least one"
+			label={t.withError}
+			placeholder={t.choose}
+			options={t.oneTwo}
+			error={t.chooseAtLeastOne}
 		/>
-		<MultiSelect label="Disabled" options={['Go', 'API']} value={['Go', 'API']} disabled />
+		<MultiSelect label={t.disabled} options={t.skillOptions} value={['Go', 'API']} disabled />
 		<MultiSelect
 			big
-			label="Roles"
-			placeholder="Choose…"
-			options={['Admin', 'Auditor', 'Editor', 'Viewer', 'Owner', 'Guest']}
+			label={t.roles}
+			placeholder={t.choose}
+			options={t.roleOptions}
 			bind:value={roles}
 		/>
 	</div>
 </Demo>
 
 <Demo title="Checkbox" figma="checkbox" about="On or off. Several can be on at once.">
-	<Checkbox bind:checked={agree}>Title</Checkbox>
-	<Checkbox bind:checked={updates} subtitle="Subtitle">Title</Checkbox>
-	<Checkbox indeterminate>Some selected</Checkbox>
-	<Checkbox checked disabled>Disabled</Checkbox>
+	<Checkbox bind:checked={agree}>{t.title}</Checkbox>
+	<Checkbox bind:checked={updates} subtitle={t.subtitle}>{t.title}</Checkbox>
+	<Checkbox indeterminate>{t.someSelected}</Checkbox>
+	<Checkbox checked disabled>{t.disabled}</Checkbox>
 </Demo>
 
 <Demo title="Radio" figma="radio-button" about="One choice out of a group.">
-	<Radio bind:group={plan} value="free">Free</Radio>
-	<Radio bind:group={plan} value="pro" subtitle="Billed yearly">Pro</Radio>
-	<Radio bind:group={plan} value="team" disabled>Team</Radio>
+	<Radio bind:group={plan} value="free">{t.free}</Radio>
+	<Radio bind:group={plan} value="pro" subtitle={t.billedYearly}>{t.pro}</Radio>
+	<Radio bind:group={plan} value="team" disabled>{t.team}</Radio>
 </Demo>
 
 <Demo title="Switch" figma="switch" about="Turns a setting on or off right away.">
-	<Switch bind:checked={dark}>Dark mode</Switch>
-	<Switch bind:checked={sync}>Auto sync</Switch>
-	<Switch big bind:checked={dark} label="Big switch" />
-	<Switch big bind:checked={sync} label="Big switch" />
-	<Switch checked disabled>Disabled</Switch>
+	<Switch bind:checked={dark}>{t.darkMode}</Switch>
+	<Switch bind:checked={sync}>{t.autoSync}</Switch>
+	<Switch big bind:checked={dark} label={t.bigSwitch} />
+	<Switch big bind:checked={sync} label={t.bigSwitch} />
+	<Switch checked disabled>{t.disabled}</Switch>
 </Demo>
 
 <Demo
@@ -125,10 +119,10 @@
 	figma="slider"
 	about="Pick a number by dragging. Hover it or drag it to see the value; it also works with the arrow keys."
 >
-	<div class="slider"><Slider bind:value={volume} label="Volume" /></div>
-	<div class="slider"><Slider bind:value={volume} big label="Volume, big" /></div>
-	<div class="slider"><Slider value={60} disabled label="Disabled" /></div>
-	<div class="slider"><Slider value={60} big disabled label="Disabled, big" /></div>
+	<div class="slider"><Slider bind:value={volume} label={t.volume} /></div>
+	<div class="slider"><Slider bind:value={volume} big label={t.volumeBig} /></div>
+	<div class="slider"><Slider value={60} disabled label={t.disabled} /></div>
+	<div class="slider"><Slider value={60} big disabled label={t.disabledBig} /></div>
 </Demo>
 
 <style>

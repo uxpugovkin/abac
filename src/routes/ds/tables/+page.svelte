@@ -16,9 +16,11 @@
 	import TableExample from './TableExample.svelte';
 	import AnatomyExample from './AnatomyExample.svelte';
 	import AppFrame from './AppFrame.svelte';
+	import { content } from '../content.js';
+	import { pick, examples, directionOf } from '../examples.svelte.js';
 
 	// rule id → the snippet that shows it. Rules without a line here have no example.
-	const examples = {
+	const exampleFor = {
 		1.1: anatomy,
 		1.2: sorting,
 		1.3: wrapAndCut,
@@ -42,54 +44,58 @@
 		6.5: selectAndPages
 	};
 
+	// The example texts, in the current language.
+	let t = $derived(pick(content.tables, examples.lang));
+
 	let tab = $state('a'); // for the "Button placement" examples
-	const tabs = [
-		{ id: 'a', label: 'Tab A' },
-		{ id: 'b', label: 'Tab B' },
-		{ id: 'c', label: 'Tab C' }
-	];
 </script>
 
 <svelte:head>
 	<title>Table guidelines · Habibi UI</title>
 </svelte:head>
 
-<article class="guide">
-	{#each tableGuidelines as chapter}
-		<!-- One chapter = one page of the Figma guide: a dark banner, then its rules. -->
-		<section class="chapter">
-			<header class="hero">
-				<h2 class="hb-text-display-b">{chapter.title}</h2>
-				<p class="hb-text-body-b">{chapter.about}</p>
-			</header>
+<!-- When the examples language changes, the guide is made again from scratch,
+     so every example starts over with its texts in the new language. -->
+{#key examples.lang}
+	<article class="guide">
+		{#each tableGuidelines as chapter}
+			<!-- One chapter = one page of the Figma guide: a dark banner, then its rules. -->
+			<section class="chapter">
+				<header class="hero">
+					<h2 class="hb-text-display-b">{chapter.title}</h2>
+					<p class="hb-text-body-b">{chapter.about}</p>
+				</header>
 
-			{#each chapter.rules as rule}
-				<!-- "1.2" → "02". The intro rule of a chapter ("1.0") has no number and a bigger title. -->
-				{@const number = rule.id.split('.')[1].padStart(2, '0')}
-				{@const isIntro = number === '00'}
+				{#each chapter.rules as rule}
+					<!-- "1.2" → "02". The intro rule of a chapter ("1.0") has no number and a bigger title. -->
+					{@const number = rule.id.split('.')[1].padStart(2, '0')}
+					{@const isIntro = number === '00'}
 
-				<section class="rule" id="rule-{rule.id}">
-					<div class="rule__text">
-						{#if !isIntro}<span class="rule__number hb-text-code-s">{number}</span>{/if}
-						<h3 class={isIntro ? 'hb-text-h1' : 'hb-text-h3'}>{rule.title}</h3>
-						{#each rule.text as line}
-							<p class="hb-text-body-b">{line}</p>
-						{/each}
-						{#if rule.code}
-							<p class="rule__code hb-text-body-d">
-								<strong>In code:</strong> <code>{rule.code}</code>
-							</p>
+					<section class="rule" id="rule-{rule.id}">
+						<div class="rule__text">
+							{#if !isIntro}<span class="rule__number hb-text-code-s">{number}</span>{/if}
+							<h3 class={isIntro ? 'hb-text-h1' : 'hb-text-h3'}>{rule.title}</h3>
+							{#each rule.text as line}
+								<p class="hb-text-body-b">{line}</p>
+							{/each}
+							{#if rule.code}
+								<p class="rule__code hb-text-body-d">
+									<strong>In code:</strong> <code>{rule.code}</code>
+								</p>
+							{/if}
+						</div>
+
+						{#if exampleFor[rule.id]}
+							<div class="rule__example" lang={examples.lang} dir={directionOf(examples.lang)}>
+								{@render exampleFor[rule.id]()}
+							</div>
 						{/if}
-					</div>
-
-					{#if examples[rule.id]}
-						<div class="rule__example">{@render examples[rule.id]()}</div>
-					{/if}
-				</section>
-			{/each}
-		</section>
-	{/each}
-</article>
+					</section>
+				{/each}
+			</section>
+		{/each}
+	</article>
+{/key}
 
 <!-- ════════════════════════ THE EXAMPLES ════════════════════════
      One snippet per rule, in the order of the rules.
@@ -105,11 +111,11 @@
 {/snippet}
 
 {#snippet sorting()}
-	<TableExample title="Employees" selectable summary limit={7} />
+	<TableExample title={t.title} selectable summary limit={7} />
 {/snippet}
 
 {#snippet wrapAndCut()}
-	<TableExample title="Employees" longTexts selectable summary limit={5} />
+	<TableExample title={t.title} longTexts selectable summary limit={5} />
 {/snippet}
 
 <!-- 2. Scrolling -->
@@ -129,14 +135,8 @@
 {#snippet filterTags()}
 	<TableExample
 		selectable
-		shown={['Status', 'Skills', 'Department', 'Office', 'Tetris score']}
-		filters={{
-			Status: 'Active',
-			Skills: 'Go, API, SQL',
-			Department: 'Engineering',
-			Office: 'Berlin',
-			'Tetris score': '> 20,000'
-		}}
+		shown={['status', 'skills', 'department', 'office', 'score']}
+		filters={['status', 'skills', 'department', 'office', 'score']}
 		minHeight={220}
 	/>
 {/snippet}
@@ -147,19 +147,19 @@
 {/snippet}
 
 {#snippet searchOne()}
-	<TableExample searchPlaceholder="Search by name" searchPinned limit={10} minHeight={400} />
+	<TableExample searchByName searchPinned limit={10} minHeight={400} />
 {/snippet}
 
 {#snippet moreFilters()}
-	<TableExample title="Employees" filterMenu limit={10} minHeight={400} />
+	<TableExample title={t.title} filterMenu limit={10} minHeight={400} />
 {/snippet}
 
 <!-- 4. Button placement -->
 {#snippet buttonInHeader()}
 	<AppFrame>
 		<div class="page-header">
-			<h4 class="hb-text-h2">Page</h4>
-			<Button appearance="accent" mode="primary">Add row</Button>
+			<h4 class="hb-text-h2">{t.page}</h4>
+			<Button appearance="accent" mode="primary">{t.addRow}</Button>
 		</div>
 		<TableExample narrow limit={9} />
 	</AppFrame>
@@ -167,13 +167,13 @@
 
 {#snippet buttonInToolbar()}
 	<AppFrame>
-		<div class="page-header"><h4 class="hb-text-h2">Page</h4></div>
-		<div class="page-tabs"><Tabs {tabs} bind:active={tab} /></div>
+		<div class="page-header"><h4 class="hb-text-h2">{t.page}</h4></div>
+		<div class="page-tabs"><Tabs tabs={t.pageTabs} bind:active={tab} /></div>
 		<TableExample narrow limit={8}>
 			{#snippet toolbarEnd()}
-				<Button icon="overflow" label="More" />
-				<Button icon="upload" label="Upload" />
-				<Button appearance="accent" mode="primary">Add row</Button>
+				<Button icon="overflow" label={t.more} />
+				<Button icon="upload" label={t.upload} />
+				<Button appearance="accent" mode="primary">{t.addRow}</Button>
 			{/snippet}
 		</TableExample>
 	</AppFrame>
@@ -181,13 +181,13 @@
 
 {#snippet iconButton()}
 	<AppFrame>
-		<div class="page-header"><h4 class="hb-text-h2">Page</h4></div>
-		<div class="page-tabs"><Tabs {tabs} bind:active={tab} /></div>
+		<div class="page-header"><h4 class="hb-text-h2">{t.page}</h4></div>
+		<div class="page-tabs"><Tabs tabs={t.pageTabs} bind:active={tab} /></div>
 		<TableExample narrow limit={8}>
 			{#snippet toolbarEnd()}
-				<Button icon="overflow" label="More" />
-				<Button icon="upload" label="Upload" />
-				<Button appearance="accent" mode="primary" icon="plus" label="Add row" />
+				<Button icon="overflow" label={t.more} />
+				<Button icon="upload" label={t.upload} />
+				<Button appearance="accent" mode="primary" icon="plus" label={t.addRow} />
 			{/snippet}
 		</TableExample>
 	</AppFrame>
@@ -201,7 +201,7 @@
 <!-- These two are about tables that scroll sideways, so they use the window too. -->
 {#snippet actionsFloating()}
 	<TableExample
-		title="Employees"
+		title={t.title}
 		wide
 		pinned
 		actions={['edit', 'download', 'delete']}
@@ -216,16 +216,16 @@
 
 <!-- 6. Bulk operations -->
 {#snippet selectStart()}
-	<TableExample title="Employees" selectable limit={10} />
+	<TableExample title={t.title} selectable limit={10} />
 {/snippet}
 
 <!-- `picked` ticks rows at the start, so each example opens in the state its rule describes. -->
 {#snippet selectSome()}
-	<TableExample title="Employees" selectable summary limit={10} picked={[2, 3, 5]} />
+	<TableExample title={t.title} selectable summary limit={10} picked={[2, 3, 5]} />
 {/snippet}
 
 {#snippet selectAll()}
-	<TableExample title="Employees" selectable summary limit={10} picked="all" />
+	<TableExample title={t.title} selectable summary limit={10} picked="all" />
 {/snippet}
 
 {#snippet selectAndFilter()}
@@ -233,14 +233,14 @@
 		selectable
 		summary
 		limit={10}
-		filters={{ Department: 'Engineering' }}
+		filters={['department']}
 		picked="all"
 		minHeight={400}
 	/>
 {/snippet}
 
 {#snippet selectAndPages()}
-	<TableExample title="Employees" selectable paged choiceShown />
+	<TableExample title={t.title} selectable paged choiceShown />
 {/snippet}
 
 <style>

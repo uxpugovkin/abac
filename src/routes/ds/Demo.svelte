@@ -12,9 +12,19 @@
 		figma    name of the page in the Figma library (shown as a small note)
 		about    one line saying what it is for
 		column   true = stack the examples top to bottom instead of in a row
+		fixed    true = this block is reference, not an example: it stays English,
+		         left to right, also when the Arabic examples are on (colours, icons…)
+		more     snippet for a line of docs text under the examples (stays English)
+
+	The grey box with the examples follows the "Arabic examples" switch:
+	it gets lang="ar" and dir="rtl" (see examples.svelte.js).
 -->
 <script>
-	let { title, figma = '', about = '', column = false, children } = $props();
+	import { examples, directionOf } from './examples.svelte.js';
+
+	let { title, figma = '', about = '', column = false, fixed = false, more, children } = $props();
+
+	let lang = $derived(fixed ? 'en' : examples.lang);
 </script>
 
 <section class="demo" id={title.toLowerCase().replaceAll(' ', '-')}>
@@ -23,9 +33,10 @@
 		{#if figma}<span class="hb-text-body-d">Figma page: {figma}</span>{/if}
 	</header>
 	{#if about}<p class="hb-text-body-c">{about}</p>{/if}
-	<div class="demo__stage" class:demo__stage--column={column}>
+	<div class="demo__stage" class:demo__stage--column={column} {lang} dir={directionOf(lang)}>
 		{@render children()}
 	</div>
+	{#if more}<p class="hb-text-body-c">{@render more()}</p>{/if}
 </section>
 
 <style>
