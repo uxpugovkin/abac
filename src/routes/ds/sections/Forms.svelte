@@ -120,10 +120,15 @@
 	<Switch checked disabled>Disabled</Switch>
 </Demo>
 
-<Demo title="Slider" figma="slider" about="Pick a number by dragging.">
+<Demo
+	title="Slider"
+	figma="slider"
+	about="Pick a number by dragging. Hover it or drag it to see the value; it also works with the arrow keys."
+>
 	<div class="slider"><Slider bind:value={volume} label="Volume" /></div>
-	<span class="hb-text-body-c">{volume}</span>
+	<div class="slider"><Slider bind:value={volume} big label="Volume, big" /></div>
 	<div class="slider"><Slider value={60} disabled label="Disabled" /></div>
+	<div class="slider"><Slider value={60} big disabled label="Disabled, big" /></div>
 </Demo>
 
 <style>
@@ -136,5 +141,6 @@
 	}
 	.slider {
 		width: 168px;
+		margin-top: 32px; /* room for the value bubble above it */
 	}
 </style>

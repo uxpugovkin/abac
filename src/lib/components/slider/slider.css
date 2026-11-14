@@ -2,95 +2,197 @@
    SLIDER — see Slider.svelte for how to use it.
    Figma: habibi-library → page "slider" → "slider-horiz"
 
-   The slider is the browser's own <input type="range"> restyled:
-     - the track is an 8px bar: dark blue up to the value, pale blue after it
-     - the thumb is a thin 2px line with a little breathing room on each side
+   The parts, as in Figma (sizes for the small / the big slider):
+     on      the bar from the start up to the value       8px / 24px tall
+     line    a thin 2px line at the value                  16px / 32px tall
+     off     the bar from the value to the end             8px / 24px tall
+   Around the line there is 2px of empty space, so the bars never touch it.
+   The line never reaches the very ends: 12px of bar always stays before
+   and after it.
 
-   --slider-fill (0%–100%) says how far the dark part goes.
-   Slider.svelte sets it from the value.
+   It is the browser's own <input type="range">, restyled. The browser moves
+   one "thumb"; here the thumb is 30px wide (12px of bar + 2px space + the
+   line + 2px space + 12px of bar) and only its middle 2px are drawn. The bars
+   are drawn on the track, with a gap where the line is.
+
+   --slider-share (0 to 1) says how far along the value is. Slider.svelte sets it.
    ========================================================================== */
 
 .hb-slider {
-	appearance: none;
+	/* Sizes. The big slider changes these four. */
+	--slider-height: 24px; /* the whole slider */
+	--slider-bar: 8px; /* the two bars */
+	--slider-line: 16px; /* the line at the value, at rest */
+
+	/* Colours, per state (see the bottom of this file). */
+	--slider-on: var(--boring-blue-50);
+	--slider-off: var(--boring-blue-90);
+	--slider-line-colour: var(--boring-blue-50);
+
+	/* Where the gap around the line starts, measured from the start of the track:
+	   the thumb travels over (track − 30px); its gap starts 12px into it. */
+	--slider-gap-start: calc(var(--slider-share) * (100% - 30px) + 12px);
+
+	position: relative;
+	display: block;
 	width: 100%;
-	height: 24px;
+}
+.hb-slider--big {
+	--slider-height: 40px;
+	--slider-bar: 24px;
+	--slider-line: 32px;
+}
+
+.hb-slider__input {
+	appearance: none;
+	display: block;
+	width: 100%;
+	height: var(--slider-height);
 	margin: 0;
 	background: transparent;
 	cursor: pointer;
-
-	--slider-on: var(--boring-blue-50);
-	--slider-off: var(--boring-blue-90);
+	/* No browser focus box: with the keyboard the slider shows its hover look and
+	   the value bubble instead (see "States" below). */
+	outline: none;
 }
 
 /* The same rules are written twice below: once for Chrome / Safari / Edge
    (-webkit-…) and once for Firefox (-moz-…). Browsers ignore a rule if they
    meet a name they don't know, so the two cannot be merged into one. */
 
-/* ---------- Track ---------- */
+/* ---------- The two bars (on the track) ----------
+   One background: "on" colour, then 6px of nothing for the line, then "off" colour. */
 
-.hb-slider::-webkit-slider-runnable-track {
-	height: 8px;
+.hb-slider__input::-webkit-slider-runnable-track {
+	height: var(--slider-bar);
 	border-radius: var(--radius-s);
 	background: linear-gradient(
 		to right,
-		var(--slider-on) var(--slider-fill),
-		var(--slider-off) var(--slider-fill)
+		var(--slider-on) var(--slider-gap-start),
+		transparent var(--slider-gap-start) calc(var(--slider-gap-start) + 6px),
+		var(--slider-off) calc(var(--slider-gap-start) + 6px)
 	);
 }
-.hb-slider::-moz-range-track {
-	height: 8px;
+.hb-slider__input::-moz-range-track {
+	height: var(--slider-bar);
 	border-radius: var(--radius-s);
 	background: linear-gradient(
 		to right,
-		var(--slider-on) var(--slider-fill),
-		var(--slider-off) var(--slider-fill)
+		var(--slider-on) var(--slider-gap-start),
+		transparent var(--slider-gap-start) calc(var(--slider-gap-start) + 6px),
+		var(--slider-off) calc(var(--slider-gap-start) + 6px)
 	);
 }
-/* In right-to-left pages the dark part starts from the right. */
-[dir='rtl'] .hb-slider::-webkit-slider-runnable-track {
+/* On right-to-left pages the slider runs from right to left. */
+[dir='rtl'] .hb-slider__input::-webkit-slider-runnable-track {
 	background: linear-gradient(
 		to left,
-		var(--slider-on) var(--slider-fill),
-		var(--slider-off) var(--slider-fill)
+		var(--slider-on) var(--slider-gap-start),
+		transparent var(--slider-gap-start) calc(var(--slider-gap-start) + 6px),
+		var(--slider-off) calc(var(--slider-gap-start) + 6px)
 	);
 }
-[dir='rtl'] .hb-slider::-moz-range-track {
+[dir='rtl'] .hb-slider__input::-moz-range-track {
 	background: linear-gradient(
 		to left,
-		var(--slider-on) var(--slider-fill),
-		var(--slider-off) var(--slider-fill)
+		var(--slider-on) var(--slider-gap-start),
+		transparent var(--slider-gap-start) calc(var(--slider-gap-start) + 6px),
+		var(--slider-off) calc(var(--slider-gap-start) + 6px)
 	);
 }
 
-/* ---------- Thumb ----------
-   6px wide: a 2px blue line in the middle, and 2px of page colour on each
-   side that "cuts" the track — just like the gap in Figma. */
+/* ---------- The line at the value (the thumb) ----------
+   30px wide and as tall as the slider; only a 2px line in its middle is drawn. */
 
-.hb-slider::-webkit-slider-thumb {
+.hb-slider__input::-webkit-slider-thumb {
 	appearance: none;
-	width: 6px;
-	height: 16px;
-	margin-top: -4px; /* centre the 16px thumb on the 8px track */
+	width: 30px;
+	height: var(--slider-height);
+	/* Centre it on the bar (Chrome puts the thumb at the top of the track). */
+	margin-top: calc((var(--slider-bar) - var(--slider-height)) / 2);
+	border: 0;
+	background: linear-gradient(var(--slider-line-colour), var(--slider-line-colour)) center / 2px
+		var(--slider-line) no-repeat;
+}
+.hb-slider__input::-moz-range-thumb {
+	width: 30px;
+	height: var(--slider-height);
 	border: 0;
 	border-radius: 0;
-	background:
-		linear-gradient(var(--slider-on), var(--slider-on)) center / 2px 100% no-repeat,
-		var(--slider-gap, var(--uncolorful-grey-background));
-}
-.hb-slider::-moz-range-thumb {
-	width: 6px;
-	height: 16px;
-	border: 0;
-	border-radius: 0;
-	background:
-		linear-gradient(var(--slider-on), var(--slider-on)) center / 2px 100% no-repeat,
-		var(--slider-gap, var(--uncolorful-grey-background));
+	background: linear-gradient(var(--slider-line-colour), var(--slider-line-colour)) center / 2px
+		var(--slider-line) no-repeat;
 }
 
-/* ---------- Disabled ---------- */
+/* ---------- The value bubble (Figma "tooltip") ----------
+   Centred on the line, 8px above the slider. Hidden at rest. */
 
-.hb-slider:disabled {
-	--slider-on: var(--uncolorful-grey-disabled);
-	--slider-off: var(--uncolorful-grey-border);
+.hb-slider__bubble {
+	position: absolute;
+	bottom: calc(100% + 8px);
+	/* The middle of the line: 15px into the 30px thumb, which travels over (width − 30px). */
+	inset-inline-start: calc(var(--slider-share) * (100% - 30px) + 15px);
+	transform: translateX(-50%);
+	z-index: 10;
+
+	padding: 4px 8px;
+	border-radius: var(--radius-s);
+	background: var(--uncolorful-grey-primary);
+	color: var(--uncolorful-grey-surface);
+	font: var(--text-body-d);
+	white-space: nowrap;
+
+	visibility: hidden;
+	opacity: 0;
+	transition: opacity 0.1s;
+	pointer-events: none;
+}
+[dir='rtl'] .hb-slider__bubble {
+	transform: translateX(50%);
+}
+
+/* ==========================================================================
+   States (Figma "state")
+   ========================================================================== */
+
+/* Hover: lighter blue, the line grows to the full height, the bubble shows. */
+.hb-slider:hover {
+	--slider-on: var(--boring-blue-60);
+	--slider-line-colour: var(--boring-blue-60);
+	--slider-line: var(--slider-height);
+}
+
+/* Pressed (while dragging): the bar is blue again, the line darker. */
+.hb-slider:has(.hb-slider__input:active) {
+	--slider-on: var(--boring-blue-50);
+	--slider-line-colour: var(--boring-blue-40);
+	--slider-line: var(--slider-height);
+}
+
+/* Keyboard focus looks like hover, so it is clear which slider the arrow keys move. */
+.hb-slider:has(.hb-slider__input:focus-visible) {
+	--slider-on: var(--boring-blue-60);
+	--slider-line-colour: var(--boring-blue-60);
+	--slider-line: var(--slider-height);
+}
+
+.hb-slider:hover .hb-slider__bubble,
+.hb-slider:has(.hb-slider__input:active) .hb-slider__bubble,
+.hb-slider:has(.hb-slider__input:focus-visible) .hb-slider__bubble {
+	visibility: visible;
+	opacity: 1;
+}
+
+/* Disabled: grey, no hover, no bubble. (Placed last so it wins over hover.) */
+.hb-slider--disabled,
+.hb-slider--disabled:hover {
+	--slider-on: var(--uncolorful-grey-secondary);
+	--slider-off: var(--uncolorful-grey-disabled);
+	--slider-line-colour: var(--uncolorful-grey-secondary);
+	--slider-line: calc(var(--slider-height) - 8px); /* the resting height: 16px / 32px */
+}
+.hb-slider--disabled .hb-slider__input {
 	cursor: not-allowed;
+}
+.hb-slider--disabled .hb-slider__bubble {
+	display: none;
 }

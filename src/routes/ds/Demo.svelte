@@ -59,8 +59,6 @@
 		padding: 24px;
 		border-radius: var(--radius-l);
 		background: var(--uncolorful-grey-surface);
-		/* Sliders on this card should "cut" with the card colour (see Slider). */
-		--slider-gap: var(--uncolorful-grey-surface);
 	}
 	.demo__stage--column {
 		flex-direction: column;
