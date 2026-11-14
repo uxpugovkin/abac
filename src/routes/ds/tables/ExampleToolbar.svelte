@@ -37,10 +37,11 @@
 		buttons
 	} = $props();
 
+	// (Only the starting values come from the props, on purpose — hence the ignores.)
 	const t = pick(content.tables); // the example texts, in the current language
+	// svelte-ignore state_referenced_locally
 	const placeholder = searchByName ? t.searchByName : t.search;
 
-	// (Only the starting values come from the props, on purpose — hence the ignores.)
 	// svelte-ignore state_referenced_locally
 	let chips = $state([...shown]); // which filter tags are in the toolbar now
 	// svelte-ignore state_referenced_locally

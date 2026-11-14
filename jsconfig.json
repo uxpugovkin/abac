@@ -1,7 +1,9 @@
 {
 	"extends": "$app/tsconfig",
 	"compilerOptions": {
-		"strict": true
+		"strict": false,
+		"checkJs": false
 	},
-	"include": ["src", "vite.config.ts", "prettier.config.js"]
+	"//": "Plain JavaScript on purpose: no type checking. `npm run check` still finds Svelte mistakes and accessibility problems.",
+	"include": ["src", "vite.config.js", "prettier.config.js"]
 }

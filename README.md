@@ -22,6 +22,7 @@ Other commands:
 | `npm run build`   | Builds the site into `build/` (this is what gets published)   |
 | `npm run preview` | Shows the built site locally                                  |
 | `npm run package` | Packs `src/lib` into `dist/` so other products can install it |
+| `npm run check`   | Looks for mistakes in the code and accessibility problems     |
 | `npm run format`  | Tidies up the formatting of all files                         |
 
 ## What is where
