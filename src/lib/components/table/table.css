@@ -192,6 +192,11 @@
 .hb-table__sort .hb-table__sort-hidden {
 	visibility: hidden;
 }
+/* In a column aligned to the far side, the arrow goes before the title,
+   so the title lines up with the values under it. */
+.hb-table .hb-table__cell--end .hb-table__sort {
+	flex-direction: row-reverse;
+}
 
 /* ---------- 3. Body cells and rows (Figma "cell") ---------- */
 
