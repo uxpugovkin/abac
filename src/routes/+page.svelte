@@ -22,7 +22,16 @@
 		<Icon name="arrow-right" />
 	</a>
 
-	<!-- Prototypes will be listed here, one card per folder in src/routes. -->
+	<!-- Prototypes: one card per folder in src/routes. -->
+	<a class="home__card" href={resolve('/abac')}>
+		<Icon name="group" />
+		<span>
+			<strong class="hb-text-body-b-bold">ABAC · Users</strong>
+			<span class="hb-text-body-c">Prototype: the user list, the user page and the JSON panel.</span
+			>
+		</span>
+		<Icon name="arrow-right" />
+	</a>
 </main>
 
 <style>

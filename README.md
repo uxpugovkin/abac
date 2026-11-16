@@ -4,7 +4,7 @@ The **habibi-library** design system, moved from Figma into code — plus the pr
 
 - **Design system** → `src/lib` (tokens + Svelte components)
 - **Live docs** → the `/ds` page: every token and component, in all four themes and in right-to-left
-- **Prototypes** → one folder each under `src/routes` (coming next)
+- **Prototypes** → one folder each under `src/routes` (the first one: `/abac`)
 
 Built with [Svelte 5](https://svelte.dev) and SvelteKit. Plain JavaScript and plain CSS — no TypeScript, no CSS framework.
 
@@ -52,6 +52,7 @@ src/
       examples.svelte.js        the "Arabic examples" switch (only the examples change, not the docs)
       employees.js              the made-up people of the table examples (ids only, words in content.js)
       tables/                   the table guidelines  →  /ds/tables
+    abac/                       the ABAC prototype  →  /abac
     (your-prototype)/           prototypes go here, one folder each
 ```
 
