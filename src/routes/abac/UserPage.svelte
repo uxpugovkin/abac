@@ -5,12 +5,13 @@
 	        and, for the old design, "domain-user-page-q2-deprecated"
 
 	Use:
-		<UserPage {user} onback={…} onjson={…} />
+		<UserPage {user} onback={…} onjson={…} onhistory={…} />
 
 	Props:
 		user     one user from data.js
 		onback   called when "Users" in the breadcrumbs is clicked
 		onjson   called when the "JSON" button is clicked
+		onhistory   called when the "Audit log" button is clicked
 
 	The page reads `proto` (the state panel):
 		proto.data      ready · loading · empty · error  — what the attributes area shows
@@ -35,7 +36,7 @@
 	import { proto, notify } from './prototype.svelte.js';
 	import Breadcrumbs from './Breadcrumbs.svelte';
 
-	let { user, onback, onjson } = $props();
+	let { user, onback, onjson, onhistory } = $props();
 
 	let old = $derived(proto.version === 'old');
 
@@ -155,7 +156,7 @@
 				<!-- The old design kept its actions here, next to the title. -->
 				<span class="title__actions">
 					<Button icon="brackets" label="JSON" onclick={onjson} />
-					<Button icon="wait" label="Audit log" onclick={() => notBuilt('Audit log')} />
+					<Button icon="wait" label="Audit log" onclick={onhistory} />
 					<Button icon="overflow" label="More" onclick={() => notBuilt('This menu')} />
 				</span>
 			{/if}
@@ -173,7 +174,7 @@
 			{@render search()}
 			<span class="bar__end">
 				<Button icon="brackets" onclick={onjson}>JSON</Button>
-				<Button icon="wait" onclick={() => notBuilt('Audit log')}>Audit log</Button>
+				<Button icon="wait" onclick={onhistory}>Audit log</Button>
 				<Button icon="overflow" label="More" onclick={() => notBuilt('This menu')} />
 			</span>
 		</div>

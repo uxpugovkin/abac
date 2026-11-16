@@ -3,6 +3,7 @@
 	It is NOT part of the product. It switches what the screens pretend:
 
 		Data      Ready · Loading · Empty · Error   what the server "answered"
+		Compare   Differs · Same · Nothing          what a comparison finds (users, snapshots)
 		Screens   New · Deprecated                  the abac-r5 design, or the old Q2 one
 		Theme     Light · Dark · Olive · Olive Night
 		Right-to-left
@@ -25,6 +26,11 @@
 		{ value: 'loading', label: 'Loading' },
 		{ value: 'empty', label: 'Empty' },
 		{ value: 'error', label: 'Error' }
+	];
+	const compares = [
+		{ value: 'diff', label: 'Differs' },
+		{ value: 'same', label: 'Same' },
+		{ value: 'nothing', label: 'Nothing' }
 	];
 	const versions = [
 		{ value: 'new', label: 'New' },
@@ -49,6 +55,10 @@
 			<div class="panel__row">
 				<span class="hb-text-body-d">Data</span>
 				<Segmented options={dataStates} bind:value={proto.data} />
+			</div>
+			<div class="panel__row">
+				<span class="hb-text-body-d">Compare</span>
+				<Segmented options={compares} bind:value={proto.compare} />
 			</div>
 			<div class="panel__row">
 				<span class="hb-text-body-d">Screens</span>

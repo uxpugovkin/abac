@@ -1,7 +1,8 @@
 <!--
 	ABAC PROTOTYPE  —  /abac
 	The "Users" part of the ABAC service: the list of a domain's users, the page
-	of one user, and the JSON panel.
+	of one user, their history, the JSON panel and the two comparisons
+	(user against user, snapshot against snapshot).
 
 	Figma:  sbertech-habibi → page "abac-r5"
 	        https://www.figma.com/design/OKwPuNTKnQ3p99F03r9MyG/sbertech-habibi?node-id=0-1
@@ -11,7 +12,12 @@
 		UsersList.svelte        the list of users (new design)
 		UsersListOld.svelte     the same list in the old Q2 design (deprecated)
 		UserPage.svelte         one user: attributes, roles, delegations
-		JsonDrawer.svelte       the JSON panel
+		HistoryPage.svelte      the history of one user (opened with "Audit log")
+		JsonDrawer.svelte       the JSON panel: read it, or compare with another user
+		SnapshotsDrawer.svelte  compare two snapshots of the history
+		CompareView.svelte      the result of a comparison (both panels use it)
+		Drawer.svelte           the sliding panel itself
+		JsonText.svelte         JSON with its colours
 		Breadcrumbs.svelte      the "where am I" line above a title
 		StatePanel.svelte       the tiny panel that switches states, designs and themes
 		prototype.svelte.js     what that panel switches (`proto`)
@@ -28,14 +34,23 @@
 	import UsersList from './UsersList.svelte';
 	import UsersListOld from './UsersListOld.svelte';
 	import UserPage from './UserPage.svelte';
+	import HistoryPage from './HistoryPage.svelte';
 	import JsonDrawer from './JsonDrawer.svelte';
+	import SnapshotsDrawer from './SnapshotsDrawer.svelte';
 	import StatePanel from './StatePanel.svelte';
 
 	let openId = $state(''); // the id of the user whose page is open; '' = the list
+	let history = $state(false); // true = the history of that user, instead of their page
 	let jsonId = $state(''); // the id of the user whose JSON panel is open; '' = closed
+	let snapshotId = $state(''); // the id of the snapshot being compared with the current one; '' = closed
 
 	let openUser = $derived(users.find((user) => user.id === openId));
 	let jsonUser = $derived(users.find((user) => user.id === jsonId));
+
+	function toList() {
+		openId = '';
+		history = false;
+	}
 
 	// Theme and direction go onto <html>, so every component follows (see the README).
 	// When the person leaves the prototype, the site gets its own look back.
@@ -58,8 +73,20 @@
 	<Sidebar />
 
 	<main class="page hb-scroll">
-		{#if openUser}
-			<UserPage user={openUser} onback={() => (openId = '')} onjson={() => (jsonId = openId)} />
+		{#if openUser && history}
+			<HistoryPage
+				user={openUser}
+				onback={toList}
+				onuser={() => (history = false)}
+				oncompare={(snapshot) => (snapshotId = snapshot.id)}
+			/>
+		{:else if openUser}
+			<UserPage
+				user={openUser}
+				onback={toList}
+				onjson={() => (jsonId = openId)}
+				onhistory={() => (history = true)}
+			/>
 		{:else if proto.version === 'old'}
 			<UsersListOld onopen={(user) => (openId = user.id)} />
 		{:else}
@@ -70,6 +97,10 @@
 
 {#if jsonUser}
 	<JsonDrawer user={jsonUser} onclose={() => (jsonId = '')} />
+{/if}
+
+{#if openUser && snapshotId}
+	<SnapshotsDrawer user={openUser} {snapshotId} onclose={() => (snapshotId = '')} />
 {/if}
 
 {#if proto.toast}
