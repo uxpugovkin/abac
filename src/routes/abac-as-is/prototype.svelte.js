@@ -10,7 +10,6 @@
 	proto.data      what the server "answered":  "ready" | "loading" | "empty" | "error"
 	proto.compare   what a comparison finds (it is mocked, see data.js):
 	                "diff" (differences) | "same" (no differences) | "nothing" (nothing to compare)
-	proto.version   which design is shown:       "new" (abac-r5) | "old" (the Q2 screens, deprecated)
 	proto.theme     "light" | "dark" | "olive" | "olive-night".  Figma draws ABAC in olive
 	proto.rtl       true = right-to-left
 	proto.toast     the message on screen now: { text, type } or null
@@ -19,7 +18,6 @@
 export const proto = $state({
 	data: 'ready',
 	compare: 'diff',
-	version: 'new',
 	theme: 'olive',
 	rtl: false,
 	toast: null

@@ -23,11 +23,22 @@
 	</a>
 
 	<!-- Prototypes: one card per folder in src/routes. -->
-	<a class="home__card" href={resolve('/abac')}>
+	<a class="home__card" href={resolve('/abac-as-is')}>
 		<Icon name="group" />
 		<span>
-			<strong class="hb-text-body-b-bold">ABAC · Users</strong>
-			<span class="hb-text-body-c">Prototype: the user list, the user page and the JSON panel.</span
+			<strong class="hb-text-body-b-bold">ABAC · Users, as is</strong>
+			<span class="hb-text-body-c"
+				>The users of a domain as designed today: list, user page, history, JSON and comparisons.</span
+			>
+		</span>
+		<Icon name="arrow-right" />
+	</a>
+	<a class="home__card" href={resolve('/abac-to-be')}>
+		<Icon name="group" />
+		<span>
+			<strong class="hb-text-body-b-bold">ABAC · Users, to be</strong>
+			<span class="hb-text-body-c"
+				>Proposed changes: the user page shows JSON in place, “Compare” opens the comparison.</span
 			>
 		</span>
 		<Icon name="arrow-right" />

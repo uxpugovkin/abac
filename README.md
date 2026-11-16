@@ -4,7 +4,7 @@ The **habibi-library** design system, moved from Figma into code — plus the pr
 
 - **Design system** → `src/lib` (tokens + Svelte components)
 - **Live docs** → the `/ds` page: every token and component, in all four themes and in right-to-left
-- **Prototypes** → one folder each under `src/routes` (the first one: `/abac`)
+- **Prototypes** → one folder each under `src/routes` (`/abac-as-is` and `/abac-to-be`)
 
 Built with [Svelte 5](https://svelte.dev) and SvelteKit. Plain JavaScript and plain CSS — no TypeScript, no CSS framework.
 
@@ -52,7 +52,8 @@ src/
       examples.svelte.js        the "Arabic examples" switch (only the examples change, not the docs)
       employees.js              the made-up people of the table examples (ids only, words in content.js)
       tables/                   the table guidelines  →  /ds/tables
-    abac/                       the ABAC prototype  →  /abac
+    abac-as-is/                 the ABAC prototype as designed today  →  /abac-as-is
+    abac-to-be/                 its copy where changes are tried out  →  /abac-to-be
     (your-prototype)/           prototypes go here, one folder each
 ```
 
@@ -112,8 +113,8 @@ Open any component file to see all of its options — they are listed in the com
 
 ## Add a prototype
 
-Make a folder in `src/routes/`, for example `src/routes/abac/+page.svelte` for the ABAC prototype.
-It is live at `/abac` on the site.
+Make a folder in `src/routes/`, for example `src/routes/abac-as-is/+page.svelte` for the ABAC prototype.
+It is live at `/abac-as-is` on the site.
 Import components from `#lib`. If the prototype needs a component that does not exist yet,
 add it to the design system first, then use it.
 

@@ -4,7 +4,6 @@
 
 		Data      Ready · Loading · Empty · Error   what the server "answered"
 		Compare   Differs · Same · Nothing          what a comparison finds (users, snapshots)
-		Screens   New · Deprecated                  the abac-r5 design, or the old Q2 one
 		Theme     Light · Dark · Olive · Olive Night
 		Right-to-left
 
@@ -32,10 +31,6 @@
 		{ value: 'same', label: 'Same' },
 		{ value: 'nothing', label: 'Nothing' }
 	];
-	const versions = [
-		{ value: 'new', label: 'New' },
-		{ value: 'old', label: 'Deprecated' }
-	];
 	const themes = [
 		{ value: 'light', label: 'Light' },
 		{ value: 'dark', label: 'Dark' },
@@ -59,10 +54,6 @@
 			<div class="panel__row">
 				<span class="hb-text-body-d">Compare</span>
 				<Segmented options={compares} bind:value={proto.compare} />
-			</div>
-			<div class="panel__row">
-				<span class="hb-text-body-d">Screens</span>
-				<Segmented options={versions} bind:value={proto.version} />
 			</div>
 			<div class="panel__row">
 				<span class="hb-text-body-d">Theme</span>

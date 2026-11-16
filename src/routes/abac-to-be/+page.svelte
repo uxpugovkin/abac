@@ -1,6 +1,12 @@
 <!--
-	ABAC PROTOTYPE  —  /abac
-	The "Users" part of the ABAC service: the list of a domain's users, the page
+	ABAC PROTOTYPE, TO BE  —  /abac-to-be
+	The "Users" part of the ABAC service, as we want it to become.
+	It started as a copy of /abac-as-is. What is different here:
+		- the user page has a "JSON" switch next to its search: the page shows its
+		  content as code instead of cards
+		- the "JSON" button is now "Compare": it opens only the comparison
+
+	What it has: the list of a domain's users, the page
 	of one user, their history, the JSON panel and the two comparisons
 	(user against user, snapshot against snapshot).
 
@@ -10,10 +16,10 @@
 	The pieces (all in this folder):
 		Sidebar.svelte          the side menu of the service
 		UsersList.svelte        the list of users (new design)
-		UsersListOld.svelte     the same list in the old Q2 design (deprecated)
 		UserPage.svelte         one user: attributes, roles, delegations
 		HistoryPage.svelte      the history of one user (opened with "Audit log")
-		JsonDrawer.svelte       the JSON panel: read it, or compare with another user
+		JsonCode.svelte         a JSON as code over the whole page (the user page's "JSON" switch)
+		CompareDrawer.svelte    compare the user with another user
 		SnapshotsDrawer.svelte  compare two snapshots of the history
 		CompareView.svelte      the result of a comparison (both panels use it)
 		Drawer.svelte           the sliding panel itself
@@ -32,20 +38,26 @@
 	import { proto } from './prototype.svelte.js';
 	import Sidebar from './Sidebar.svelte';
 	import UsersList from './UsersList.svelte';
-	import UsersListOld from './UsersListOld.svelte';
 	import UserPage from './UserPage.svelte';
 	import HistoryPage from './HistoryPage.svelte';
-	import JsonDrawer from './JsonDrawer.svelte';
+	import CompareDrawer from './CompareDrawer.svelte';
 	import SnapshotsDrawer from './SnapshotsDrawer.svelte';
 	import StatePanel from './StatePanel.svelte';
 
 	let openId = $state(''); // the id of the user whose page is open; '' = the list
 	let history = $state(false); // true = the history of that user, instead of their page
-	let jsonId = $state(''); // the id of the user whose JSON panel is open; '' = closed
+	let json = $state(false); // true = the user page shows its content as JSON code
+	let compareId = $state(''); // the id of the user whose compare panel is open; '' = closed
 	let snapshotId = $state(''); // the id of the snapshot being compared with the current one; '' = closed
 
 	let openUser = $derived(users.find((user) => user.id === openId));
-	let jsonUser = $derived(users.find((user) => user.id === jsonId));
+	let compareUser = $derived(users.find((user) => user.id === compareId));
+
+	// Opens a user's page; `asJson` = straight in the JSON view.
+	function open(user, asJson = false) {
+		openId = user.id;
+		json = asJson;
+	}
 
 	function toList() {
 		openId = '';
@@ -66,7 +78,7 @@
 </script>
 
 <svelte:head>
-	<title>ABAC · Users — Habibi UI prototype</title>
+	<title>ABAC · Users (to-be) — Habibi UI prototype</title>
 </svelte:head>
 
 <div class="app">
@@ -83,20 +95,23 @@
 		{:else if openUser}
 			<UserPage
 				user={openUser}
+				bind:json
 				onback={toList}
-				onjson={() => (jsonId = openId)}
+				oncompare={() => (compareId = openId)}
 				onhistory={() => (history = true)}
 			/>
-		{:else if proto.version === 'old'}
-			<UsersListOld onopen={(user) => (openId = user.id)} />
 		{:else}
-			<UsersList onopen={(user) => (openId = user.id)} onjson={(user) => (jsonId = user.id)} />
+			<UsersList
+				onopen={(user) => open(user)}
+				onjson={(user) => open(user, true)}
+				oncompare={(user) => (compareId = user.id)}
+			/>
 		{/if}
 	</main>
 </div>
 
-{#if jsonUser}
-	<JsonDrawer user={jsonUser} onclose={() => (jsonId = '')} />
+{#if compareUser}
+	<CompareDrawer user={compareUser} onclose={() => (compareId = '')} />
 {/if}
 
 {#if openUser && snapshotId}

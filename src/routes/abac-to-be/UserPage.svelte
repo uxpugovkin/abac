@@ -2,74 +2,52 @@
 	USER PAGE — everything ABAC knows about one user.
 
 	Figma:  sbertech-habibi → page "abac-r5" → "domain-user-page" (2-1, three variants)
-	        and, for the old design, "domain-user-page-q2-deprecated"
 
 	Use:
-		<UserPage {user} onback={…} onjson={…} onhistory={…} />
+		<UserPage {user} bind:json onback={…} oncompare={…} onhistory={…} />
 
 	Props:
 		user     one user from data.js
 		onback   called when "Users" in the breadcrumbs is clicked
-		onjson   called when the "JSON" button is clicked
+		json        true = the content is shown as JSON code (the "JSON" switch). Bindable
+		oncompare   called when the "Compare" button is clicked
 		onhistory   called when the "Audit log" button is clicked
 
-	The page reads `proto` (the state panel):
-		proto.data      ready · loading · empty · error  — what the attributes area shows
-		proto.version   "new" = abac-r5;  "old" = the Q2 layout (other tabs, group switch)
+	TO BE: next to the search there is a "JSON" switch. On, the open tab shows its
+	content as code over the whole page (JsonCode) instead of cards, and the search
+	marks the matching lines. The old "JSON" button became "Compare".
+
+	The page reads `proto.data` (the state panel): ready · loading · empty · error —
+	what the attributes area shows.
 
 	Some users are broken on purpose, as in Figma: a user whose domain attributes
 	are not filled shows "Failed to load the user schema", whatever the state panel says.
 -->
 <script>
-	import {
-		Button,
-		Tabs,
-		Tag,
-		TextInput,
-		Segmented,
-		Table,
-		Skeleton,
-		EmptyState,
-		Notification
-	} from '#lib';
-	import { statuses, formatSync, attributeGroups, roles } from './data.js';
+	import { Button, Tabs, Tag, TextInput, Switch, Table, Skeleton, EmptyState } from '#lib';
+	import { statuses, formatSync, attributeGroups, roles, jsonOf } from './data.js';
 	import { proto, notify } from './prototype.svelte.js';
 	import Breadcrumbs from './Breadcrumbs.svelte';
+	import JsonCode from './JsonCode.svelte';
 
-	let { user, onback, onjson, onhistory } = $props();
-
-	let old = $derived(proto.version === 'old');
+	let { user, json = $bindable(false), onback, oncompare, onhistory } = $props();
 
 	/* ---------- Tabs ---------- */
 
-	const newTabs = [
+	const tabs = [
 		{ id: 'attributes', label: 'Domain attributes' },
 		{ id: 'roles', label: 'Roles and privileges' },
 		{ id: 'delegations', label: 'Delegations' }
 	];
-	const oldTabs = [
-		{ id: 'attributes', label: 'Domain attributes' },
-		{ id: 'incoming', label: 'Incoming delegations' },
-		{ id: 'outgoing', label: 'Outgoing delegations' }
-	];
 	let tab = $state('attributes');
 
-	// The two designs have different tabs: after a switch, start from the first one.
-	$effect(() => {
-		proto.version;
-		tab = 'attributes';
-	});
-
-	/* ---------- Attributes: search (both designs) and the group switch (old design) ---------- */
+	/* ---------- Attributes: the search narrows the groups to the matching rows ---------- */
 
 	let query = $state('');
-	let group = $state('All');
-	const groupNames = ['All', ...attributeGroups.map((item) => item.title)];
 
 	let groups = $derived.by(() => {
 		const words = query.trim().toLowerCase();
 		return attributeGroups
-			.filter((item) => !old || group === 'All' || item.title === group)
 			.map((item) => ({
 				...item,
 				rows: item.rows.filter((row) => row.some((text) => text.toLowerCase().includes(words)))
@@ -93,22 +71,16 @@
 		{ key: 'validUntil', label: 'Valid until', width: 140 }
 	];
 
-	let crumbs = $derived(
-		old
-			? [
-					{ label: 'tenant' },
-					{ label: 'cyber-security-tenant', quiet: true },
-					{ label: 'domain' },
-					{ label: 'res-domain-144', quiet: true },
-					{ label: 'Users', onclick: onback },
-					{ label: user.fullName ?? user.login, current: true }
-				]
-			: [
-					{ label: 'cyber-security-tenant' },
-					{ label: 'res-domain-144', domains: true },
-					{ label: 'Users', onclick: onback }
-				]
+	// What the JSON view shows for each tab. Delegations have no JSON yet.
+	let code = $derived(
+		tab === 'attributes' ? jsonOf(user).domain : tab === 'roles' ? jsonOf(user).roles : null
 	);
+
+	let crumbs = $derived([
+		{ label: 'cyber-security-tenant' },
+		{ label: 'res-domain-144', domains: true },
+		{ label: 'Users', onclick: onback }
+	]);
 
 	function notBuilt(what) {
 		notify(`${what} is not part of this prototype`);
@@ -119,18 +91,14 @@
 	<div class="search">
 		<TextInput
 			icon="search"
-			placeholder="Search attributes"
-			aria-label="Search attributes"
+			placeholder={json ? 'Search in JSON' : 'Search attributes'}
+			aria-label={json ? 'Search in JSON' : 'Search attributes'}
 			bind:value={query}
 		/>
 	</div>
 {/snippet}
 
 <div class="screen">
-	{#if old}
-		<Notification type="warning">Deprecated Q2 screen — shown only for comparison.</Notification>
-	{/if}
-
 	<header class="head">
 		<Breadcrumbs items={crumbs} />
 
@@ -151,15 +119,6 @@
 			{#if user.domainAttrs === 'empty'}<Tag colour="error" icon="warning">Domain attributes</Tag
 				>{/if}
 			{#if user.baseAttrs === 'empty'}<Tag colour="error" icon="warning">Base attributes</Tag>{/if}
-
-			{#if old}
-				<!-- The old design kept its actions here, next to the title. -->
-				<span class="title__actions">
-					<Button icon="brackets" label="JSON" onclick={onjson} />
-					<Button icon="wait" label="Audit log" onclick={onhistory} />
-					<Button icon="overflow" label="More" onclick={() => notBuilt('This menu')} />
-				</span>
-			{/if}
 		</div>
 
 		<div class="hb-text-body-c ids">
@@ -169,27 +128,44 @@
 		</div>
 	</header>
 
-	{#if !old}
-		<div class="bar">
-			{@render search()}
-			<span class="bar__end">
-				<Button icon="brackets" onclick={onjson}>JSON</Button>
-				<Button icon="wait" onclick={onhistory}>Audit log</Button>
-				<Button icon="overflow" label="More" onclick={() => notBuilt('This menu')} />
-			</span>
+	<div class="bar">
+		{@render search()}
+		<!-- On: the tab below shows its content as code instead of cards. -->
+		<span class="bar__json"><Switch bind:checked={json}>JSON</Switch></span>
+		<span class="bar__end">
+			<Button icon="split" onclick={oncompare}>Compare</Button>
+			<Button icon="wait" onclick={onhistory}>Audit log</Button>
+			<Button icon="overflow" label="More" onclick={() => notBuilt('This menu')} />
+		</span>
+	</div>
+
+	<Tabs {tabs} bind:active={tab} />
+
+	{#if json && proto.data === 'loading'}
+		<section class="card" aria-busy="true">
+			{#each [8, 30, 45, 60, 40, 55, 35, 50, 25, 8] as size}<Skeleton width="{size}%" />{/each}
+		</section>
+	{:else if json && (proto.data === 'error' || (tab === 'attributes' && view === 'failed'))}
+		<div class="fill">
+			<EmptyState
+				type="maintenance"
+				title="Failed to load the user schema"
+				description="The JSON of this user cannot be shown until the schema loads."
+			/>
 		</div>
-	{/if}
-
-	<Tabs tabs={old ? oldTabs : newTabs} bind:active={tab} />
-
-	{#if tab === 'attributes'}
-		{#if old}
-			<div class="bar">
-				<Segmented options={groupNames} bind:value={group} />
-				<span class="bar__end">{@render search()}</span>
-			</div>
-		{/if}
-
+	{:else if json && code && proto.data === 'ready'}
+		<JsonCode value={code} {query} />
+	{:else if json}
+		<div class="fill">
+			<EmptyState
+				type="empty"
+				title="No JSON yet"
+				description={tab === 'delegations'
+					? 'Delegations have no JSON view yet.'
+					: 'There is nothing to show as JSON until the first sync.'}
+			/>
+		</div>
+	{:else if tab === 'attributes'}
 		{#if view === 'loading'}
 			<section class="card" aria-busy="true">
 				<Skeleton width={160} />
@@ -293,11 +269,6 @@
 	.title h1 {
 		margin: 0;
 	}
-	.title__actions {
-		display: flex;
-		gap: 8px;
-		margin-inline-start: auto;
-	}
 	.ids {
 		display: flex;
 		gap: 8px;
@@ -312,6 +283,11 @@
 		flex-wrap: wrap;
 		align-items: center;
 		gap: 8px;
+	}
+	.bar__json {
+		display: inline-flex;
+		align-items: center;
+		margin-inline-start: 4px; /* 8 + 4: a little apart from the search, as the toolbar switch */
 	}
 	.bar__end {
 		display: flex;

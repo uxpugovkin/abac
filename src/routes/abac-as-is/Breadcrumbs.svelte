@@ -19,7 +19,6 @@
 		          onclick   if set, the step is a link (a button) that calls it
 		          domains   true = a small arrow after the text; a click opens the list of
 		                    domains (DomainPicker)
-		          quiet     true = grey text (the old screens write values like this)
 		          current   true = the page you are on: pale grey
 -->
 <script>
@@ -47,7 +46,6 @@
 		{:else}
 			<span
 				class="crumbs__step"
-				class:crumbs__step--quiet={item.quiet}
 				class:crumbs__step--current={item.current}
 				aria-current={item.current ? 'page' : undefined}
 			>
@@ -86,9 +84,6 @@
 	button.crumbs__step:hover {
 		color: var(--boring-blue-40);
 		text-decoration: underline;
-	}
-	.crumbs__step--quiet {
-		color: var(--uncolorful-grey-secondary);
 	}
 	.crumbs__step--current {
 		color: var(--uncolorful-grey-disabled);
