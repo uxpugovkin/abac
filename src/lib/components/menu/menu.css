@@ -57,7 +57,10 @@
 	color: var(--boring-blue-50);
 }
 
-.hb-menu__item:disabled {
+/* Disabled: no states — hover and press look exactly like rest. */
+.hb-menu__item:disabled,
+.hb-menu__item:disabled:hover,
+.hb-menu__item:disabled:active {
 	background: transparent;
 	color: var(--uncolorful-grey-tertiary);
 	cursor: not-allowed;

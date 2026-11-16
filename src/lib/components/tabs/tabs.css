@@ -40,7 +40,10 @@
 	color: var(--boring-blue-60);
 }
 
-.hb-tab:disabled {
+/* Disabled: no states — hover and press look exactly like rest. */
+.hb-tab:disabled,
+.hb-tab:disabled:hover,
+.hb-tab:disabled:active {
 	color: var(--uncolorful-grey-disabled);
 	cursor: not-allowed;
 }

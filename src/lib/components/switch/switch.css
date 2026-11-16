@@ -80,14 +80,20 @@
 	box-shadow: var(--shadow-accent-l);
 }
 
-/* ---------- Disabled (same look on and off) ---------- */
+/* ---------- Disabled (same look on and off) ----------
+   A disabled control has no states: hover and press look exactly like rest. */
 
-.hb-switch:disabled {
+.hb-switch:disabled,
+.hb-switch:disabled:hover,
+.hb-switch:disabled:checked,
+.hb-switch:disabled:checked:hover {
 	background: var(--uncolorful-grey-border);
 	box-shadow: inset 0 0 0 1px var(--uncolorful-grey-disabled);
 	cursor: not-allowed;
 }
-.hb-switch:disabled::before {
+.hb-switch:disabled::before,
+.hb-switch:disabled:checked::before,
+.hb-switch--big:disabled:checked::before {
 	background: var(--uncolorful-grey-disabled);
 	box-shadow: none;
 }

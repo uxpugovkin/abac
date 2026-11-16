@@ -53,10 +53,15 @@
 	background: var(--boring-blue-70);
 	color: var(--boring-blue-40);
 }
-.hb-chip--scope:disabled {
+/* Disabled: no states — hover and press look exactly like rest. */
+.hb-chip--scope:disabled,
+.hb-chip--scope:disabled:hover,
+.hb-chip--scope:disabled:active {
 	background: transparent;
 }
-.hb-chip--scope.hb-chip--active:disabled {
+.hb-chip--scope.hb-chip--active:disabled,
+.hb-chip--scope.hb-chip--active:disabled:hover,
+.hb-chip--scope.hb-chip--active:disabled:active {
 	background: var(--uncolorful-grey-disabled);
 	color: var(--uncolorful-grey-tertiary);
 }

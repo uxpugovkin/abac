@@ -182,9 +182,11 @@
 	opacity: 1;
 }
 
-/* Disabled: grey, no hover, no bubble. (Placed last so it wins over hover.) */
+/* Disabled: grey, no bubble. A disabled control has no states:
+   hover and press look exactly like rest. */
 .hb-slider--disabled,
-.hb-slider--disabled:hover {
+.hb-slider--disabled:hover,
+.hb-slider--disabled:has(.hb-slider__input:active) {
 	--slider-on: var(--uncolorful-grey-secondary);
 	--slider-off: var(--uncolorful-grey-disabled);
 	--slider-line-colour: var(--uncolorful-grey-secondary);
