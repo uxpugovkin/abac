@@ -150,9 +150,15 @@
 
 /* ---------- SearchChip ---------- */
 
-/* The open search box has a fixed width, so the toolbar does not jump while typing. */
+/* The open search box has a fixed width, so the toolbar does not jump while typing.
+   The field inside fills it exactly: otherwise the box is narrower than its place and
+   the gap to the next tag grows while the search is open. */
 .hb-search-chip {
+	display: inline-flex;
 	width: 220px;
+}
+.hb-search-chip > .hb-field {
+	flex: 1;
 }
 /* The applied search chip starts with an icon, so it needs less padding at the start. */
 .hb-chip--search {
