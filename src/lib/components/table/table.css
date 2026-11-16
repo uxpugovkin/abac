@@ -183,9 +183,14 @@
 	font: inherit;
 	cursor: pointer;
 }
-/* The little arrow that shows which column the rows are sorted by. */
+/* The little arrow that shows which column the rows are sorted by.
+   Every sortable title keeps room for it; it is only visible on the sorted one. */
 .hb-table__sort .hb-icon {
+	flex: none;
 	color: var(--boring-blue-50);
+}
+.hb-table__sort .hb-table__sort-hidden {
+	visibility: hidden;
 }
 
 /* ---------- 3. Body cells and rows (Figma "cell") ---------- */
@@ -227,9 +232,9 @@
 	-webkit-line-clamp: 3;
 	overflow: hidden;
 }
-/* A sortable header that wraps: its text may wrap too, and stays at the start. */
+/* A sortable header that wraps: its text may wrap too, and stays at the start.
+   (The arrow stays in the middle of the text, like everything in the header.) */
 .hb-table .hb-table__cell--wrap .hb-table__sort {
-	align-items: baseline;
 	text-align: start;
 }
 .hb-table .hb-table__cell--wrap .hb-table__sort span {

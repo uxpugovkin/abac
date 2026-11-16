@@ -232,9 +232,13 @@
 		{#if column.sortable}
 			<button class="hb-table__sort" type="button" onclick={() => onsort?.(column.key)}>
 				<span>{column.label}</span>
-				{#if column.key === sortKey}
-					<Icon name={sortDirection === 'asc' ? 'arrow-up' : 'arrow-down'} size={16} />
-				{/if}
+				<!-- The arrow is always there, but only visible on the sorted column:
+				     its room is kept, so the titles do not move when the sorting changes. -->
+				<Icon
+					name={column.key === sortKey && sortDirection === 'desc' ? 'arrow-down' : 'arrow-up'}
+					size={16}
+					class={column.key === sortKey ? '' : 'hb-table__sort-hidden'}
+				/>
 			</button>
 		{:else}
 			{column.label}
