@@ -396,8 +396,16 @@
 	align-items: center;
 	gap: 8px;
 }
+/* Things wrapped in a plain <span> (a switch, a button with its list) are centred too:
+   everything in the toolbar sits in the middle of the line, whatever its height. */
+.hb-table-toolbar > span,
+.hb-table-toolbar__end > span {
+	display: inline-flex;
+	align-items: center;
+}
 .hb-table-toolbar__end {
 	display: flex;
+	align-items: center;
 	gap: 8px;
 	margin-inline-start: auto;
 }

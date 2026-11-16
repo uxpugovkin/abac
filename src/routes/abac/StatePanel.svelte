@@ -77,8 +77,9 @@
 		inset-inline-end: 16px;
 		z-index: 100; /* above everything, also above the JSON panel */
 	}
+	/* No cast shadows: a 1px line sets the panel apart from the page. */
 	.panel > :global(.hb-button) {
-		box-shadow: var(--shadow-default-l);
+		box-shadow: 0 0 0 1px var(--uncolorful-grey-border);
 	}
 	.panel__card {
 		display: flex;
@@ -87,9 +88,7 @@
 		padding: 8px 12px 12px;
 		border-radius: var(--radius-l);
 		background: var(--uncolorful-grey-surface);
-		box-shadow:
-			0 0 0 1px var(--uncolorful-grey-border),
-			var(--shadow-default-l);
+		box-shadow: 0 0 0 1px var(--uncolorful-grey-border);
 	}
 	.panel__head,
 	.panel__row {

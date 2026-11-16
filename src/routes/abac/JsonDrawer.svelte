@@ -146,7 +146,7 @@
 		display: flex;
 		max-width: 100vw;
 		background: var(--uncolorful-grey-background);
-		box-shadow: var(--shadow-default-l);
+		border-inline-start: 1px solid var(--uncolorful-grey-border);
 	}
 	.body {
 		flex: 1;
@@ -184,7 +184,6 @@
 		flex-direction: column;
 		border-radius: var(--radius-l);
 		background: var(--uncolorful-grey-surface);
-		box-shadow: var(--shadow-default-s);
 	}
 	.tools {
 		padding: 8px;

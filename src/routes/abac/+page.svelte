@@ -88,6 +88,10 @@
 		flex: 1;
 		min-width: 0;
 		overflow: auto;
+		/* Room for the up-down scrollbar is kept even when a filter leaves too few rows to
+		   scroll — otherwise the whole page would jump sideways (same as the Window of the
+		   table guide, src/routes/ds/tables/Window.svelte). */
+		scrollbar-gutter: stable;
 		--table-surface: var(--uncolorful-grey-surface);
 	}
 	/* Short messages: bottom centre, above everything. */

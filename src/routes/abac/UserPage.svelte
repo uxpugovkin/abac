@@ -351,7 +351,6 @@
 		padding: 12px;
 		border-radius: var(--radius-l);
 		background: var(--uncolorful-grey-surface);
-		box-shadow: var(--shadow-default-s);
 	}
 	.card--table {
 		padding: 0 0 8px;

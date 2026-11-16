@@ -26,7 +26,7 @@
 		{ key: 'name', label: 'Name', sortable: true },
 		{ key: 'surname', label: 'Surname', sortable: true },
 		{ key: 'patronymic', label: 'Patronymic', sortable: true },
-		{ key: 'uid', label: 'ID', sortable: true },
+		{ key: 'uid', label: 'ID' },
 		{ key: 'lastSync', label: 'Last sync', width: 160, sortable: true, align: 'end' }
 	];
 
@@ -90,7 +90,7 @@
 					{:else if column.key === 'lastSync' && user.lastSync}
 						<span dir="ltr">{formatSync(user.lastSync).slice(0, 16)}</span>
 					{:else}
-						{user[column.key] ?? '—'}
+						{#if user[column.key] == null}<span class="none">—</span>{:else}{user[column.key]}{/if}
 					{/if}
 				{/snippet}
 			</Table>
@@ -102,7 +102,7 @@
 	.screen {
 		display: flex;
 		flex-direction: column;
-		gap: 16px;
+		gap: 12px; /* toolbar and table sit 12px apart, as in the table guide */
 		min-height: 100%;
 		padding: 24px;
 	}
@@ -123,12 +123,15 @@
 		padding: 0 0 8px;
 		border-radius: var(--radius-l);
 		background: var(--uncolorful-grey-surface);
-		box-shadow: var(--shadow-default-s);
 	}
 	.card :global(th:first-child) {
 		border-start-start-radius: var(--radius-l);
 	}
 	.card :global(th:last-child) {
 		border-start-end-radius: var(--radius-l);
+	}
+	/* The dash of an empty cell is pale. */
+	.none {
+		color: var(--uncolorful-grey-tertiary);
 	}
 </style>

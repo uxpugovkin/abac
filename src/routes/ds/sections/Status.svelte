@@ -23,6 +23,9 @@
 	</div>
 	<div class="row">
 		{#each colours as colour}<Tag {colour} size="xs">{t.colours[colour]}</Tag>{/each}
+		{#each colours as colour}<Tag {colour} size="xs" shape="circle">{t.colours[colour]}</Tag>{/each}
+		{#each colours as colour}<Tag {colour} size="xs" shape="circle" outline>{t.colours[colour]}</Tag
+			>{/each}
 	</div>
 </Demo>
 

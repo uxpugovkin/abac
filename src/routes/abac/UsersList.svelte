@@ -42,7 +42,7 @@
 	const columns = [
 		{ key: 'login', label: 'Login', width: 176, sortable: true },
 		{ key: 'fullName', label: 'Full Name', sortable: true },
-		{ key: 'uid', label: 'UID', width: 120, sortable: true },
+		{ key: 'uid', label: 'UID', width: 120 },
 		{ key: 'status', label: 'Status', width: 120, sortable: true },
 		{ key: 'domainAttrs', label: 'Domain attributes', width: 144 },
 		{ key: 'baseAttrs', label: 'Base attributes', width: 144 },
@@ -267,15 +267,11 @@
 			<span class="warnings"><Switch bind:checked={warningsOnly}>Warnings only</Switch></span>
 
 			{#snippet end()}
-				<Button
-					appearance="white"
-					icon="upload"
-					onclick={() => notify('Import is not part of this prototype')}>Import</Button
+				<Button icon="upload" onclick={() => notify('Import is not part of this prototype')}
+					>Import</Button
 				>
-				<Button
-					appearance="white"
-					icon="download"
-					onclick={() => notify(`Exported ${rows.length} users`, 'success')}>Export</Button
+				<Button icon="download" onclick={() => notify(`Exported ${rows.length} users`, 'success')}
+					>Export</Button
 				>
 			{/snippet}
 		</TableToolbar>
@@ -309,8 +305,12 @@
 						{#if user.loading}
 							<Skeleton width={column.key === 'fullName' ? '50%' : '70%'} />
 						{:else if column.key === 'status' && user.status}
-							<Tag colour={statuses[user.status].colour} size="xs"
-								>{statuses[user.status].label}</Tag
+							<!-- Statuses have a round marker; "Inactive" is an outline (not filled). -->
+							<Tag
+								colour={statuses[user.status].colour}
+								size="xs"
+								shape="circle"
+								outline={user.status === 'inactive'}>{statuses[user.status].label}</Tag
 							>
 						{:else if (column.key === 'domainAttrs' || column.key === 'baseAttrs') && user[column.key]}
 							{#if user[column.key] === 'empty'}
@@ -324,7 +324,9 @@
 							<!-- A date reads left to right, also on a right-to-left page. -->
 							<span dir="ltr">{formatSync(user.lastSync)}</span>
 						{:else}
-							{user[column.key] ?? '—'}
+							{#if user[column.key] == null}<span class="none">—</span>{:else}{user[
+									column.key
+								]}{/if}
 						{/if}
 					{/snippet}
 				</Table>
@@ -363,7 +365,7 @@
 	.screen {
 		display: flex;
 		flex-direction: column;
-		gap: 16px;
+		gap: 12px; /* toolbar and table sit 12px apart, as in the table guide */
 		min-height: 100%;
 		padding: 24px;
 	}
@@ -386,7 +388,6 @@
 		padding: 0 0 8px;
 		border-radius: var(--radius-l);
 		background: var(--uncolorful-grey-surface);
-		box-shadow: var(--shadow-default-s);
 	}
 	.card :global(th:first-child) {
 		border-start-start-radius: var(--radius-l);
@@ -415,6 +416,10 @@
 	}
 	.warnings {
 		margin-inline-start: 12px;
+	}
+	/* The dash of an empty cell is pale. */
+	.none {
+		color: var(--uncolorful-grey-tertiary);
 	}
 	.row-menu {
 		position: fixed;
