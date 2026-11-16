@@ -132,13 +132,16 @@
 }
 
 /* Disabled: grey, with or without a value. */
-.hb-chip--filter.hb-chip--disabled {
+/* Disabled: grey, with or without a value. Hover and press change nothing. */
+.hb-chip--filter.hb-chip--disabled,
+.hb-chip--filter.hb-chip--disabled:hover,
+.hb-chip--filter.hb-chip--disabled:active {
 	background: var(--uncolorful-grey-disabled);
 	color: var(--uncolorful-grey-tertiary);
 	cursor: not-allowed;
-	pointer-events: none;
 }
-.hb-chip--disabled .hb-chip__filter-name {
+.hb-chip--disabled .hb-chip__filter-name,
+.hb-chip--disabled:active .hb-chip__filter-name {
 	color: inherit;
 }
 

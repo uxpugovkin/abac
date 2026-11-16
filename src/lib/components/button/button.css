@@ -191,12 +191,13 @@
 	background: var(--btn-ghost-bg-pressed);
 }
 
-/* ---------- 5. Disabled (looks the same in every colour set and mode) ---------- */
+/* ---------- 5. Disabled (looks the same in every colour set and mode) ----------
+   The mouse shows a "not allowed" cursor. Hover and press change nothing,
+   because these rules come last and win over the ones above.                */
 
 .hb-btn:disabled,
 .hb-btn[aria-disabled='true'] {
 	background: var(--uncolorful-grey-disabled);
 	color: var(--uncolorful-grey-tertiary);
 	cursor: not-allowed;
-	pointer-events: none;
 }

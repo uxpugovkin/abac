@@ -28,6 +28,9 @@
 	min-height: 28px;
 	padding-block: 4px;
 }
+.hb-multi-select .hb-field__body:disabled {
+	cursor: not-allowed;
+}
 .hb-multi-select.hb-field--big .hb-field__body {
 	min-height: 48px;
 	padding-block: 6px;

@@ -20,7 +20,8 @@
 		label        needed for icon-only buttons: says what the button does (tooltip + screen readers)
 		disabled     true = cannot be clicked
 		href         if set, the button becomes a link to this address
-		…anything else (onclick, type, id, …) is passed straight to the <button>
+		onclick      what happens on click. Not called while disabled
+		…anything else (type, id, …) is passed straight to the <button>
 
 	Text: put it between the tags. Leave it out for an icon-only button.
 -->
@@ -37,6 +38,7 @@
 		label = '',
 		disabled = false,
 		href = '',
+		onclick,
 		children,
 		class: extraClass = '',
 		...rest
@@ -68,12 +70,14 @@
 {/snippet}
 
 {#if href}
+	<!-- A disabled <button> ignores clicks by itself; a link does not, so a disabled link gets no onclick. -->
 	<a
 		class={classes}
 		href={disabled ? undefined : href}
 		aria-disabled={disabled ? 'true' : undefined}
 		aria-label={label || undefined}
 		title={label || undefined}
+		onclick={disabled ? undefined : onclick}
 		{...rest}
 	>
 		{@render content()}
@@ -85,6 +89,7 @@
 		{disabled}
 		aria-label={label || undefined}
 		title={label || undefined}
+		{onclick}
 		{...rest}
 	>
 		{@render content()}

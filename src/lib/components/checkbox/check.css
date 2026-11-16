@@ -45,10 +45,13 @@
 	text-transform: uppercase;
 }
 
-/* Disabled: pale and not clickable. */
-.hb-check--disabled {
+/* Disabled: pale, not clickable, "not allowed" cursor. Hover and press change nothing. */
+.hb-check--disabled,
+.hb-check--disabled:hover,
+.hb-check--disabled:active {
+	background: transparent;
 	color: var(--uncolorful-grey-tertiary);
-	pointer-events: none;
+	cursor: not-allowed;
 }
 .hb-check--disabled .hb-icon {
 	color: var(--uncolorful-grey-disabled);

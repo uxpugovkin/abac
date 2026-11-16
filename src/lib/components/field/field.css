@@ -150,12 +150,17 @@ select.hb-field__input:invalid {
 	color: var(--uncolorful-grey-primary);
 }
 
-/* Disabled: pale, with a dashed line. Does not react to the mouse. */
+/* Disabled: pale, with a dashed line, "not allowed" cursor.
+   (The dashed line replaces the hover line, so hover changes nothing.) */
 .hb-field--disabled {
 	--field-fill: var(--uncolorful-grey-background);
 	--field-text: var(--uncolorful-grey-tertiary);
 	--field-quiet: var(--uncolorful-grey-tertiary);
-	pointer-events: none;
+}
+.hb-field--disabled,
+.hb-field--disabled .hb-field__body,
+.hb-field--disabled .hb-field__input {
+	cursor: not-allowed;
 }
 .hb-field--disabled .hb-field__label,
 .hb-field--disabled .hb-field__chevron {
