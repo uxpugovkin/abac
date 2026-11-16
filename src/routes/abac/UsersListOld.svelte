@@ -104,7 +104,7 @@
 		flex-direction: column;
 		gap: 12px; /* toolbar and table sit 12px apart, as in the table guide */
 		min-height: 100%;
-		padding: 24px;
+		padding: 24px var(--screen-end, 24px) 24px 24px;
 	}
 	.head {
 		display: flex;

@@ -105,7 +105,7 @@
 				]
 			: [
 					{ label: 'cyber-security-tenant' },
-					{ label: 'res-domain-144', menu: true },
+					{ label: 'res-domain-144', domains: true },
 					{ label: 'Users', onclick: onback }
 				]
 	);
@@ -276,7 +276,7 @@
 		flex-direction: column;
 		gap: 16px;
 		min-height: 100%;
-		padding: 24px;
+		padding: 24px var(--screen-end, 24px) 24px 24px;
 	}
 	.head {
 		display: flex;

@@ -123,7 +123,16 @@
 		   scroll — otherwise the whole page would jump sideways (same as the Window of the
 		   table guide, src/routes/ds/tables/Window.svelte). */
 		scrollbar-gutter: stable;
+		/* That room is 20px (the design system's scrollbar), so the screens keep only 4px
+		   of their own at the far side: 4 + 20 = the same 24px as at the start side. */
+		--screen-end: 4px;
 		--table-surface: var(--uncolorful-grey-surface);
+	}
+	/* Firefox draws a thin scrollbar of its own (about 12px), so more padding is kept there. */
+	@supports not selector(::-webkit-scrollbar) {
+		.page {
+			--screen-end: 12px;
+		}
 	}
 	/* Short messages: bottom centre, above everything. */
 	.toast {

@@ -187,7 +187,7 @@
 <div class="screen">
 	<header class="head">
 		<Breadcrumbs
-			items={[{ label: 'cyber-security-tenant' }, { label: 'res-domain-144', menu: true }]}
+			items={[{ label: 'cyber-security-tenant' }, { label: 'res-domain-144', domains: true }]}
 		/>
 		<h1 class="hb-text-h2">Users</h1>
 	</header>
@@ -368,7 +368,7 @@
 		flex-direction: column;
 		gap: 12px; /* toolbar and table sit 12px apart, as in the table guide */
 		min-height: 100%;
-		padding: 24px;
+		padding: 24px var(--screen-end, 24px) 24px 24px;
 	}
 	.head {
 		display: flex;

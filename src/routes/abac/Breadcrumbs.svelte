@@ -8,7 +8,7 @@
 		<Breadcrumbs
 			items={[
 				{ label: 'cyber-security-tenant' },
-				{ label: 'res-domain-144', menu: true },
+				{ label: 'res-domain-144', domains: true },
 				{ label: 'Users', onclick: goToList }
 			]}
 		/>
@@ -17,12 +17,14 @@
 		items   the steps, first to last. Each one:
 		          label     the text
 		          onclick   if set, the step is a link (a button) that calls it
-		          menu      true = a small arrow after the text ("this can be switched")
+		          domains   true = a small arrow after the text; a click opens the list of
+		                    domains (DomainPicker)
 		          quiet     true = grey text (the old screens write values like this)
 		          current   true = the page you are on: pale grey
 -->
 <script>
 	import { Icon } from '#lib';
+	import DomainPicker from './DomainPicker.svelte';
 
 	let { items = [] } = $props();
 </script>
@@ -31,7 +33,16 @@
 	{#each items as item, index}
 		{#if index > 0}<span class="crumbs__slash" aria-hidden="true">/</span>{/if}
 
-		{#if item.onclick}
+		{#if item.domains}
+			<DomainPicker>
+				{#snippet trigger(toggle, open)}
+					<button class="crumbs__step" type="button" aria-expanded={open} onclick={toggle}>
+						{item.label}
+						<Icon name={open ? 'chevron-up' : 'chevron-down'} size={16} />
+					</button>
+				{/snippet}
+			</DomainPicker>
+		{:else if item.onclick}
 			<button class="crumbs__step" type="button" onclick={item.onclick}>{item.label}</button>
 		{:else}
 			<span
@@ -41,7 +52,6 @@
 				aria-current={item.current ? 'page' : undefined}
 			>
 				{item.label}
-				{#if item.menu}<Icon name="chevron-down" size={16} />{/if}
 			</span>
 		{/if}
 	{/each}

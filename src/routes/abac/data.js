@@ -477,6 +477,39 @@ export function sideLines(rows, side) {
 	});
 }
 
+/* ---------- Domains ---------- */
+
+/** The domain the prototype works in. */
+export const currentDomain = 'res-domain-144';
+
+/** All domains of the tenant. Only the current one can be picked in this prototype. */
+export const domains = [
+	'res-domain-101',
+	'res-domain-102',
+	'res-domain-117',
+	'res-domain-120',
+	'res-domain-128',
+	'res-domain-131',
+	'res-domain-139',
+	'res-domain-144',
+	'res-domain-145',
+	'res-domain-151',
+	'res-domain-163',
+	'res-domain-170',
+	'res-domain-188',
+	'audit-logs',
+	'billing-core',
+	'customer-identity',
+	'data-platform',
+	'finance-reporting',
+	'hr-directory',
+	'payments-gateway',
+	'procurement',
+	'risk-engine',
+	'security-operations',
+	'support-desk'
+];
+
 /* ---------- The history of a user ---------- */
 
 /*
@@ -597,6 +630,46 @@ const snapshotList = [
 		'fa35e192121eabf3dabf9f5ea6abdbcbc107ac3b'
 	]
 ];
+
+/*
+	Older snapshots, made up in a loop so the history is long enough to scroll.
+	Every 47 minutes back from 14.08.2026 07:30, cycling through operations, types and authors.
+*/
+const operationCycle = ['update', 'update', 'create', 'update', 'delete'];
+const typeCycle = ['SYSTEM_OTT', 'USER_JWT', 'SYSTEM_INNER'];
+const authorCycle = [
+	'paps_user_ba',
+	'Hanna Dias',
+	'Terry Saris',
+	'Chance Curtis',
+	'Maria Culhane',
+	'paps_user_ba',
+	'Gretchen Dias'
+];
+
+/** A made-up 40-character snapshot id, always the same for the same number. */
+function fakeId(seed) {
+	// A tiny "random" sequence (Park–Miller); the numbers stay small enough to be exact.
+	let value = seed * 7919 + 17;
+	let id = '';
+	while (id.length < 40) {
+		value = (value * 48271) % 2147483647;
+		id += (value % 16).toString(16);
+	}
+	return id;
+}
+
+const start = Date.UTC(2026, 7, 14, 7, 30, 0);
+for (let index = 0; index < 34; index++) {
+	const time = new Date(start - index * 47 * 60 * 1000 - (index % 7) * 13 * 1000);
+	snapshotList.push([
+		time.toISOString().slice(0, 19).replace('T', ' '),
+		operationCycle[index % operationCycle.length],
+		typeCycle[index % typeCycle.length],
+		authorCycle[index % authorCycle.length],
+		fakeId(index + 1)
+	]);
+}
 
 /** The snapshots as table rows. The first one is the current state of the user. */
 export const snapshots = snapshotList.map(([time, operation, type, author, id], index) => ({

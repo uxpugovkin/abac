@@ -10,11 +10,13 @@
 		<Sidebar />
 
 	Only "Users" is built in this prototype; the other sections are drawn but do nothing.
+	The "Current domain" box opens the list of domains (DomainPicker).
 -->
 <script>
 	import { Icon, Avatar } from '#lib';
 	import { photos } from '../ds/employees.js';
 	import { proto } from './prototype.svelte.js';
+	import DomainPicker from './DomainPicker.svelte';
 
 	const sections = [
 		{ label: 'Dashboard', icon: 'view-grid' },
@@ -38,13 +40,18 @@
 		</div>
 	</div>
 
-	<div class="domain">
-		<div>
-			<div class="hb-text-body-d domain__label">Current domain</div>
-			<div class="hb-text-body-c">res-domain-144</div>
-		</div>
-		<Icon name="chevron-down" size={20} />
-	</div>
+	<!-- A click opens the list of domains, as wide as this box. -->
+	<DomainPicker wide>
+		{#snippet trigger(toggle, open)}
+			<button class="domain" type="button" aria-expanded={open} onclick={toggle}>
+				<span>
+					<span class="hb-text-body-d domain__label">Current domain</span>
+					<span class="hb-text-body-c">res-domain-144</span>
+				</span>
+				<Icon name={open ? 'chevron-up' : 'chevron-down'} size={20} />
+			</button>
+		{/snippet}
+	</DomainPicker>
 
 	<nav aria-label="Sections">
 		{#each sections as section}
@@ -94,12 +101,25 @@
 		color: var(--uncolorful-grey-tertiary);
 	}
 	.domain {
+		width: 100%;
+		border: 0;
+		color: var(--uncolorful-grey-primary);
+		font: inherit;
+		text-align: start;
+		cursor: pointer;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		padding: 6px 12px;
 		border-radius: var(--radius-m);
 		background: var(--uncolorful-grey-border);
+	}
+	.domain:hover {
+		background: var(--uncolorful-grey-disabled);
+	}
+	.domain > span {
+		display: flex;
+		flex-direction: column;
 	}
 	.domain__label {
 		color: var(--uncolorful-grey-secondary);
