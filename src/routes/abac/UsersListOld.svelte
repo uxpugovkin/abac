@@ -121,14 +121,14 @@
 	}
 	.card {
 		padding: 0 0 8px;
-		border-radius: var(--radius-l);
+		border-radius: var(--radius-m);
 		background: var(--uncolorful-grey-surface);
 	}
 	.card :global(th:first-child) {
-		border-start-start-radius: var(--radius-l);
+		border-start-start-radius: var(--radius-m);
 	}
 	.card :global(th:last-child) {
-		border-start-end-radius: var(--radius-l);
+		border-start-end-radius: var(--radius-m);
 	}
 	/* The dash of an empty cell is pale. */
 	.none {

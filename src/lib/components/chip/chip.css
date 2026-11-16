@@ -73,14 +73,12 @@
 	border-radius: var(--radius-m);
 	background: var(--uncolorful-grey-border);
 }
-/* The chosen segment is a white pill that floats above the tray. */
+/* The chosen segment is a white pill on the tray (no cast shadow). */
 .hb-chip--segment.hb-chip--active {
 	background: var(--uncolorful-grey-surface);
-	box-shadow: var(--shadow-default-s);
 }
 .hb-chip--segment.hb-chip--active:disabled {
 	background: var(--uncolorful-grey-disabled);
-	box-shadow: none;
 }
 
 /* ---------- FilterChip (Figma "filter-tag") ----------

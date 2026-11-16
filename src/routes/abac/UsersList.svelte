@@ -310,7 +310,8 @@
 								colour={statuses[user.status].colour}
 								size="xs"
 								shape="circle"
-								outline={user.status === 'inactive'}>{statuses[user.status].label}</Tag
+								outline={user.status === 'inactive'}
+								disabled={user.status === 'inactive'}>{statuses[user.status].label}</Tag
 							>
 						{:else if (column.key === 'domainAttrs' || column.key === 'baseAttrs') && user[column.key]}
 							{#if user[column.key] === 'empty'}
@@ -386,14 +387,14 @@
 	/* The white card the table lies on. */
 	.card {
 		padding: 0 0 8px;
-		border-radius: var(--radius-l);
+		border-radius: var(--radius-m);
 		background: var(--uncolorful-grey-surface);
 	}
 	.card :global(th:first-child) {
-		border-start-start-radius: var(--radius-l);
+		border-start-start-radius: var(--radius-m);
 	}
 	.card :global(th:last-child) {
-		border-start-end-radius: var(--radius-l);
+		border-start-end-radius: var(--radius-m);
 	}
 
 	/* A button or a filter tag, with its list opening right under it. */

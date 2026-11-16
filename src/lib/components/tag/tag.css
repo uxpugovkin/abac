@@ -83,3 +83,7 @@
 	--tag-line: var(--uncolorful-grey-border);
 	--tag-text: var(--uncolorful-grey-disabled);
 }
+/* XS has no box, so its disabled text stays readable: tertiary, as in Figma. */
+.hb-tag--xs.hb-tag--disabled {
+	--tag-text: var(--uncolorful-grey-tertiary);
+}

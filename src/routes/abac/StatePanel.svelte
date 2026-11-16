@@ -66,7 +66,7 @@
 			</div>
 		</div>
 	{:else}
-		<Button appearance="white" icon="tune" label="Prototype states" onclick={() => (open = true)} />
+		<Button icon="tune" label="Prototype states" onclick={() => (open = true)} />
 	{/if}
 </aside>
 

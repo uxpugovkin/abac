@@ -154,19 +154,9 @@
 			{#if old}
 				<!-- The old design kept its actions here, next to the title. -->
 				<span class="title__actions">
-					<Button appearance="white" icon="brackets" label="JSON" onclick={onjson} />
-					<Button
-						appearance="white"
-						icon="wait"
-						label="Audit log"
-						onclick={() => notBuilt('Audit log')}
-					/>
-					<Button
-						appearance="white"
-						icon="overflow"
-						label="More"
-						onclick={() => notBuilt('This menu')}
-					/>
+					<Button icon="brackets" label="JSON" onclick={onjson} />
+					<Button icon="wait" label="Audit log" onclick={() => notBuilt('Audit log')} />
+					<Button icon="overflow" label="More" onclick={() => notBuilt('This menu')} />
 				</span>
 			{/if}
 		</div>
@@ -182,16 +172,9 @@
 		<div class="bar">
 			{@render search()}
 			<span class="bar__end">
-				<Button appearance="white" icon="brackets" onclick={onjson}>JSON</Button>
-				<Button appearance="white" icon="wait" onclick={() => notBuilt('Audit log')}
-					>Audit log</Button
-				>
-				<Button
-					appearance="white"
-					icon="overflow"
-					label="More"
-					onclick={() => notBuilt('This menu')}
-				/>
+				<Button icon="brackets" onclick={onjson}>JSON</Button>
+				<Button icon="wait" onclick={() => notBuilt('Audit log')}>Audit log</Button>
+				<Button icon="overflow" label="More" onclick={() => notBuilt('This menu')} />
 			</span>
 		</div>
 	{/if}
@@ -349,7 +332,7 @@
 		flex-direction: column;
 		gap: 8px;
 		padding: 12px;
-		border-radius: var(--radius-l);
+		border-radius: var(--radius-m);
 		background: var(--uncolorful-grey-surface);
 	}
 	.card--table {

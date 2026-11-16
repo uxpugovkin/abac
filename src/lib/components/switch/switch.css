@@ -73,11 +73,9 @@
 	width: 16px;
 	height: 24px;
 	border-radius: var(--radius-s);
-	box-shadow: var(--shadow-default-s);
 }
 .hb-switch--big:checked::before {
 	inset-inline-start: 20px; /* 36 track − 16 knob */
-	box-shadow: var(--shadow-accent-l);
 }
 
 /* ---------- Disabled (same look on and off) ----------

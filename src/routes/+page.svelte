@@ -52,14 +52,13 @@
 		align-items: center;
 		gap: 12px;
 		padding: 16px;
-		border-radius: var(--radius-l);
+		border-radius: var(--radius-m);
 		background: var(--uncolorful-grey-surface);
-		box-shadow: var(--shadow-default-s);
 		color: var(--uncolorful-grey-primary);
 		text-decoration: none;
 	}
 	.home__card:hover {
-		box-shadow: var(--shadow-default-l);
+		background: var(--boring-blue-90);
 	}
 	.home__card > span {
 		flex: 1;

@@ -12,9 +12,8 @@
 	padding: 4px 0;
 	border-radius: var(--radius-l);
 	background: var(--uncolorful-grey-surface);
-	box-shadow:
-		inset 0 0 0 1px var(--uncolorful-grey-border),
-		var(--shadow-default-l);
+	/* No cast shadow: a 1px line sets the card apart from what is under it. */
+	box-shadow: inset 0 0 0 1px var(--uncolorful-grey-border);
 	overflow: hidden; /* keeps row highlights inside the rounded corners */
 }
 

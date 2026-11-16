@@ -113,7 +113,7 @@
 			{:else}
 				<div class="tools">
 					<SearchChip bind:value={query} placeholder="Search in JSON" />
-					<Button mode="ghost" icon="duplicate" label="Copy JSON" onclick={copy} />
+					<Button icon="duplicate" label="Copy JSON" onclick={copy} />
 				</div>
 				<!-- JSON always reads left to right, also on a right-to-left page. -->
 				<ol class="code hb-text-code-s hb-scroll" dir="ltr">
@@ -182,7 +182,7 @@
 		min-height: 0;
 		display: flex;
 		flex-direction: column;
-		border-radius: var(--radius-l);
+		border-radius: var(--radius-m);
 		background: var(--uncolorful-grey-surface);
 	}
 	.tools {
