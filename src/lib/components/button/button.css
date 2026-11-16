@@ -71,13 +71,15 @@
 
 /* ---------- 3. Colour sets ----------
    For each mode: the fill (bg) when resting, on hover and when pressed,
-   and the text colour. Ghost buttons have no fill when resting.          */
+   and the text colour (some modes change it when pressed).
+   Ghost buttons have no fill when resting.          */
 
 .hb-btn--default {
 	--btn-primary-bg: var(--uncolorful-grey-primary);
 	--btn-primary-bg-hover: var(--uncolorful-grey-secondary);
 	--btn-primary-bg-pressed: var(--uncolorful-grey-tertiary);
 	--btn-primary-text: var(--uncolorful-grey-background);
+	--btn-primary-text-pressed: var(--uncolorful-grey-background);
 
 	--btn-secondary-bg: var(--uncolorful-grey-border);
 	--btn-secondary-bg-hover: var(--uncolorful-grey-disabled);
@@ -96,6 +98,7 @@
 	--btn-primary-bg-hover: var(--boring-blue-60);
 	--btn-primary-bg-pressed: var(--boring-blue-70);
 	--btn-primary-text: var(--boring-blue-90);
+	--btn-primary-text-pressed: var(--boring-blue-40);
 
 	--btn-secondary-bg: var(--boring-blue-90);
 	--btn-secondary-bg-hover: var(--boring-blue-80);
@@ -114,6 +117,7 @@
 	--btn-primary-bg-hover: var(--traffic-light-red-60);
 	--btn-primary-bg-pressed: var(--traffic-light-red-70);
 	--btn-primary-text: var(--traffic-light-red-90);
+	--btn-primary-text-pressed: var(--traffic-light-red-40);
 
 	--btn-secondary-bg: var(--traffic-light-red-90);
 	--btn-secondary-bg-hover: var(--traffic-light-red-80);
@@ -133,6 +137,7 @@
 	--btn-primary-bg-hover: var(--uncolorful-grey-border);
 	--btn-primary-bg-pressed: var(--uncolorful-grey-disabled);
 	--btn-primary-text: var(--uncolorful-grey-primary);
+	--btn-primary-text-pressed: var(--uncolorful-grey-primary);
 
 	--btn-secondary-bg: var(--uncolorful-grey-surface);
 	--btn-secondary-bg-hover: var(--uncolorful-grey-border);
@@ -158,6 +163,7 @@
 }
 .hb-btn--primary:active {
 	background: var(--btn-primary-bg-pressed);
+	color: var(--btn-primary-text-pressed);
 }
 
 /* Secondary: soft fill. */

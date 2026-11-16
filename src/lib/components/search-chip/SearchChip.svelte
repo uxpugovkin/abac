@@ -6,7 +6,7 @@
 		2. open      click it → a box to type in
 		3. applied   press Enter (or click away) → a blue chip with the text and an ×
 
-	Figma:  habibi-library → page "Tables Guide" → "Search and filter"
+	Figma:  habibi-library → page "chips" → "filter-tag-icon" (and "Tables Guide" → "Search and filter")
 
 	Use:
 		<SearchChip bind:value={query} />                               ← searches several columns

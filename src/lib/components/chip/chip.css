@@ -87,6 +87,13 @@
 	padding-inline: 12px 6px;
 	background: var(--uncolorful-grey-border);
 }
+.hb-chip--filter:hover {
+	background: var(--uncolorful-grey-disabled);
+}
+.hb-chip--filter:active {
+	background: var(--uncolorful-grey-tertiary);
+}
+
 /* The two buttons inside have no look of their own. */
 .hb-chip--filter button {
 	display: inline-flex;
@@ -101,7 +108,8 @@
 	cursor: inherit;
 }
 
-/* Something chosen: blue pill showing "Name Value ×". */
+/* Something chosen: blue pill showing "Name Value ×".
+   The name is a lighter blue than the value. */
 .hb-chip--filter.hb-chip--active {
 	background: var(--boring-blue-50);
 	color: var(--boring-blue-90);
@@ -110,19 +118,25 @@
 	background: var(--boring-blue-60);
 }
 .hb-chip--filter.hb-chip--active:active {
-	background: var(--boring-blue-40);
+	background: var(--boring-blue-70);
+	color: var(--boring-blue-40);
 }
 .hb-chip__filter-name {
 	color: var(--boring-blue-80);
+}
+.hb-chip--active:active .hb-chip__filter-name {
+	color: var(--boring-blue-50);
 }
 .hb-chip__filter-value {
 	padding-inline-start: 4px;
 }
 
+/* Disabled: grey, with or without a value. */
 .hb-chip--filter.hb-chip--disabled {
 	background: var(--uncolorful-grey-disabled);
 	color: var(--uncolorful-grey-tertiary);
 	cursor: not-allowed;
+	pointer-events: none;
 }
 .hb-chip--disabled .hb-chip__filter-name {
 	color: inherit;
@@ -136,5 +150,5 @@
 }
 /* The applied search chip starts with an icon, so it needs less padding at the start. */
 .hb-chip--search {
-	padding-inline-start: 6px;
+	padding-inline-start: 8px;
 }
