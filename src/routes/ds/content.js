@@ -150,6 +150,7 @@ export const content = {
 		json: 'JSON',
 		more: words.more,
 		moreActions: { en: 'More actions', ar: 'إجراءات أخرى' },
+		inUse: { en: 'in use', ar: 'أمثلة' },
 		loading: { en: 'Loading', ar: 'جارٍ التحميل' }
 	},
 

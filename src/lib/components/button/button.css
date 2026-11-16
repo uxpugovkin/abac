@@ -6,11 +6,11 @@
      1. Shape and layout (the same for every button)
      2. Sizes: S (default) and M
      3. Colour sets: default, accent, danger, white
-     4. Modes: primary (filled), secondary (outlined), ghost (text only)
+     4. Modes: primary (strong fill), secondary (soft fill), ghost (no fill)
      5. Disabled
 
-   The trick that keeps it short: each COLOUR SET only fills in a few
-   variables (--btn-…), and each MODE only says which of them to use.
+   Each COLOUR SET writes down its colours for every mode and state,
+   copied from the Figma table. Each MODE then just picks up its own ones.
    ========================================================================== */
 
 /* ---------- 1. Shape and layout ---------- */
@@ -22,22 +22,16 @@
 
 	/* Size S (the default) */
 	height: 28px;
+	min-width: 28px;
 	padding: 0 6px;
 	font: var(--text-body-c-bold);
 
 	border: 0;
 	border-radius: var(--radius-m);
 	background: transparent;
-	color: var(--btn-ink);
 	text-decoration: none;
 	white-space: nowrap;
 	cursor: pointer;
-
-	/* The outline of "secondary" buttons is drawn as an inside shadow,
-	   so it never changes the button's size. */
-	box-shadow:
-		inset 0 0 0 1px var(--btn-outline, transparent),
-		var(--btn-shadow, 0 0 transparent);
 }
 
 /* The text. It has its own side padding, like the "Label" layer in Figma. */
@@ -63,6 +57,7 @@
 
 .hb-btn--m {
 	height: 36px;
+	min-width: 36px;
 	padding: 0 8px;
 	font: var(--text-body-b-bold);
 }
@@ -75,127 +70,127 @@
 }
 
 /* ---------- 3. Colour sets ----------
-   --btn-solid          fill of a primary button   (+ -hover, -pressed)
-   --btn-on-solid       text on top of that fill
-   --btn-ink            text of secondary and ghost buttons
-   --btn-line           outline of a secondary button
-   --btn-tint           light fill of a secondary icon-only button
-   --btn-tint-hover     light fill when hovering a secondary / ghost button
-   --btn-tint-pressed   light fill when pressing one                        */
+   For each mode: the fill (bg) when resting, on hover and when pressed,
+   and the text colour. Ghost buttons have no fill when resting.          */
 
 .hb-btn--default {
-	--btn-solid: var(--uncolorful-grey-primary);
-	--btn-solid-hover: var(--uncolorful-grey-secondary);
-	--btn-solid-pressed: var(--uncolorful-grey-extra);
-	--btn-on-solid: var(--uncolorful-grey-background);
-	--btn-ink: var(--uncolorful-grey-primary);
-	--btn-line: var(--uncolorful-grey-disabled);
-	--btn-tint: var(--uncolorful-grey-border);
-	--btn-tint-hover: var(--uncolorful-grey-disabled);
-	--btn-tint-pressed: var(--uncolorful-grey-tertiary);
+	--btn-primary-bg: var(--uncolorful-grey-primary);
+	--btn-primary-bg-hover: var(--uncolorful-grey-secondary);
+	--btn-primary-bg-pressed: var(--uncolorful-grey-tertiary);
+	--btn-primary-text: var(--uncolorful-grey-background);
+
+	--btn-secondary-bg: var(--uncolorful-grey-border);
+	--btn-secondary-bg-hover: var(--uncolorful-grey-disabled);
+	--btn-secondary-bg-pressed: var(--uncolorful-grey-tertiary);
+	--btn-secondary-text: var(--uncolorful-grey-primary);
+	--btn-secondary-text-pressed: var(--uncolorful-grey-primary);
+
+	--btn-ghost-bg: transparent;
+	--btn-ghost-bg-hover: var(--uncolorful-grey-border);
+	--btn-ghost-bg-pressed: var(--uncolorful-grey-disabled);
+	--btn-ghost-text: var(--uncolorful-grey-primary);
 }
 
 .hb-btn--accent {
-	--btn-solid: var(--boring-blue-50);
-	--btn-solid-hover: var(--boring-blue-60);
-	--btn-solid-pressed: var(--boring-blue-40);
-	--btn-on-solid: var(--boring-blue-90);
-	--btn-ink: var(--boring-blue-50);
-	--btn-line: var(--boring-blue-60);
-	--btn-tint: var(--boring-blue-90);
-	--btn-tint-hover: var(--boring-blue-90);
-	--btn-tint-pressed: var(--boring-blue-80);
+	--btn-primary-bg: var(--boring-blue-50);
+	--btn-primary-bg-hover: var(--boring-blue-60);
+	--btn-primary-bg-pressed: var(--boring-blue-70);
+	--btn-primary-text: var(--boring-blue-90);
+
+	--btn-secondary-bg: var(--boring-blue-90);
+	--btn-secondary-bg-hover: var(--boring-blue-80);
+	--btn-secondary-bg-pressed: var(--boring-blue-70);
+	--btn-secondary-text: var(--boring-blue-50);
+	--btn-secondary-text-pressed: var(--boring-blue-40);
+
+	--btn-ghost-bg: transparent;
+	--btn-ghost-bg-hover: var(--boring-blue-90);
+	--btn-ghost-bg-pressed: var(--boring-blue-80);
+	--btn-ghost-text: var(--boring-blue-50);
 }
 
 .hb-btn--danger {
-	--btn-solid: var(--traffic-light-red-50);
-	--btn-solid-hover: var(--traffic-light-red-60);
-	--btn-solid-pressed: var(--traffic-light-red-40);
-	--btn-on-solid: var(--traffic-light-red-90);
-	--btn-ink: var(--traffic-light-red-50);
-	--btn-line: var(--traffic-light-red-60);
-	--btn-tint: var(--traffic-light-red-90);
-	--btn-tint-hover: var(--traffic-light-red-90);
-	--btn-tint-pressed: var(--traffic-light-red-80);
+	--btn-primary-bg: var(--traffic-light-red-50);
+	--btn-primary-bg-hover: var(--traffic-light-red-60);
+	--btn-primary-bg-pressed: var(--traffic-light-red-70);
+	--btn-primary-text: var(--traffic-light-red-90);
+
+	--btn-secondary-bg: var(--traffic-light-red-90);
+	--btn-secondary-bg-hover: var(--traffic-light-red-80);
+	--btn-secondary-bg-pressed: var(--traffic-light-red-70);
+	--btn-secondary-text: var(--traffic-light-red-50);
+	--btn-secondary-text-pressed: var(--traffic-light-red-40);
+
+	--btn-ghost-bg: transparent;
+	--btn-ghost-bg-hover: var(--traffic-light-red-90);
+	--btn-ghost-bg-pressed: var(--traffic-light-red-80);
+	--btn-ghost-text: var(--traffic-light-red-50);
 }
 
-/* White buttons float above the page with a small shadow. */
+/* White: all three modes look the same — white, then grey on hover and press. */
 .hb-btn--white {
-	--btn-solid: var(--uncolorful-grey-surface);
-	--btn-solid-hover: var(--uncolorful-grey-background);
-	--btn-solid-pressed: var(--uncolorful-grey-disabled);
-	--btn-on-solid: var(--uncolorful-grey-primary);
-	--btn-ink: var(--uncolorful-grey-primary);
-	--btn-line: var(--uncolorful-grey-primary);
-	--btn-tint: var(--uncolorful-grey-surface);
-	--btn-tint-hover: var(--uncolorful-grey-background);
-	--btn-tint-pressed: var(--uncolorful-grey-disabled);
-	--btn-shadow: var(--shadow-default-s);
+	--btn-primary-bg: var(--uncolorful-grey-surface);
+	--btn-primary-bg-hover: var(--uncolorful-grey-border);
+	--btn-primary-bg-pressed: var(--uncolorful-grey-disabled);
+	--btn-primary-text: var(--uncolorful-grey-primary);
+
+	--btn-secondary-bg: var(--uncolorful-grey-surface);
+	--btn-secondary-bg-hover: var(--uncolorful-grey-border);
+	--btn-secondary-bg-pressed: var(--uncolorful-grey-disabled);
+	--btn-secondary-text: var(--uncolorful-grey-primary);
+	--btn-secondary-text-pressed: var(--uncolorful-grey-primary);
+
+	--btn-ghost-bg: var(--uncolorful-grey-surface);
+	--btn-ghost-bg-hover: var(--uncolorful-grey-border);
+	--btn-ghost-bg-pressed: var(--uncolorful-grey-disabled);
+	--btn-ghost-text: var(--uncolorful-grey-primary);
 }
 
 /* ---------- 4. Modes ---------- */
 
-/* Primary: filled. The main action on a screen. */
+/* Primary: strong fill. The main action on a screen. */
 .hb-btn--primary {
-	background: var(--btn-solid);
-	color: var(--btn-on-solid);
+	background: var(--btn-primary-bg);
+	color: var(--btn-primary-text);
 }
 .hb-btn--primary:hover {
-	background: var(--btn-solid-hover);
+	background: var(--btn-primary-bg-hover);
 }
 .hb-btn--primary:active {
-	background: var(--btn-solid-pressed);
+	background: var(--btn-primary-bg-pressed);
 }
 
-/* Secondary: outlined. */
+/* Secondary: soft fill. */
 .hb-btn--secondary {
-	--btn-outline: var(--btn-line);
+	background: var(--btn-secondary-bg);
+	color: var(--btn-secondary-text);
 }
-/* Ghost: text only. Secondary and ghost react to the mouse the same way. */
-.hb-btn--secondary:hover,
+.hb-btn--secondary:hover {
+	background: var(--btn-secondary-bg-hover);
+}
+.hb-btn--secondary:active {
+	background: var(--btn-secondary-bg-pressed);
+	color: var(--btn-secondary-text-pressed);
+}
+
+/* Ghost: no fill until you point at it. */
+.hb-btn--ghost {
+	background: var(--btn-ghost-bg);
+	color: var(--btn-ghost-text);
+}
 .hb-btn--ghost:hover {
-	background: var(--btn-tint-hover);
+	background: var(--btn-ghost-bg-hover);
 }
-.hb-btn--secondary:active,
 .hb-btn--ghost:active {
-	background: var(--btn-tint-pressed);
+	background: var(--btn-ghost-bg-pressed);
 }
 
-/* Two small exceptions, exactly as drawn in Figma: */
-
-/* 1. A white secondary button is filled with white. */
-.hb-btn--white.hb-btn--secondary {
-	background: var(--btn-solid);
-}
-.hb-btn--white.hb-btn--secondary:hover {
-	background: var(--btn-solid-hover);
-}
-.hb-btn--white.hb-btn--secondary:active {
-	background: var(--btn-solid-pressed);
-}
-
-/* 2. A secondary icon-only button has a soft fill, and gets its outline on hover. */
-.hb-btn--icon-only.hb-btn--secondary:not(:hover, :active) {
-	--btn-outline: transparent;
-	background: var(--btn-tint);
-}
-
-/* ---------- 5. Disabled (looks the same in every colour set) ---------- */
+/* ---------- 5. Disabled (looks the same in every colour set and mode) ---------- */
 
 .hb-btn:disabled,
 .hb-btn[aria-disabled='true'] {
-	--btn-shadow: 0 0 transparent;
-	color: var(--uncolorful-grey-disabled);
-	background: transparent;
+	background: var(--uncolorful-grey-disabled);
+	color: var(--uncolorful-grey-tertiary);
 	cursor: not-allowed;
 	pointer-events: none;
-}
-.hb-btn--primary:disabled,
-.hb-btn--primary[aria-disabled='true'] {
-	background: var(--uncolorful-grey-disabled);
-	color: var(--uncolorful-grey-background);
-}
-.hb-btn--secondary:disabled,
-.hb-btn--secondary[aria-disabled='true'] {
-	--btn-outline: var(--uncolorful-grey-disabled);
 }

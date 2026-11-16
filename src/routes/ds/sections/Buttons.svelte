@@ -9,30 +9,42 @@
 
 	const appearances = ['default', 'accent', 'danger', 'white'];
 	const modes = ['primary', 'secondary', 'ghost'];
+	const sizes = ['s', 'm'];
 </script>
 
 <Demo
 	title="Button"
-	figma="button"
+	figma="button, icon-button"
 	about="4 colour sets × 3 modes × 2 sizes. Hover and press them to see the states."
 	column
 >
-	{#each appearances as appearance}
+	{#each sizes as size}
+		<p class="hb-text-body-d size"><bdi>size="{size}"</bdi></p>
+		{#each appearances as appearance}
+			<div class="row">
+				<code class="hb-text-code-s">{appearance}</code>
+				{#each modes as mode}
+					<Button {appearance} {mode} {size} icon="upload">{t.button}</Button>
+				{/each}
+				{#each modes as mode}
+					<Button {appearance} {mode} {size} icon="kitecat" label={t.iconOnly} />
+				{/each}
+			</div>
+		{/each}
+	{/each}
+	<p class="hb-text-body-d size">disabled</p>
+	{#each sizes as size}
 		<div class="row">
-			<code class="hb-text-code-s">{appearance}</code>
+			<code class="hb-text-code-s">{size}</code>
 			{#each modes as mode}
-				<Button {appearance} {mode} icon="upload">{t.button}</Button>
+				<Button {mode} {size} icon="upload" disabled>{t.disabled}</Button>
 			{/each}
-			{#each modes as mode}
-				<Button {appearance} {mode} icon="kitecat" label={t.iconOnly} />
-			{/each}
-			{#each modes as mode}
-				<Button {appearance} {mode} disabled>{t.disabled}</Button>
-			{/each}
+			<Button {size} icon="kitecat" label={t.iconOnly} disabled />
 		</div>
 	{/each}
+	<p class="hb-text-body-d size">{t.inUse}</p>
 	<div class="row">
-		<code class="hb-text-code-s">size="m"</code>
+		<code class="hb-text-code-s">m</code>
 		<Button size="m" appearance="accent" mode="primary" icon="plus">{t.addUser}</Button>
 		<Button size="m" icon="brackets">{t.json}</Button>
 		<Button size="m" mode="ghost" iconEnd="chevron-down">{t.more}</Button>
@@ -55,5 +67,12 @@
 	code {
 		width: 80px;
 		color: var(--uncolorful-grey-secondary);
+	}
+	.size {
+		margin: 8px 0 0;
+		color: var(--uncolorful-grey-tertiary);
+	}
+	.size:first-child {
+		margin-top: 0;
 	}
 </style>
