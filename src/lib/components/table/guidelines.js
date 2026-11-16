@@ -57,7 +57,7 @@ export const tableGuidelines = [
 				id: '1.3',
 				title: 'Row alignment and text truncation',
 				text: [
-					'Everything in a row is centred vertically. Header labels stay at the top of the header, lined up on their first line.',
+					'Everything in a row is centred vertically, and so are the header labels, also when one of them wraps.',
 					'Text with important information, such as a full name, wraps — to at most 3 lines.',
 					'Text that can be skipped is cut with "…" and stays available in the detail view.'
 				],

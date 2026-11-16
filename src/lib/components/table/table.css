@@ -166,8 +166,8 @@
 	color: var(--uncolorful-grey-secondary);
 	font: var(--text-body-d-bold);
 	text-align: start;
-	/* Header texts line up on their first line, also when one of them wraps. */
-	vertical-align: baseline;
+	/* Header texts sit in the middle, also when one of them wraps to more lines. */
+	vertical-align: middle;
 }
 
 /* A header you can click to sort is a button. */
@@ -304,12 +304,10 @@
 	color: var(--uncolorful-grey-primary);
 	cursor: pointer;
 }
-/* In the header the box sits next to the FIRST line of the labels, also when a label
-   wraps. The box is 20px, a text line is 16px: the -2px margins let it stick out 2px
-   above and below that line instead of making the line (and the header) taller. */
+/* In the header the box sits in the middle, like the labels. The box is 20px, a text
+   line is 16px: the -2px margins let it stick out 2px above and below that line
+   instead of making the header taller. */
 .hb-table th .hb-table__check {
-	display: inline-flex;
-	vertical-align: top;
 	margin-block: -2px;
 }
 /* Ticked (or partly ticked) boxes are blue. */
@@ -334,10 +332,6 @@
 	z-index: 1;
 	padding: 0;
 	overflow: visible;
-}
-/* (In the header this cell is empty; it only needs to stay at the top like the labels.) */
-.hb-table th.hb-table__actions-cell {
-	vertical-align: top;
 }
 /* The buttons. Hidden until the row is hovered (or reached with the keyboard). */
 .hb-table__actions {

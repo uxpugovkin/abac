@@ -37,9 +37,12 @@
 		   so the sideways scrollbar sits at the bottom edge, like in a real window. */
 		margin-block: -16px;
 	}
-	/* With an up-down scrollbar: reach the far edge too, so that scrollbar sits at the edge. */
+	/* With an up-down scrollbar: reach the far edge too, so that scrollbar sits at the edge.
+	   The room for that scrollbar is kept even when a filter leaves too few rows to scroll.
+	   Otherwise the content would slide into the card's padding and touch its edge. */
 	.window--tall {
 		margin-inline-end: -16px;
+		scrollbar-gutter: stable;
 	}
 	.cover {
 		position: sticky;
