@@ -73,12 +73,34 @@
 	border-radius: var(--radius-m);
 	background: var(--uncolorful-grey-border);
 }
-/* The chosen segment is a white pill on the tray (no cast shadow). */
-.hb-chip--segment.hb-chip--active {
-	background: var(--uncolorful-grey-surface);
+/* A segment that is not chosen lightens on hover. Press changes nothing. */
+.hb-chip--segment:hover {
+	background: var(--uncolorful-grey-background);
 }
-.hb-chip--segment.hb-chip--active:disabled {
+.hb-chip--segment:active {
+	background: transparent;
+}
+
+/* The chosen segment is a white pill with a 2px tray-coloured line inside,
+   so it looks set into the tray (no cast shadow). Hover and press keep that look. */
+.hb-chip--segment.hb-chip--active,
+.hb-chip--segment.hb-chip--active:hover,
+.hb-chip--segment.hb-chip--active:active {
+	background: var(--uncolorful-grey-surface);
+	box-shadow: inset 0 0 0 2px var(--uncolorful-grey-border);
+}
+
+/* Disabled: no states — hover and press look exactly like rest. */
+.hb-chip--segment:disabled,
+.hb-chip--segment:disabled:hover,
+.hb-chip--segment:disabled:active {
+	background: transparent;
+}
+.hb-chip--segment.hb-chip--active:disabled,
+.hb-chip--segment.hb-chip--active:disabled:hover,
+.hb-chip--segment.hb-chip--active:disabled:active {
 	background: var(--uncolorful-grey-disabled);
+	box-shadow: none;
 }
 
 /* ---------- FilterChip (Figma "filter-tag") ----------

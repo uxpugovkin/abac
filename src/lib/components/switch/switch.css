@@ -62,20 +62,20 @@
 }
 
 /* ---------- Size: big (Figma "compact = False") ----------
-   Taller track; the knob is a slab that fills the whole height. */
+   Taller track; the knob is a tall slab, 2px in from the edges. */
 
 .hb-switch--big {
 	height: 24px;
 }
 .hb-switch--big::before {
-	top: 0;
-	inset-inline-start: 0;
-	width: 16px;
-	height: 24px;
+	top: 2px;
+	inset-inline-start: 2px;
+	width: 14px;
+	height: 20px;
 	border-radius: var(--radius-s);
 }
 .hb-switch--big:checked::before {
-	inset-inline-start: 20px; /* 36 track − 16 knob */
+	inset-inline-start: 20px; /* 36 track − 14 knob − 2 gap */
 }
 
 /* ---------- Disabled (same look on and off) ----------

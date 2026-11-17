@@ -31,12 +31,16 @@
 	text-align: start;
 	cursor: pointer;
 }
+/* Hover: a light blue row. The text stays dark. */
 .hb-tree__row:hover {
-	background: var(--uncolorful-grey-border);
+	background: var(--boring-blue-90);
 }
-.hb-tree__row--selected {
-	color: var(--boring-blue-50);
-	font: var(--text-body-c-bold);
+/* The selected row (Figma state "Active"): a solid blue row with light text and arrow.
+   It looks the same under the mouse. The text stays Regular, as in every state. */
+.hb-tree__row--selected,
+.hb-tree__row--selected:hover {
+	background: var(--boring-blue-50);
+	color: var(--boring-blue-90);
 }
 .hb-tree__row .hb-icon {
 	flex: none;

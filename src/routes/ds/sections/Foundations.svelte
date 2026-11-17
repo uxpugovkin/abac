@@ -51,7 +51,7 @@
 	];
 
 	const radii = ['xs', 's', 'm', 'l', 'full'];
-	const shadows = ['default-s', 'default-l', 'accent-l'];
+	const shadows = ['default-s', 'default-l'];
 </script>
 
 <Demo

@@ -8,6 +8,8 @@
 	gap: var(--tabs-gap, 12px); /* set --tabs-gap on a parent to space them differently */
 }
 
+/* Every tab has a 2px line under it. It is see-through until you hover, press or open the tab.
+   All tabs are Medium, so a tab does not change width when it opens. */
 .hb-tab {
 	display: inline-flex;
 	align-items: center;
@@ -15,35 +17,49 @@
 	height: 24px;
 	padding: 0 0 4px;
 	border: 0;
-	/* Every tab has a 2px line under it. It is see-through unless the tab is active. */
 	border-bottom: 2px solid transparent;
 	background: transparent;
 	color: var(--uncolorful-grey-primary);
-	font: var(--text-body-c);
+	font: var(--text-body-c-bold);
 	white-space: nowrap;
 	cursor: pointer;
 }
+
+/* A closed tab: the text stays dark, only a grey line shows up. */
 .hb-tab:hover {
-	color: var(--boring-blue-70);
+	border-bottom-color: var(--uncolorful-grey-border);
 }
 .hb-tab:active {
-	color: var(--boring-blue-40);
+	border-bottom-color: var(--uncolorful-grey-disabled);
 }
 
-/* The tab you are on: blue, bolder, underlined. */
-.hb-tab--active {
+/* The tab you are on: blue text with a blue line in the same colour. */
+.hb-tab--active,
+.hb-tab--active:hover,
+.hb-tab--active:active {
 	border-bottom-color: currentColor;
+}
+.hb-tab--active {
 	color: var(--boring-blue-50);
-	font: var(--text-body-c-bold);
 }
 .hb-tab--active:hover {
 	color: var(--boring-blue-60);
 }
+.hb-tab--active:active {
+	color: var(--boring-blue-70);
+}
 
-/* Disabled: no states — hover and press look exactly like rest. */
+/* Disabled: no states — hover and press look exactly like rest.
+   A closed tab has no line; the open one keeps its line, in grey. */
 .hb-tab:disabled,
 .hb-tab:disabled:hover,
 .hb-tab:disabled:active {
+	border-bottom-color: transparent;
 	color: var(--uncolorful-grey-disabled);
 	cursor: not-allowed;
+}
+.hb-tab--active:disabled,
+.hb-tab--active:disabled:hover,
+.hb-tab--active:disabled:active {
+	border-bottom-color: currentColor;
 }

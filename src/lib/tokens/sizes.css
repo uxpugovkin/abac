@@ -13,12 +13,10 @@
 	--radius-l: 10px; /* cards, popups, notifications */
 	--radius-full: 9999px; /* pills and circles */
 
-	/* ---------- Shadows (Figma: Shadow/Default/S, Shadow/Default/L, Shadow/Accent/L) ----------
+	/* ---------- Shadows (Figma: Shadow/Default/S, Shadow/Default/L) ----------
 	   Kept because they exist in Figma, but NOT used: we avoid casting shadows now.
 	   Set floating things apart with a 1px line instead. */
 	--shadow-default-s:
 		0 4px 12px #0000000a, 0 0.5px 5px #0000000a; /* small things that float a little */
 	--shadow-default-l: 0 40px 56px #0000000a, 0 16px 20px #0000000f; /* popups, notifications */
-	--shadow-accent-l:
-		0 10px 8px #004ce514, 0 2px 8px #004ce53d; /* the blue glow under an "on" switch */
 }
