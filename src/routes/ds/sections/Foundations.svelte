@@ -2,35 +2,7 @@
 <script>
 	import { Icon, iconNames, Tooltip } from '#lib';
 	import Demo from '../Demo.svelte';
-
-	// The colour groups, as in Figma. Each name is a CSS variable: var(--name).
-	const steps = ['90', '80', '70', '60', '50', '40'];
-	const colourGroups = [
-		{
-			title: 'uncolorful-grey — text, lines, backgrounds',
-			names: [
-				'extra',
-				'primary',
-				'secondary',
-				'tertiary',
-				'disabled',
-				'border',
-				'background',
-				'surface'
-			].map((step) => `uncolorful-grey-${step}`)
-		},
-		{ title: 'boring-blue — main actions', names: steps.map((step) => `boring-blue-${step}`) },
-		{
-			title: 'traffic-light-red — danger',
-			names: steps.map((step) => `traffic-light-red-${step}`)
-		},
-		{ title: 'shitpile-orange — warnings', names: steps.map((step) => `shitpile-orange-${step}`) },
-		{ title: 'uncreative-green — success', names: steps.map((step) => `uncreative-green-${step}`) },
-		{
-			title: 'accent — charts, markers, badges',
-			names: [1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => `accent-${n}`)
-		}
-	];
+	import ColourPalette from '../ColourPalette.svelte';
 
 	const textStyles = [
 		'display-b',
@@ -61,19 +33,7 @@
 	about="Use them in CSS as var(--name). The values change with the theme — try the switcher at the top."
 	column
 >
-	{#each colourGroups as group}
-		<div>
-			<div class="hb-text-body-d-bold label">{group.title}</div>
-			<div class="swatches">
-				{#each group.names as name}
-					<div class="swatch">
-						<div class="swatch__colour" style="background: var(--{name})"></div>
-						<code class="hb-text-code-s">--{name}</code>
-					</div>
-				{/each}
-			</div>
-		</div>
-	{/each}
+	<ColourPalette />
 </Demo>
 
 <Demo
@@ -123,20 +83,6 @@
 </Demo>
 
 <style>
-	.label {
-		margin-bottom: 8px;
-		color: var(--uncolorful-grey-secondary);
-	}
-	.swatches {
-		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-		gap: 8px;
-	}
-	.swatch__colour {
-		height: 48px;
-		border-radius: var(--radius-m);
-		box-shadow: inset 0 0 0 1px var(--opacity-16);
-	}
 	code {
 		color: var(--uncolorful-grey-secondary);
 	}
