@@ -1,6 +1,6 @@
 <!--
 	TREE
-	A list with levels that can be opened and closed, like folders.
+	A list of folders and files. Folders open and close; a file can be selected.
 
 	Figma:  habibi-library → page "Tree"
 
@@ -13,8 +13,9 @@
 					label: 'cyber-security-tenant',
 					open: true,
 					children: [
-						{ id: 'd144', label: 'res-domain-144' },
-						{ id: 'd145', label: 'res-domain-145', children: [{ id: 'users', label: 'Users' }] }
+						{ id: 'd144', label: 'res-domain-144', children: [{ id: 'users', label: 'Users' }] },
+						{ id: 'd145', label: 'res-domain-145', children: [] },
+						{ id: 'readme', label: 'Read me' }
 					]
 				}
 			]}
@@ -24,17 +25,19 @@
 		nodes      the tree. Each node:
 		             id         something unique (used to remember what is open and selected)
 		             label      the text
-		             children   the nodes inside it (optional)
-		             open       true = starts opened (optional)
-		selected   the id of the highlighted node. Use bind:selected to read what was clicked
-		onselect   called with the node when a row is clicked (optional)
+		             children   the nodes inside it. A node WITH children is a folder —
+		                        even an empty one (children: []). A node without them is a file
+		             open       true = the folder starts opened (optional)
+		selected   the id of the selected file. Use bind:selected to read what was clicked
+		onselect   called with the file when a file is clicked (optional)
 
-	Clicking a row selects it; if it has children, it also opens or closes.
-	An open row shows an arrow up, a closed one an arrow down.
-	Rows without children have no arrow.
+	Folders and files work differently (Figma "tree-row", property "Folder"):
+		folder   a click opens or closes it. A folder is never selected.
+		         Closed: arrow down. Open: arrow up.
+		file     a click selects it: the row turns solid blue. It shows a document icon.
 
 	How a row is built — the same layers as the Figma component "tree-row":
-		[ line ][ line ]…[ arrow ][ text ]
+		[ line ][ line ]…[ arrow or icon ][ text ]
 		  └ one 16px piece per level, drawn in tree.css. Together the pieces of
 		    all rows form the thin lines that connect every row to its parent.
 -->
@@ -60,7 +63,7 @@
 
 	/* ---------- From a tree to a flat list of rows ----------
 	   The screen shows a plain list: one row per visible node. Each row knows
-	   which line pieces to draw before its arrow, one per level (Figma names in brackets):
+	   which line pieces to draw before its arrow or icon, one per level (Figma names in brackets):
 	     'branch'  line down + a short branch to this row       (type B)  ├
 	     'corner'  rounded corner into this row, the line ends  (type C)  └
 	     'line'    a line passing by, to a later row above us   (type A)  │
@@ -85,28 +88,41 @@
 		return result;
 	}
 
+	function isFolder(node) {
+		return Array.isArray(node.children);
+	}
+
+	// A folder opens or closes. A file gets selected.
 	function click(node) {
-		if (node.children) open[node.id] = !open[node.id];
-		selected = node.id;
-		onselect?.(node);
+		if (isFolder(node)) {
+			open[node.id] = !open[node.id];
+		} else {
+			selected = node.id;
+			onselect?.(node);
+		}
 	}
 </script>
 
 <ul class="hb-tree {extraClass}">
 	{#each rows as { node, lines } (node.id)}
+		{@const folder = isFolder(node)}
+		{@const isSelected = !folder && node.id === selected}
 		<li>
 			<button
 				class="hb-tree__row"
-				class:hb-tree__row--selected={node.id === selected}
+				class:hb-tree__row--selected={isSelected}
 				type="button"
-				aria-expanded={node.children ? !!open[node.id] : undefined}
+				aria-expanded={folder ? !!open[node.id] : undefined}
+				aria-current={isSelected ? 'true' : undefined}
 				onclick={() => click(node)}
 			>
 				{#each lines as line}<span class="hb-tree__line hb-tree__line--{line}"></span>{/each}
 
-				<!-- Only rows with children have an arrow. -->
-				{#if node.children}
+				<!-- A folder shows its arrow, a file a document icon. -->
+				{#if folder}
 					<Icon name={open[node.id] ? 'chevron-up' : 'chevron-down'} size={16} />
+				{:else}
+					<Icon name="doc" size={16} />
 				{/if}
 
 				<span class="hb-tree__text">{node.label}</span>

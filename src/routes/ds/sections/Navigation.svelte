@@ -50,7 +50,7 @@
 					]
 				},
 				{ id: 'd146', label: 'res-domain-146', children: [{ id: 'users3', label: t.users }] },
-				{ id: 'd147', label: 'res-domain-147' }
+				{ id: 'd147', label: 'res-domain-147', children: [] }
 			]
 		}
 	];
@@ -120,7 +120,7 @@
 	</Menu>
 </Demo>
 
-<Demo title="Tree" figma="Tree" about="Levels that open and close, like folders.">
+<Demo title="Tree" figma="Tree" about="Folders open and close; a file can be selected.">
 	<div class="tree">
 		<Tree bind:selected={node} nodes={tree} />
 	</div>
