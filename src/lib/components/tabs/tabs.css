@@ -9,7 +9,7 @@
 }
 
 /* Every tab has a 2px line under it. It is see-through until you hover, press or open the tab.
-   All tabs are Medium, so a tab does not change width when it opens. */
+   All tabs are Regular, open or not, so a tab does not change width when it opens. */
 .hb-tab {
 	display: inline-flex;
 	align-items: center;
@@ -20,7 +20,7 @@
 	border-bottom: 2px solid transparent;
 	background: transparent;
 	color: var(--uncolorful-grey-primary);
-	font: var(--text-body-c-bold);
+	font: var(--text-body-c);
 	white-space: nowrap;
 	cursor: pointer;
 }
