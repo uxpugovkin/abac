@@ -271,7 +271,7 @@
 				<Button icon="upload" onclick={() => notify('Import is not part of this prototype')}
 					>Import</Button
 				>
-				<Button icon="download" onclick={() => notify(`Exported ${rows.length} users`, 'success')}
+				<Button icon="download" onclick={() => notify('Export is not part of this prototype')}
 					>Export</Button
 				>
 			{/snippet}

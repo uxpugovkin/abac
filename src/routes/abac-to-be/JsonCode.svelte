@@ -1,6 +1,7 @@
 <!--
 	JSON CODE — a JSON shown as code over the whole page: numbered lines, colours,
-	the lines that match a search marked, and a small bar with Copy and Auth context.
+	the lines that match a search marked, and a small bar with Copy.
+	(Auth context used to be in that bar; it now sits in the user page toolbar.)
 
 	Figma:  none yet — a "to be" idea. Its look follows "read-json" (the code area)
 	        of sbertech-habibi → page "abac-r5".
@@ -46,12 +47,6 @@
 		</span>
 		<span class="tools__end">
 			<Button icon="duplicate" label="Copy JSON" onclick={copy} />
-			<Button
-				appearance="accent"
-				mode="primary"
-				icon="download"
-				onclick={() => notify('Auth context downloaded', 'success')}>Auth context</Button
-			>
 		</span>
 	</div>
 

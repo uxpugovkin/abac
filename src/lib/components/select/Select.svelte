@@ -22,7 +22,8 @@
 		placeholder  grey text shown while nothing is chosen
 		hint         small help text under the box
 		error        error message under the box. When set, the field turns red
-		big          true = tall version (Figma "compact = False"). Default false
+		big          true = tall version (Figma "compact = False"). Default false.
+		             While nothing is chosen, only the label shows, big (no placeholder)
 		disabled     true = cannot be changed
 		…anything else (name, onchange, …) is passed straight to the <select>
 
@@ -57,13 +58,25 @@
 	);
 
 	let tip = $derived(error || hint);
+	let empty = $derived(value === '' || value == null);
+
+	// The grey text shown while nothing is chosen.
+	// Big select: the label itself takes that place, big; it moves up once something is chosen.
+	let emptyText = $derived(big ? label || placeholder : placeholder);
 </script>
 
 <!-- The <select> itself, used in both sizes below. -->
 {#snippet control()}
 	<!-- `required` lets CSS know when nothing is chosen yet, to grey out the placeholder. -->
-	<select class="hb-field__input" bind:value {disabled} required {...rest}>
-		{#if placeholder}<option value="" disabled hidden>{placeholder}</option>{/if}
+	<select
+		class="hb-field__input"
+		bind:value
+		{disabled}
+		required
+		aria-label={big ? label || undefined : undefined}
+		{...rest}
+	>
+		{#if emptyText}<option value="" disabled hidden>{emptyText}</option>{/if}
 		{#each items as item}
 			<option value={item.value} disabled={item.disabled}>{item.label}</option>
 		{/each}
@@ -81,7 +94,8 @@
 	<span class="hb-field__body">
 		{#if big}
 			<span class="hb-field__stack">
-				{#if label}<span class="hb-field__label">{label}</span>{/if}
+				<!-- Nothing chosen: the select shows the label itself (see emptyText). -->
+				{#if label && !empty}<span class="hb-field__label">{label}</span>{/if}
 				{@render control()}
 			</span>
 		{:else}

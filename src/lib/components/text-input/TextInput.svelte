@@ -20,7 +20,8 @@
 		icon         icon name shown at the start of the box
 		iconEnd      icon name shown at the end of the box
 		maxlength    longest text allowed. Also shows a counter under the box
-		big          true = tall version (Figma "compact = False"). Default false
+		big          true = tall version (Figma "compact = False"). Default false.
+		             While it is empty and not focused, only the label shows, big, in the middle
 		disabled     true = cannot be edited
 		…anything else (type, name, oninput, …) is passed straight to the <input>
 
@@ -45,6 +46,8 @@
 		...rest
 	} = $props();
 
+	let empty = $derived(value === '' || value == null);
+
 	// The text under the box: the error wins over the hint.
 	let tip = $derived(error || hint);
 	let counter = $derived(maxlength ? `${value.length} / ${maxlength}` : '');
@@ -53,6 +56,7 @@
 <label
 	class="hb-field {extraClass}"
 	class:hb-field--big={big}
+	class:hb-field--empty={empty}
 	class:hb-field--error={error}
 	class:hb-field--disabled={disabled}
 >

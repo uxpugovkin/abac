@@ -104,8 +104,26 @@ select.hb-field__input:invalid {
 .hb-field--big .hb-field__label {
 	color: var(--uncolorful-grey-secondary);
 }
+/* In the big box the input sits under the label and keeps its own height (it does not stretch). */
 .hb-field--big .hb-field__input {
+	flex: none;
 	height: 20px;
+}
+
+/* Big and empty (Figma "filled = False"): the label alone sits big in the middle of the box.
+   Text input: as soon as you click in, the label goes small on top and the input shows.
+   (The input is only folded to no height, so a click or Tab still reaches it.) */
+.hb-field--big.hb-field--empty:not(:focus-within) .hb-field__label {
+	font: var(--text-body-b);
+}
+.hb-field--big.hb-field--empty:not(:focus-within) input.hb-field__input {
+	height: 0;
+}
+/* Select: while nothing is chosen, the select itself shows the label text (big, normal colour). */
+.hb-field--big select.hb-field__input:invalid {
+	height: 24px;
+	color: var(--field-text);
+	font: var(--text-body-b);
 }
 
 /* ---------- States ---------- */

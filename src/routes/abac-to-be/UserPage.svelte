@@ -16,6 +16,7 @@
 	TO BE: next to the search there is a "JSON" switch. On, the open tab shows its
 	content as code over the whole page (JsonCode) instead of cards, and the search
 	marks the matching lines. The old "JSON" button became "Compare".
+	"Auth context" (download) sits in the toolbar between Compare and Audit log.
 
 	The page reads `proto.data` (the state panel): ready · loading · empty · error —
 	what the attributes area shows.
@@ -134,6 +135,9 @@
 		<span class="bar__json"><Switch bind:checked={json}>JSON</Switch></span>
 		<span class="bar__end">
 			<Button icon="split" onclick={oncompare}>Compare</Button>
+			<Button icon="download" onclick={() => notify('Auth context downloaded', 'success')}
+				>Auth context</Button
+			>
 			<Button icon="wait" onclick={onhistory}>Audit log</Button>
 			<Button icon="overflow" label="More" onclick={() => notBuilt('This menu')} />
 		</span>

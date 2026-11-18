@@ -39,6 +39,7 @@
 		<TextInput label={t.comment} bind:value={comment} maxlength={40} iconEnd="edit" />
 		<TextInput label={t.disabled} value={t.cannotChange} disabled />
 		<TextInput big label={t.fullName} bind:value={fullName} />
+		<TextInput big label={t.fullName} />
 	</div>
 </Demo>
 
@@ -53,6 +54,7 @@
 		<Select label={t.withError} placeholder={t.choose} options={t.oneTwo} error={t.chooseOne} />
 		<Select label={t.disabled} options={t.attributeTypes} value="domain" disabled />
 		<Select big label={t.compareWith} options={t.emails} bind:value={compareWith} />
+		<Select big label={t.compareWith} options={t.emails} />
 	</div>
 </Demo>
 
