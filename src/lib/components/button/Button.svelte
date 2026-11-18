@@ -10,6 +10,7 @@
 		<Button mode="ghost" icon="close" label="Close" />        ← icon only
 		<Button href="/users">Go to users</Button>                 ← a link that looks like a button
 		<Button onclick={save} disabled={!canSave}>Save</Button>
+		<Button icon="play" loading={running} onclick={run}>Run</Button>   ← spins while it runs
 
 	Props:
 		appearance   colour set:  "default" (grey) | "accent" (blue) | "danger" (red) | "white".  Default "default"
@@ -19,6 +20,8 @@
 		iconEnd      name of an icon shown AFTER the text
 		label        needed for icon-only buttons: says what the button does (tooltip + screen readers)
 		disabled     true = cannot be clicked
+		loading      true = something is going on: a spinner takes the place of the icon
+		             (the text stays, so the button keeps its width). Clicks do nothing meanwhile
 		href         if set, the button becomes a link to this address
 		onclick      what happens on click. Not called while disabled
 		…anything else (type, id, …) is passed straight to the <button>
@@ -27,6 +30,7 @@
 -->
 <script>
 	import Icon from '../icon/Icon.svelte';
+	import Loader from '../loader/Loader.svelte';
 	import './button.css';
 
 	let {
@@ -37,6 +41,7 @@
 		iconEnd = '',
 		label = '',
 		disabled = false,
+		loading = false,
 		href = '',
 		onclick,
 		children,
@@ -64,7 +69,7 @@
 
 <!-- What goes inside is the same for a real button and for a link. -->
 {#snippet content()}
-	{#if icon}<Icon name={icon} size={iconSize} />{/if}
+	{#if loading}<Loader size={iconSize} />{:else if icon}<Icon name={icon} size={iconSize} />{/if}
 	{#if children}<span class="hb-btn__label">{@render children()}</span>{/if}
 	{#if iconEnd}<Icon name={iconEnd} size={iconSize} />{/if}
 {/snippet}
@@ -77,7 +82,8 @@
 		aria-disabled={disabled ? 'true' : undefined}
 		aria-label={label || undefined}
 		title={label || undefined}
-		onclick={disabled ? undefined : onclick}
+		onclick={disabled || loading ? undefined : onclick}
+		aria-busy={loading || undefined}
 		{...rest}
 	>
 		{@render content()}
@@ -89,7 +95,8 @@
 		{disabled}
 		aria-label={label || undefined}
 		title={label || undefined}
-		{onclick}
+		onclick={loading ? undefined : onclick}
+		aria-busy={loading || undefined}
 		{...rest}
 	>
 		{@render content()}

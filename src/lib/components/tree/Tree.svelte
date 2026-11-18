@@ -32,12 +32,14 @@
 		                        a folder, "doc" for a file. '' = no icon
 		                        e.g. { id: 'meta', label: 'meta.json', icon: 'brackets' }
 		selected   the id of the selected file. Use bind:selected to read what was clicked
-		onselect   called with the file when a file is clicked (optional)
+		onselect   called with the file when a file is clicked, or with null when
+		           the selected file is clicked again (optional)
 
 	Folders and files work differently (Figma "tree-row", property "Folder"):
 		folder   a click opens or closes it. A folder is never selected.
 		         Closed: arrow down. Open: arrow up. It shows a folder icon.
 		file     a click selects it: the row turns solid blue. It shows a document icon.
+		         A second click on the selected file unselects it.
 
 	How a row is built — the same layers as the Figma component "tree-row":
 		folder   [ line ][ line ]…[ arrow ][ text: folder icon + label ]
@@ -96,10 +98,13 @@
 		return Array.isArray(node.children);
 	}
 
-	// A folder opens or closes. A file gets selected.
+	// A folder opens or closes. A file gets selected — or unselected, if it already was.
 	function click(node) {
 		if (isFolder(node)) {
 			open[node.id] = !open[node.id];
+		} else if (selected === node.id) {
+			selected = '';
+			onselect?.(null);
 		} else {
 			selected = node.id;
 			onselect?.(node);

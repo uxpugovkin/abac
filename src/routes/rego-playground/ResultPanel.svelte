@@ -29,7 +29,6 @@
 
 	let tab = $state('result'); // "result" | "problems"
 	let asJson = $state(false);
-	let searching = $state(false);
 
 	let text = $derived(
 		result ? (asJson ? sectionsJson(result.sections) : sectionsText(result.sections)) : ''
@@ -44,24 +43,12 @@
 	{#snippet actions()}
 		{#if tab === 'problems'}
 			<Button
-				icon="search"
-				label="Search"
-				onclick={() => notify('Nothing to search: no problems')}
-			/>
-			<Button
-				appearance="white"
 				icon="tune"
 				label="Filter"
 				onclick={() => notify('Filters are not part of this prototype')}
 			/>
 		{:else if result}
-			<Button
-				appearance={searching ? 'accent' : 'default'}
-				icon="search"
-				label="Search"
-				onclick={() => (searching = !searching)}
-			/>
-			<Button appearance="white" icon="duplicate" label="Copy" onclick={() => copy(text)} />
+			<Button icon="duplicate" label="Copy" onclick={() => copy(text)} />
 		{/if}
 	{/snippet}
 
@@ -83,7 +70,7 @@
 			<Switch bind:checked={asJson}>Show as JSON</Switch>
 		</div>
 		<div class="body">
-			<Code {text} {searching} />
+			<Code {text} />
 		</div>
 	{/if}
 </Panel>

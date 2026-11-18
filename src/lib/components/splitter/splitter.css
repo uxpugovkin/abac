@@ -26,6 +26,17 @@
 	inset: 0 -4px;
 }
 
+/* Horizontal: the same line on its side, between panels one above the other. */
+.hb-splitter--horizontal {
+	flex-direction: row;
+	width: auto;
+	height: 2px;
+	cursor: row-resize;
+}
+.hb-splitter--horizontal::before {
+	inset: -4px 0;
+}
+
 /* The three grip dots in the middle. */
 .hb-splitter__dot {
 	width: 2px;

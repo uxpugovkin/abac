@@ -147,6 +147,7 @@ export const content = {
 		iconOnly: { en: 'Icon only', ar: 'أيقونة فقط' },
 		disabled: words.disabled,
 		addUser: { en: 'Add user', ar: 'إضافة مستخدم' },
+		run: { en: 'Run', ar: 'تشغيل' },
 		json: 'JSON',
 		more: words.more,
 		moreActions: { en: 'More actions', ar: 'إجراءات أخرى' },
@@ -321,7 +322,9 @@ export const content = {
 		// Splitter: the panel before the line, the one after it, and the line itself
 		first: { en: 'Left', ar: 'يمين' },
 		second: { en: 'Right', ar: 'يسار' },
-		resize: { en: 'Resize', ar: 'تغيير الحجم' }
+		resize: { en: 'Resize', ar: 'تغيير الحجم' },
+		top: { en: 'Top', ar: 'أعلى' },
+		bottom: { en: 'Bottom', ar: 'أسفل' }
 	},
 
 	// The "Employees" table of the table guidelines

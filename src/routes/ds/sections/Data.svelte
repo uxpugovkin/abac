@@ -52,6 +52,9 @@
 		const allowed = Math.min(pixels, rightWidth - 400); // how far the right panel lets us go
 		leftWidth = Math.round(Math.max(400, leftWidth + allowed));
 	}
+
+	// The horizontal one: the top panel stays between 40 and 160 px tall.
+	let topHeight = $state(80);
 </script>
 
 <Demo
@@ -110,6 +113,22 @@
 	</div>
 </Demo>
 
+<Demo
+	title="Splitter, horizontal"
+	figma="splitter"
+	about="The same line on its side, for panels one above the other. Here the top panel stays 40–160 px tall."
+>
+	<div class="panels panels--stacked">
+		<div class="panel" style="height: {topHeight}px">{t.top} · {topHeight}px</div>
+		<Splitter
+			horizontal
+			ondrag={(pixels) => (topHeight = Math.min(Math.max(topHeight + pixels, 40), 160))}
+			label={t.resize}
+		/>
+		<div class="panel panel--rest">{t.bottom}</div>
+	</div>
+</Demo>
+
 <style>
 	.more {
 		color: var(--boring-blue-50);
@@ -118,6 +137,10 @@
 		display: flex;
 		width: 100%;
 		height: 120px;
+	}
+	.panels--stacked {
+		flex-direction: column;
+		height: 220px;
 	}
 	.panel {
 		flex: none;

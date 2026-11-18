@@ -60,6 +60,8 @@
 	<Tooltip title={t.lastSync} text="12.08.2026, 14:30" placement="bottom"
 		><Tag colour="neutral">{t.lastSyncDate}</Tag></Tooltip
 	>
+	<!-- align="end": for buttons at the far edge of a panel, where a centred bubble would not fit. -->
+	<Tooltip text={t.downloadJson} align="end"><Button icon="download" label={t.download} /></Tooltip>
 </Demo>
 
 <Demo

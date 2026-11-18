@@ -7,14 +7,12 @@
 
 	Use:
 		<Code text={policy} language="rego" />
-		<Code text={json} searching />                    ← a search box on top; matching lines are marked
 		<Code text="" placeholder="### Enter content" />  ← nothing yet: one line in the value colour
 
 	Props:
 		text          the code
 		language      "rego" | "json".  Default "json"
 		placeholder   shown on line 01 while `text` is empty
-		searching     true = a search box above the code
 
 	The colours, as in Figma:
 		rego   keywords red · comments grey · numbers, true, false purple ·
@@ -23,19 +21,9 @@
 		       A line that starts with a letter is a title (e.g. "Obligations (obligations)"): grey
 -->
 <script>
-	import { TextInput } from '#lib';
-
-	let { text = '', language = 'json', placeholder = '', searching = false } = $props();
-
-	let query = $state('');
+	let { text = '', language = 'json', placeholder = '' } = $props();
 
 	let lines = $derived(text ? text.split('\n') : [placeholder]);
-	let words = $derived(searching ? query.trim().toLowerCase() : '');
-
-	function found(line) {
-		return words && line.toLowerCase().includes(words);
-	}
-
 	// ---------- Colours: one line → pieces of { text, kind } ----------
 
 	const keywords = [
@@ -94,23 +82,12 @@
 			return [{ text, kind: 'value' }];
 		});
 	}
-
-	// Focus the search box as soon as it appears.
-	function focusInput(node) {
-		node.querySelector('input')?.focus();
-	}
 </script>
-
-{#if searching}
-	<div class="search" use:focusInput>
-		<TextInput icon="search" placeholder="Search" aria-label="Search the code" bind:value={query} />
-	</div>
-{/if}
 
 <!-- Code always reads left to right, also on a right-to-left page. -->
 <ol class="code hb-text-code-s" dir="ltr">
 	{#each lines as line, index (index)}
-		<li class:found={found(line)}>
+		<li>
 			{#if text}
 				{#each colour(line) as piece}<span class="c-{piece.kind}">{piece.text}</span>{/each}
 			{:else}
@@ -121,10 +98,6 @@
 </ol>
 
 <style>
-	.search {
-		padding: 8px 12px;
-		border-bottom: 1px solid var(--uncolorful-grey-border);
-	}
 	/* Numbered lines; a long line scrolls sideways with the whole panel. */
 	.code {
 		margin: 0;
@@ -151,9 +124,6 @@
 		box-sizing: border-box;
 		text-align: end;
 		color: var(--uncolorful-grey-tertiary);
-	}
-	.code li.found {
-		background: var(--boring-blue-90);
 	}
 
 	.c-keyword {

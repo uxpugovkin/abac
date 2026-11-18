@@ -75,3 +75,18 @@
 	border-top: 0;
 	border-bottom-color: var(--uncolorful-grey-primary);
 }
+
+/* ---------- Align: end ----------
+   The bubble's end lines up with the wrapped thing's end; the arrow stays
+   14px from the end, under the middle of a 28px icon button. */
+
+.hb-tooltip--align-end .hb-tooltip__bubble {
+	left: auto;
+	inset-inline-end: 0;
+	transform: none;
+}
+.hb-tooltip--align-end .hb-tooltip__bubble::after {
+	left: auto;
+	margin-left: 0;
+	inset-inline-end: 9px; /* 14px minus half the 10px arrow */
+}

@@ -50,6 +50,13 @@
 		<Button size="m" mode="ghost" iconEnd="chevron-down">{t.more}</Button>
 		<Button size="m" mode="ghost" icon="overflow" label={t.moreActions} />
 	</div>
+	<p class="hb-text-body-d size">loading</p>
+	<div class="row">
+		<code class="hb-text-code-s">s</code>
+		<Button appearance="accent" mode="primary" icon="play" loading>{t.run}</Button>
+		<Button icon="play" loading>{t.run}</Button>
+		<Button icon="play" label={t.run} loading />
+	</div>
 </Demo>
 
 <Demo title="Loader" figma="icons → loader" about="Says “please wait”.">

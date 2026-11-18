@@ -39,12 +39,19 @@
 	padding: 0 6px;
 }
 
-/* Icon and text sit 2px apart: the label's 6px padding minus these 4px. */
-.hb-btn .hb-icon + .hb-btn__label {
+/* Icon and text sit 2px apart: the label's 6px padding minus these 4px.
+   The spinner of a loading button sits where the icon was, so it counts as one. */
+.hb-btn .hb-icon + .hb-btn__label,
+.hb-btn .hb-loader + .hb-btn__label {
 	margin-inline-start: -4px;
 }
 .hb-btn__label + .hb-icon {
 	margin-inline-start: -4px;
+}
+
+/* The spinner of a loading button takes the text colour, like an icon. */
+.hb-btn .hb-loader {
+	color: inherit;
 }
 
 /* A button with an icon and no text is a square. */

@@ -7,11 +7,10 @@
 	Local to the playground.
 
 	Use:
-		<ProblemsList groups={problems} query="unused" />
+		<ProblemsList groups={problems} />
 
 	Props:
 		groups   the groups (see `problems` in data.js)
-		query    only rows that contain this text are shown (case does not matter)
 
 	A group header shows "Compilation error" when the test did not compile,
 	otherwise how many errors and warnings it has.
@@ -20,33 +19,20 @@
 <script>
 	import { Button, Icon, Tag, Tooltip } from '#lib';
 	import { notify } from './prototype.svelte.js';
-	import Message from './Message.svelte';
 
-	let { groups = [], query = '' } = $props();
+	let { groups = [] } = $props();
 
 	// Which groups are open:  { 'test name': true, … }. Starts from `open: true` in the data.
 	// (Only the starting value of `groups` is used here, on purpose — hence the ignore.)
 	// svelte-ignore state_referenced_locally
 	let open = $state(Object.fromEntries(groups.map((group) => [group.test, !!group.open])));
 
-	let words = $derived(query.trim().toLowerCase());
-
-	// The groups with only their matching rows; groups left with no rows are hidden.
-	let shown = $derived(
-		groups
-			.map((group) => ({
-				...group,
-				items: group.items.filter((item) => item.text.toLowerCase().includes(words))
-			}))
-			.filter((group) => group.items.length > 0)
-	);
-
 	function count(group, kind) {
 		return group.items.filter((item) => item.kind === kind).length;
 	}
 </script>
 
-{#each shown as group (group.test)}
+{#each groups as group (group.test)}
 	{@const compiled = count(group, 'compile') === 0}
 	<section class="group">
 		<button
@@ -82,7 +68,7 @@
 						>{column}
 					</p>
 					<span class="item__docs">
-						<Tooltip text="View in documentation" placement="bottom">
+						<Tooltip text="View in documentation" placement="bottom" align="end">
 							<Button
 								appearance="accent"
 								mode="ghost"
@@ -96,8 +82,6 @@
 			{/each}
 		{/if}
 	</section>
-{:else}
-	<Message text="No problems match “{query}”" />
 {/each}
 
 <style>

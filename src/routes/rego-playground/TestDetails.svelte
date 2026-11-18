@@ -22,8 +22,6 @@
 
 	let { test, onclose } = $props();
 
-	let searching = $state(false);
-
 	let status = $derived(statuses[test.status]);
 	let expected = sectionsText([expectedEffect]);
 </script>
@@ -60,19 +58,12 @@
 	{#if test.status === 'failed'}
 		<div class="expected">
 			<Panel>
-				{#snippet head()}
-					<Button
-						appearance={searching ? 'accent' : 'default'}
-						icon="search"
-						label="Search"
-						onclick={() => (searching = !searching)}
-					/>
-				{/snippet}
+				{#snippet head()}Expected effect{/snippet}
 				{#snippet actions()}
-					<Button appearance="white" icon="duplicate" label="Copy" onclick={() => copy(expected)} />
+					<Button icon="duplicate" label="Copy" onclick={() => copy(expected)} />
 				{/snippet}
 
-				<Code text={expected} {searching} />
+				<Code text={expected} />
 			</Panel>
 		</div>
 	{/if}

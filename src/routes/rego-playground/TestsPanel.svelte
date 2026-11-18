@@ -17,7 +17,7 @@
 	"Go to problems" opens the Problems tab.
 -->
 <script>
-	import { Button, Chip, Switch, Tag, TextInput } from '#lib';
+	import { Button, Chip, Switch, Tag } from '#lib';
 	import { tests, problems, statuses } from './data.js';
 	import { notify } from './prototype.svelte.js';
 	import Panel from './Panel.svelte';
@@ -28,8 +28,6 @@
 
 	let tab = $state('result'); // "result" | "problems"
 	let failedOnly = $state(false);
-	let searching = $state(false);
-	let query = $state('');
 
 	let shownTests = $derived(failedOnly ? tests.filter((test) => test.status === 'failed') : tests);
 	let totalMs = $derived(tests.reduce((sum, test) => sum + test.ms, 0));
@@ -57,16 +55,6 @@
 	{#snippet actions()}
 		{#if tab === 'problems' && run === 'failed'}
 			<Button
-				appearance={searching ? 'accent' : 'default'}
-				icon="search"
-				label="Search"
-				onclick={() => {
-					searching = !searching;
-					query = '';
-				}}
-			/>
-			<Button
-				appearance="white"
 				icon="tune"
 				label="Filter"
 				onclick={() => notify('Filters are not part of this prototype')}
@@ -79,18 +67,8 @@
 	{:else if tab === 'problems' && run === 'results'}
 		<Message text="No problems found" />
 	{:else if tab === 'problems'}
-		{#if searching}
-			<div class="search">
-				<TextInput
-					icon="search"
-					placeholder="Search"
-					aria-label="Search problems"
-					bind:value={query}
-				/>
-			</div>
-		{/if}
 		<div class="body">
-			<ProblemsList groups={problems} {query} />
+			<ProblemsList groups={problems} />
 		</div>
 	{:else if run === 'failed'}
 		<Message text="Failed to execute the policy">
@@ -99,9 +77,7 @@
 				<Tag colour="error" icon="wrong">Linter error — {problemsOf('error')}</Tag>
 				<Tag colour="warning" icon="warning">Linter warning — {problemsOf('warning')}</Tag>
 			</div>
-			<Button appearance="accent" mode="ghost" onclick={() => (tab = 'problems')}>
-				Go to problems
-			</Button>
+			<Button onclick={() => (tab = 'problems')}>Go to problems</Button>
 		</Message>
 	{:else}
 		<div class="summary">
@@ -134,11 +110,6 @@
 </Panel>
 
 <style>
-	.search {
-		flex: none;
-		padding: 8px 12px;
-		border-bottom: 1px solid var(--uncolorful-grey-border);
-	}
 	.body {
 		flex: 1;
 		min-height: 0;

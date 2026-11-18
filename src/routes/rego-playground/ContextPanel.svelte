@@ -16,7 +16,7 @@
 	then shows everything. Every fixture puts the same made-up input in (see data.js).
 -->
 <script>
-	import { Button, Chip, Loader, Menu, MenuItem, TextInput } from '#lib';
+	import { Button, Chip, Loader, Menu, MenuItem } from '#lib';
 	import { fixtures, fixtureInput, contextData } from './data.js';
 	import { copy } from './prototype.svelte.js';
 	import Panel from './Panel.svelte';
@@ -25,21 +25,14 @@
 	let { input = $bindable('') } = $props();
 
 	let tab = $state('auth'); // "auth" | "data"
-	let searching = $state(false);
-
 	let menuOpen = $state(false);
 	let loading = $state(false);
-	let query = $state('');
 
 	let shownText = $derived(tab === 'auth' ? input : JSON.stringify(contextData, null, 2));
-	let matching = $derived(
-		fixtures.filter((name) => name.toLowerCase().includes(query.trim().toLowerCase()))
-	);
 
 	function openMenu(event) {
 		event.stopPropagation(); // the window handler below must not close what was just opened
 		menuOpen = !menuOpen;
-		query = '';
 		loading = true;
 		setTimeout(() => (loading = false), 800);
 	}
@@ -48,11 +41,6 @@
 		input = JSON.stringify(fixtureInput, null, 2);
 		tab = 'auth';
 		menuOpen = false;
-	}
-
-	// Focus the search as soon as the list appears.
-	function focusInput(node) {
-		node.querySelector('input')?.focus();
 	}
 </script>
 
@@ -69,28 +57,16 @@
 	{/snippet}
 	{#snippet actions()}
 		<span class="fixtures">
-			<Button mode={menuOpen ? 'secondary' : 'ghost'} aria-expanded={menuOpen} onclick={openMenu}
-				>Add from fixtures</Button
-			>
+			<Button aria-expanded={menuOpen} onclick={openMenu}>Add from fixtures</Button>
 			{#if menuOpen}
 				<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
 				<div class="fixtures__menu" onclick={(event) => event.stopPropagation()}>
 					<Menu label="Fixtures">
-						<div class="fixtures__search" use:focusInput>
-							<TextInput
-								icon="search"
-								placeholder="Search"
-								aria-label="Search fixtures"
-								bind:value={query}
-							/>
-						</div>
-						{#each matching as name (name)}
+						{#each fixtures as name (name)}
 							<MenuItem icon="doc" onclick={pick}>{name}</MenuItem>
-						{:else}
-							<div class="fixtures__note hb-text-body-c">No fixtures match “{query}”</div>
 						{/each}
 						{#if loading}
-							<div class="fixtures__note hb-text-body-b">
+							<div class="fixtures__loading hb-text-body-b">
 								<Loader label="Loading fixtures" />
 								Loading…
 							</div>
@@ -99,16 +75,10 @@
 				</div>
 			{/if}
 		</span>
-		<Button
-			appearance={searching ? 'accent' : 'default'}
-			icon="search"
-			label="Search"
-			onclick={() => (searching = !searching)}
-		/>
-		<Button appearance="white" icon="duplicate" label="Copy" onclick={() => copy(shownText)} />
+		<Button icon="duplicate" label="Copy" onclick={() => copy(shownText)} />
 	{/snippet}
 
-	<Code text={shownText} placeholder="### Enter content for Input" {searching} />
+	<Code text={shownText} placeholder="### Enter content for Input" />
 </Panel>
 
 <style>
@@ -124,11 +94,7 @@
 		z-index: 30;
 		width: 330px;
 	}
-	.fixtures__search {
-		padding: 12px;
-		border-bottom: 1px solid var(--uncolorful-grey-border);
-	}
-	.fixtures__note {
+	.fixtures__loading {
 		display: flex;
 		align-items: center;
 		gap: 12px;

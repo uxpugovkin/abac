@@ -36,7 +36,7 @@
 	Everything is built from the design system (#lib); nothing here fetches data.
 -->
 <script>
-	import { Button, Checkbox, Loader, Notification, Segmented, Splitter, Tabs } from '#lib';
+	import { Button, Notification, Segmented, Splitter, Tabs } from '#lib';
 	import { openFiles, results } from './data.js';
 	import { proto, notify } from './prototype.svelte.js';
 	import Sidebar from './Sidebar.svelte';
@@ -55,7 +55,6 @@
 
 	let mode = $state('execution'); // "execution" | "testing"
 	let fileTab = $state('policy'); // the open file tab (leads nowhere)
-	let coverage = $state(true);
 	let input = $state(''); // the Auth context, as text
 
 	let running = $state(''); // what is running now: "run" | "project" | "policy" | ''
@@ -67,8 +66,9 @@
 	let result = $derived(executed ? { decision: proto.decision, ...results[proto.decision] } : null);
 	let testRun = $derived(tested ? proto.tests : null);
 
-	// The widths that the splitters change.
+	// The sizes that the splitters change.
 	let filesWidth = $state(228);
+	let contextHeight = $state(200); // Auth context, above the result
 	let editorWidth = $state(380);
 
 	function limit(value, min, max) {
@@ -76,7 +76,7 @@
 	}
 
 	// Pretends to run: the button spins for a moment, then the answer shows.
-	// While something runs, the run buttons do nothing.
+	// While one runs, the other run button does nothing either.
 	function run(what) {
 		if (running) return;
 		running = what;
@@ -108,6 +108,7 @@
 	<Sidebar />
 	<FileTree width={filesWidth} />
 	<Splitter
+		class="files-splitter"
 		label="Resize the file tree"
 		ondrag={(pixels) => (filesWidth = limit(filesWidth + pixels, 160, 480))}
 	/>
@@ -125,33 +126,24 @@
 			<span class="toolbar__gap"></span>
 
 			{#if mode === 'execution'}
-				<Checkbox bind:checked={coverage}>Coverage</Checkbox>
 				<Button
 					appearance="accent"
 					mode="primary"
-					icon={running === 'run' ? '' : 'play'}
-					class="toolbar__run"
-					onclick={() => run('run')}
+					icon="play"
+					loading={running === 'run'}
+					onclick={() => run('run')}>Run</Button
 				>
-					{#if running === 'run'}<Loader size={20} label="Running" />{:else}Run{/if}
-				</Button>
 			{:else}
-				<Button
-					icon={running === 'project' ? '' : 'play'}
-					class="toolbar__run"
-					onclick={() => run('project')}
+				<Button icon="play" loading={running === 'project'} onclick={() => run('project')}
+					>Project tests</Button
 				>
-					{#if running === 'project'}<Loader size={20} label="Running" />{:else}Project tests{/if}
-				</Button>
 				<Button
 					appearance="accent"
 					mode="primary"
-					icon={running === 'policy' ? '' : 'play'}
-					class="toolbar__run"
-					onclick={() => run('policy')}
+					icon="play"
+					loading={running === 'policy'}
+					onclick={() => run('policy')}>Policy tests</Button
 				>
-					{#if running === 'policy'}<Loader size={20} label="Running" />{:else}Policy tests{/if}
-				</Button>
 			{/if}
 		</div>
 
@@ -165,10 +157,14 @@
 			/>
 			<div class="side">
 				{#if mode === 'execution'}
-					<div class="side__context">
+					<div class="side__context" style:height="{contextHeight}px">
 						<ContextPanel bind:input />
 					</div>
-					<div class="side__line"></div>
+					<Splitter
+						horizontal
+						label="Resize the input"
+						ondrag={(pixels) => (contextHeight = limit(contextHeight + pixels, 80, 480))}
+					/>
 					<ResultPanel {result} />
 				{:else}
 					<TestsPanel run={testRun} onopen={(test) => (openTest = test)} />
@@ -195,6 +191,10 @@
 		height: 100vh;
 		overflow: hidden;
 	}
+	/* Figma overrides this splitter: only the three dots, no line (until it is hovered). */
+	.app :global(.files-splitter:not(:hover, .hb-splitter--dragging)) {
+		background: transparent;
+	}
 	.content {
 		flex: 1;
 		min-width: 0;
@@ -215,18 +215,13 @@
 	.toolbar__gap {
 		flex: 1;
 	}
-	/* While it spins, a run button keeps the width it had with its text. */
-	.toolbar :global(.toolbar__run) {
-		min-width: 67px;
-	}
-	/* The spinner takes the button's text colour (it is blue by default — invisible on blue). */
-	.toolbar :global(.toolbar__run .hb-loader) {
-		color: inherit;
-	}
+	/* The editor and the side panels sit in one rounded area. */
 	.workspace {
 		flex: 1;
 		min-height: 0;
 		display: flex;
+		border-radius: var(--radius-m);
+		overflow: hidden;
 	}
 	.editor {
 		flex: none;
@@ -238,16 +233,10 @@
 		display: flex;
 		flex-direction: column;
 	}
-	/* Auth context keeps 200px; the result takes the rest. */
+	/* Auth context keeps its height (the splitter under it changes it); the result takes the rest. */
 	.side__context {
 		flex: none;
-		height: 200px;
 		display: flex;
-	}
-	.side__line {
-		flex: none;
-		height: 2px;
-		background: var(--uncolorful-grey-border);
 	}
 	/* Short messages: bottom centre, above everything. */
 	.toast {
