@@ -43,6 +43,16 @@
 		</span>
 		<Icon name="arrow-right" />
 	</a>
+	<a class="home__card" href={resolve('/rego-playground')}>
+		<Icon name="script" />
+		<span>
+			<strong class="hb-text-body-b-bold">Flow Designer · Rego playground</strong>
+			<span class="hb-text-body-c"
+				>Run a policy against an input and see the decision, or run its tests and read the problems.</span
+			>
+		</span>
+		<Icon name="arrow-right" />
+	</a>
 </main>
 
 <style>

@@ -28,6 +28,9 @@
 		             children   the nodes inside it. A node WITH children is a folder —
 		                        even an empty one (children: []). A node without them is a file
 		             open       true = the folder starts opened (optional)
+		             icon       the icon before the label (optional). Default: "folder" for
+		                        a folder, "doc" for a file. '' = no icon
+		                        e.g. { id: 'meta', label: 'meta.json', icon: 'brackets' }
 		selected   the id of the selected file. Use bind:selected to read what was clicked
 		onselect   called with the file when a file is clicked (optional)
 
@@ -108,6 +111,7 @@
 	{#each rows as { node, lines } (node.id)}
 		{@const folder = isFolder(node)}
 		{@const isSelected = !folder && node.id === selected}
+		{@const icon = node.icon ?? (folder ? 'folder' : 'doc')}
 		<li>
 			<button
 				class="hb-tree__row"
@@ -124,9 +128,10 @@
 					<Icon name={open[node.id] ? 'chevron-up' : 'chevron-down'} size={16} />
 				{/if}
 
-				<!-- Inside the text block, before the label: a folder or a document icon. -->
+				<!-- Inside the text block, before the label: the node's own icon,
+				     or else a folder or a document icon. -->
 				<span class="hb-tree__text">
-					<Icon name={folder ? 'folder' : 'doc'} size={16} />
+					{#if icon}<Icon name={icon} size={16} />{/if}
 					<span class="hb-tree__label">{node.label}</span>
 				</span>
 			</button>
