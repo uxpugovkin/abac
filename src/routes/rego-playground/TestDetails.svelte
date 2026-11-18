@@ -16,7 +16,7 @@
 <script>
 	import { Button, Tag } from '#lib';
 	import { expectedEffect, sectionsText, statuses, testPackage } from './data.js';
-	import { copy } from './prototype.svelte.js';
+	import { copy, notify } from './prototype.svelte.js';
 	import Panel from './Panel.svelte';
 	import Code from './Code.svelte';
 
@@ -58,7 +58,13 @@
 	{#if test.status === 'failed'}
 		<div class="expected">
 			<Panel>
-				{#snippet head()}Expected effect{/snippet}
+				{#snippet head()}
+					<Button
+						icon="search"
+						label="Search"
+						onclick={() => notify('Search is not part of this prototype')}
+					/>
+				{/snippet}
 				{#snippet actions()}
 					<Button icon="duplicate" label="Copy" onclick={() => copy(expected)} />
 				{/snippet}

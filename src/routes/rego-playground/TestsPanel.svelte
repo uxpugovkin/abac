@@ -55,6 +55,11 @@
 	{#snippet actions()}
 		{#if tab === 'problems' && run === 'failed'}
 			<Button
+				icon="search"
+				label="Search"
+				onclick={() => notify('Search is not part of this prototype')}
+			/>
+			<Button
 				icon="tune"
 				label="Filter"
 				onclick={() => notify('Filters are not part of this prototype')}

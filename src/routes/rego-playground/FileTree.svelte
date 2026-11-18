@@ -34,7 +34,7 @@
 		display: flex;
 		flex-direction: column;
 		margin-block: 8px;
-		margin-inline-start: 8px;
+		margin-inline: 8px 4px; /* 4px of room before the splitter, as in Figma */
 		padding: 12px;
 		border-radius: var(--radius-m);
 		background: var(--uncolorful-grey-surface);

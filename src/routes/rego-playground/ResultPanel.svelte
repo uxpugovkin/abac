@@ -43,11 +43,21 @@
 	{#snippet actions()}
 		{#if tab === 'problems'}
 			<Button
+				icon="search"
+				label="Search"
+				onclick={() => notify('Search is not part of this prototype')}
+			/>
+			<Button
 				icon="tune"
 				label="Filter"
 				onclick={() => notify('Filters are not part of this prototype')}
 			/>
 		{:else if result}
+			<Button
+				icon="search"
+				label="Search"
+				onclick={() => notify('Search is not part of this prototype')}
+			/>
 			<Button icon="duplicate" label="Copy" onclick={() => copy(text)} />
 		{/if}
 	{/snippet}

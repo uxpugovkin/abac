@@ -18,7 +18,7 @@
 <script>
 	import { Button, Chip, Loader, Menu, MenuItem } from '#lib';
 	import { fixtures, fixtureInput, contextData } from './data.js';
-	import { copy } from './prototype.svelte.js';
+	import { copy, notify } from './prototype.svelte.js';
 	import Panel from './Panel.svelte';
 	import Code from './Code.svelte';
 
@@ -75,6 +75,11 @@
 				</div>
 			{/if}
 		</span>
+		<Button
+			icon="search"
+			label="Search"
+			onclick={() => notify('Search is not part of this prototype')}
+		/>
 		<Button icon="duplicate" label="Copy" onclick={() => copy(shownText)} />
 	{/snippet}
 
