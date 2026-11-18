@@ -4,9 +4,10 @@
 
    The layers are the same as in Figma:
      row     24px tall, 4px of room at both sides, rounded
-     line    16 × 24px pieces before the arrow, one per level
-     icon    16px: an arrow on a folder, a document on a file
-     text    8px of room at both sides
+     line    16 × 24px pieces, one per level
+     arrow   16px, folders only, before the text
+     text    8px of room at both sides. A 16px icon (folder or document)
+             sits inside it, 8px before the label
    ========================================================================== */
 
 .hb-tree {
@@ -50,10 +51,19 @@
 	flex: none;
 }
 
+/* The text block: 8px of room at both sides. The icon sits in it, 8px before the label. */
 .hb-tree__text {
 	flex: 1;
 	min-width: 0;
+	display: flex;
+	align-items: center;
+	gap: 8px;
 	padding: 0 8px;
+}
+/* A long label ends with "…". */
+.hb-tree__label {
+	flex: 1;
+	min-width: 0;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;

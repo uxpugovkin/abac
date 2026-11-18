@@ -33,11 +33,12 @@
 
 	Folders and files work differently (Figma "tree-row", property "Folder"):
 		folder   a click opens or closes it. A folder is never selected.
-		         Closed: arrow down. Open: arrow up.
+		         Closed: arrow down. Open: arrow up. It shows a folder icon.
 		file     a click selects it: the row turns solid blue. It shows a document icon.
 
 	How a row is built — the same layers as the Figma component "tree-row":
-		[ line ][ line ]…[ arrow or icon ][ text ]
+		folder   [ line ][ line ]…[ arrow ][ text: folder icon + label ]
+		file     [ line ][ line ]…[ text: document icon + label ]
 		  └ one 16px piece per level, drawn in tree.css. Together the pieces of
 		    all rows form the thin lines that connect every row to its parent.
 -->
@@ -63,7 +64,7 @@
 
 	/* ---------- From a tree to a flat list of rows ----------
 	   The screen shows a plain list: one row per visible node. Each row knows
-	   which line pieces to draw before its arrow or icon, one per level (Figma names in brackets):
+	   which line pieces to draw at its start, one per level (Figma names in brackets):
 	     'branch'  line down + a short branch to this row       (type B)  ├
 	     'corner'  rounded corner into this row, the line ends  (type C)  └
 	     'line'    a line passing by, to a later row above us   (type A)  │
@@ -118,14 +119,16 @@
 			>
 				{#each lines as line}<span class="hb-tree__line hb-tree__line--{line}"></span>{/each}
 
-				<!-- A folder shows its arrow, a file a document icon. -->
+				<!-- A folder has its arrow before the text. -->
 				{#if folder}
 					<Icon name={open[node.id] ? 'chevron-up' : 'chevron-down'} size={16} />
-				{:else}
-					<Icon name="doc" size={16} />
 				{/if}
 
-				<span class="hb-tree__text">{node.label}</span>
+				<!-- Inside the text block, before the label: a folder or a document icon. -->
+				<span class="hb-tree__text">
+					<Icon name={folder ? 'folder' : 'doc'} size={16} />
+					<span class="hb-tree__label">{node.label}</span>
+				</span>
 			</button>
 		</li>
 	{/each}
