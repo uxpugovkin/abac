@@ -9,36 +9,48 @@
 	Use:
 		<ResultPanel result={null} />                        ← not run yet
 		<ResultPanel result={{ decision: 'allow', ...results.allow }} />
+		<ResultPanel result={{ decision: 'failed' }} />          ← the policy did not compile
 
 	Props:
 		result   null = nothing run yet. Otherwise { decision: "allow" | "deny", ms, sections }
-		         (see `results` in data.js)
+		         (see `results` in data.js), or { decision: "failed" }
 
 	"Show as JSON" off: each section with a title. On: all of them as one JSON.
-	In this prototype a run never has problems, so "Problems" always says so.
+	A failed run shows its problems (`runProblems` in data.js); other runs have none.
 -->
 <script>
 	import { Button, Chip, Switch, Tag } from '#lib';
-	import { opaVersion, sectionsJson, sectionsText } from './data.js';
+	import { opaVersion, runProblems, sectionsJson, sectionsText } from './data.js';
 	import { copy, notify } from './prototype.svelte.js';
 	import Panel from './Panel.svelte';
 	import Code from './Code.svelte';
 	import Message from './Message.svelte';
+	import ProblemsList from './ProblemsList.svelte';
+	import FailedRun from './FailedRun.svelte';
 
 	let { result = null } = $props();
 
 	let tab = $state('result'); // "result" | "problems"
 	let asJson = $state(false);
 
+	let failed = $derived(result?.decision === 'failed');
+	let problemCount = runProblems.flatMap((group) => group.items).length;
+
 	let text = $derived(
-		result ? (asJson ? sectionsJson(result.sections) : sectionsText(result.sections)) : ''
+		result && !failed
+			? asJson
+				? sectionsJson(result.sections)
+				: sectionsText(result.sections)
+			: ''
 	);
 </script>
 
 <Panel flat>
 	{#snippet head()}
 		<Chip active={tab === 'result'} onclick={() => (tab = 'result')}>Result</Chip>
-		<Chip active={tab === 'problems'} onclick={() => (tab = 'problems')}>Problems</Chip>
+		<Chip active={tab === 'problems'} onclick={() => (tab = 'problems')}>
+			Problems{failed ? ` ${problemCount}` : ''}
+		</Chip>
 	{/snippet}
 	{#snippet actions()}
 		{#if tab === 'problems'}
@@ -52,7 +64,7 @@
 				label="Filter"
 				onclick={() => notify('Filters are not part of this prototype')}
 			/>
-		{:else if result}
+		{:else if result && !failed}
 			<Button
 				icon="search"
 				label="Search"
@@ -62,10 +74,16 @@
 		{/if}
 	{/snippet}
 
-	{#if tab === 'problems'}
+	{#if tab === 'problems' && failed}
+		<div class="body">
+			<ProblemsList groups={runProblems} />
+		</div>
+	{:else if tab === 'problems'}
 		<Message text="No problems found" />
 	{:else if !result}
 		<Message text={'Results will appear after\nthe first execution'} />
+	{:else if failed}
+		<FailedRun groups={runProblems} ongo={() => (tab = 'problems')} />
 	{:else}
 		<div class="summary">
 			<div class="summary__tags">

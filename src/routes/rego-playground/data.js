@@ -11,6 +11,7 @@
 	tests          the 12 tests of a test run
 	expectedEffect what a failed test expected (shown in its details)
 	problems       what a failed test run reports, grouped by test
+	runProblems    what a failed "Run" reports, grouped by rule of policy.rego
 
 	Figma:  sbertech-habibi → page "rego-playground"
 */
@@ -294,11 +295,12 @@ export const statuses = {
 export const expectedEffect = { label: 'Obligations', key: 'obligations', value: obligations };
 
 // ---------- A failed test run ----------
+// name: the test (or, in runProblems, the rule) the problems belong to.
 // kind: "compile" (the policy did not compile) | "error" (linter error) | "warning" (linter warning)
 
 export const problems = [
 	{
-		test: 'test_project_read_allowed',
+		name: 'test_project_read_allowed',
 		file: 'Minimal/projects/policy_test.rego',
 		open: true,
 		items: [
@@ -310,7 +312,7 @@ export const problems = [
 		]
 	},
 	{
-		test: 'test_project_read_denied_without_reader_role',
+		name: 'test_project_read_denied_without_reader_role',
 		file: 'Minimal/projects/policy_test.rego',
 		open: true,
 		items: [
@@ -332,7 +334,7 @@ export const problems = [
 		]
 	},
 	{
-		test: 'test_deny_when_subject_is_blocked',
+		name: 'test_deny_when_subject_is_blocked',
 		file: 'FailingTests/policy_test.rego',
 		items: [
 			{
@@ -358,7 +360,7 @@ export const problems = [
 		]
 	},
 	{
-		test: 'test_unused_imports_reported',
+		name: 'test_unused_imports_reported',
 		file: 'LintWarnings/policy_test.rego',
 		items: [
 			{
@@ -384,7 +386,7 @@ export const problems = [
 		]
 	},
 	{
-		test: 'test_recursive_rule_detected',
+		name: 'test_recursive_rule_detected',
 		file: 'RecursionError/policy_test.rego',
 		items: [
 			{
@@ -401,6 +403,64 @@ export const problems = [
 				kind: 'compile',
 				text: 'rego_type_error: undefined function data.authz.inherits',
 				at: '31:5'
+			}
+		]
+	}
+];
+
+// ---------- A failed "Run" (Execution) ----------
+// The same shape as `problems`, grouped by the rules of policy.rego.
+
+const policyFile = 'Minimal/projects/policy.rego';
+
+export const runProblems = [
+	{
+		name: 'allow',
+		file: policyFile,
+		open: true,
+		items: [{ kind: 'compile', text: 'rego_unsafe_var: var rule is unsafe in allow', at: '42:7' }]
+	},
+	{
+		name: 'mfa_required_actions',
+		file: policyFile,
+		open: true,
+		items: [
+			{
+				kind: 'compile',
+				text: 'rego_type_error: set contains values of mixed types: string and number',
+				at: '29:25'
+			},
+			{
+				kind: 'warning',
+				text: 'regal/style/line-length: line is 124 characters long and exceeds the 120-character limit',
+				at: '29:1'
+			}
+		]
+	},
+	{
+		name: 'grants',
+		file: policyFile,
+		items: [
+			{
+				kind: 'error',
+				text: 'regal/bugs/rule-shadows-builtin: rule "contains" shadows a built-in function',
+				at: '58:1'
+			},
+			{
+				kind: 'warning',
+				text: 'regal/idiomatic/use-some-for-output-vars: use "some" to declare d',
+				at: '73:2'
+			}
+		]
+	},
+	{
+		name: 'decision',
+		file: policyFile,
+		items: [
+			{
+				kind: 'warning',
+				text: 'regal/idiomatic/no-defined-entrypoint: no rule is marked as an entrypoint',
+				at: '47:1'
 			}
 		]
 	}

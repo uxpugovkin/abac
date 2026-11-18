@@ -2,7 +2,7 @@
 	STATE PANEL — the tiny floating panel for whoever reviews the prototype.
 	It is NOT part of the product. It switches what the screens pretend:
 
-		Run answers   Allow · Deny              what "Run" decides (Execution)
+		Run answers   Allow · Deny · Failed run what "Run" gives (Execution)
 		Tests         Results · Failed run      what a test run gives (Testing)
 		Theme         Light · Dark · Olive · Olive Night
 		Right-to-left
@@ -23,7 +23,8 @@
 
 	const decisions = [
 		{ value: 'allow', label: 'Allow' },
-		{ value: 'deny', label: 'Deny' }
+		{ value: 'deny', label: 'Deny' },
+		{ value: 'failed', label: 'Failed run' }
 	];
 	const testRuns = [
 		{ value: 'results', label: 'Results' },

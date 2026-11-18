@@ -23,6 +23,7 @@
 	import Panel from './Panel.svelte';
 	import Message from './Message.svelte';
 	import ProblemsList from './ProblemsList.svelte';
+	import FailedRun from './FailedRun.svelte';
 
 	let { run = null, onopen } = $props();
 
@@ -32,14 +33,11 @@
 	let shownTests = $derived(failedOnly ? tests.filter((test) => test.status === 'failed') : tests);
 	let totalMs = $derived(tests.reduce((sum, test) => sum + test.ms, 0));
 
-	// Every problem of every group, to count them by kind.
+	// Every problem of every group, for the count on the tab.
 	let allProblems = problems.flatMap((group) => group.items);
 
 	function testsWith(status) {
 		return tests.filter((test) => test.status === status).length;
-	}
-	function problemsOf(kind) {
-		return allProblems.filter((item) => item.kind === kind).length;
 	}
 </script>
 
@@ -76,14 +74,7 @@
 			<ProblemsList groups={problems} />
 		</div>
 	{:else if run === 'failed'}
-		<Message text="Failed to execute the policy">
-			<div class="failed__tags">
-				<Tag colour="error" icon="wrong">Compilation error — {problemsOf('compile')}</Tag>
-				<Tag colour="error" icon="wrong">Linter error — {problemsOf('error')}</Tag>
-				<Tag colour="warning" icon="warning">Linter warning — {problemsOf('warning')}</Tag>
-			</div>
-			<Button onclick={() => (tab = 'problems')}>Go to problems</Button>
-		</Message>
+		<FailedRun groups={problems} ongo={() => (tab = 'problems')} />
 	{:else}
 		<div class="summary">
 			<div class="summary__counts">
@@ -119,15 +110,6 @@
 		flex: 1;
 		min-height: 0;
 		overflow: auto;
-	}
-
-	/* ---------- A failed run ---------- */
-	.failed__tags {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: center;
-		gap: 4px;
-		max-width: 360px;
 	}
 
 	/* ---------- The summary above the list ---------- */

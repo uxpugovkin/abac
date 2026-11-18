@@ -5,7 +5,8 @@
 
 	Two modes (the switch in the toolbar):
 		Execution   the input ("Auth context", "Data"; "Add from fixtures" fills it),
-		            "Run", then the decision: Allow or Deny, with what came with it
+		            "Run", then the decision: Allow or Deny, with what came with it —
+		            or, when the policy did not compile, its problems
 		Testing     "Project tests" or "Policy tests", then the list of tests (a click opens
 		            one test), or — when the policy did not compile — its problems
 
@@ -23,7 +24,8 @@
 		ContextPanel.svelte   the input: Auth context, Data, Add from fixtures
 		ResultPanel.svelte    what "Run" answered (Execution)
 		TestsPanel.svelte     what a test run answered (Testing)
-		ProblemsList.svelte   the problems of a failed test run
+		ProblemsList.svelte   the problems of a failed run (both modes)
+		FailedRun.svelte      "Failed to execute the policy" with the counts (both modes)
 		TestDetails.svelte    one test, in a panel over the page
 		Panel.svelte          a white area with a header — the editor and every side panel
 		Code.svelte           code with numbered lines and colours

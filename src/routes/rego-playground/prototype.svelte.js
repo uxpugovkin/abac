@@ -7,7 +7,8 @@
 		{#if proto.decision === 'allow'} … {/if}
 		notify('Copied');                      ← a short message at the bottom of the screen
 
-	proto.decision  what "Run" answers in Execution:  "allow" | "deny"
+	proto.decision  what "Run" answers in Execution:
+	                "allow" | "deny" | "failed" (the policy did not compile: see its problems)
 	proto.tests     what a test run answers in Testing:
 	                "results" (the list of tests) | "failed" (the policy did not compile)
 	proto.theme     "light" | "dark" | "olive" | "olive-night".  Figma draws most screens in light

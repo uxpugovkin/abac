@@ -1,5 +1,5 @@
 <!--
-	PROBLEMS LIST — what a failed test run reports, grouped by test.
+	PROBLEMS LIST — what a failed run reports, grouped by test (Testing) or by rule (Execution).
 	A group opens and closes; each row is one error or warning.
 
 	Figma:  sbertech-habibi → page "rego-playground" → "problems-list"
@@ -7,12 +7,12 @@
 	Local to the playground.
 
 	Use:
-		<ProblemsList groups={problems} />
+		<ProblemsList groups={problems} />          ← or runProblems
 
 	Props:
 		groups   the groups (see `problems` in data.js)
 
-	A group header shows "Compilation error" when the test did not compile,
+	A group header shows "Compilation error" when it did not compile,
 	otherwise how many errors and warnings it has.
 	Under the mouse, a row shows a button to its documentation (not part of this prototype).
 -->
@@ -22,28 +22,28 @@
 
 	let { groups = [] } = $props();
 
-	// Which groups are open:  { 'test name': true, … }. Starts from `open: true` in the data.
+	// Which groups are open:  { 'group name': true, … }. Starts from `open: true` in the data.
 	// (Only the starting value of `groups` is used here, on purpose — hence the ignore.)
 	// svelte-ignore state_referenced_locally
-	let open = $state(Object.fromEntries(groups.map((group) => [group.test, !!group.open])));
+	let open = $state(Object.fromEntries(groups.map((group) => [group.name, !!group.open])));
 
 	function count(group, kind) {
 		return group.items.filter((item) => item.kind === kind).length;
 	}
 </script>
 
-{#each groups as group (group.test)}
+{#each groups as group (group.name)}
 	{@const compiled = count(group, 'compile') === 0}
 	<section class="group">
 		<button
 			class="group__head"
 			type="button"
-			aria-expanded={open[group.test]}
-			onclick={() => (open[group.test] = !open[group.test])}
+			aria-expanded={open[group.name]}
+			onclick={() => (open[group.name] = !open[group.name])}
 		>
-			<Icon name={open[group.test] ? 'chevron-up' : 'chevron-down'} size={20} />
+			<Icon name={open[group.name] ? 'chevron-up' : 'chevron-down'} size={20} />
 			<span class="group__text">
-				<span class="hb-text-body-c group__name">{group.test}</span>
+				<span class="hb-text-body-c group__name">{group.name}</span>
 				<span class="hb-text-body-d group__file">{group.file}</span>
 			</span>
 			<span class="group__tags">
@@ -56,7 +56,7 @@
 			</span>
 		</button>
 
-		{#if open[group.test]}
+		{#if open[group.name]}
 			{#each group.items as item}
 				{@const [line, column] = item.at.split(':')}
 				<div class="item">
@@ -100,6 +100,10 @@
 		color: var(--uncolorful-grey-primary);
 		text-align: start;
 		cursor: pointer;
+	}
+	/* Same hover as the problem rows under it. */
+	.group__head:hover {
+		background: var(--uncolorful-grey-border);
 	}
 	.group__text {
 		flex: 1;
