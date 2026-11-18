@@ -71,7 +71,11 @@
 	// The sizes that the splitters change.
 	let filesWidth = $state(228);
 	let contextHeight = $state(200); // Auth context, above the result
-	let editorWidth = $state(380);
+	let editorWidth = $state(400);
+	let workspaceWidth = $state(0); // measured from the page, see bind:clientWidth below
+
+	// No panel of the working area gets narrower than this.
+	const minPanel = 400;
 
 	function limit(value, min, max) {
 		return Math.min(Math.max(value, min), max);
@@ -149,13 +153,14 @@
 			{/if}
 		</div>
 
-		<div class="workspace">
+		<div class="workspace" bind:clientWidth={workspaceWidth}>
 			<div class="editor" style:width="{editorWidth}px">
 				<Editor />
 			</div>
 			<Splitter
 				label="Resize the editor"
-				ondrag={(pixels) => (editorWidth = limit(editorWidth + pixels, 240, 720))}
+				ondrag={(pixels) =>
+					(editorWidth = limit(editorWidth + pixels, minPanel, workspaceWidth - 2 - minPanel))}
 			/>
 			<div class="side">
 				{#if mode === 'execution'}
@@ -225,13 +230,15 @@
 		border-radius: var(--radius-m);
 		overflow: hidden;
 	}
+	/* Each panel is at least 400px wide (minPanel above), also when the window is narrow. */
 	.editor {
 		flex: none;
 		display: flex;
+		min-width: 400px;
 	}
 	.side {
 		flex: 1;
-		min-width: 0;
+		min-width: 400px;
 		display: flex;
 		flex-direction: column;
 	}
