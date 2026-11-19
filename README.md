@@ -154,6 +154,12 @@ npm run package      # builds dist/
 **Not moved yet:** Date Picker, Charts, Messages, browser frame, and a few variants
 (split-button, inline-input, combobox, vertical slider, flag and file-type icons).
 
+## Visits
+
+Visits of the docs (`/ds`) and of every prototype are counted with GoatCounter
+(the home page is not). See them at https://habibi-ui.goatcounter.com. The code is in `src/routes/goatcounter.js`;
+nothing is counted while you run the site on your own computer.
+
 ## Publishing
 
 Every push to `main` builds the site and publishes it to GitHub Pages
