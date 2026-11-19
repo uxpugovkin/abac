@@ -27,7 +27,7 @@
 		},
 		{
 			group: 'Navigation',
-			items: ['Tabs', 'Chip', 'Segmented', 'FilterChip', 'SearchChip', 'Menu', 'Tree']
+			items: ['Tabs', 'Chip', 'Segmented', 'FilterChip', 'SearchChip', 'Menu', 'Tree', 'Sidebar']
 		},
 		{
 			group: 'Status',

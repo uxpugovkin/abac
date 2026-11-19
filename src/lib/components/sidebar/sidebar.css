@@ -1,0 +1,181 @@
+/* ==========================================================================
+   SIDEBAR — see Sidebar.svelte for how to use it.
+   Figma: habibi-library → "Sidebar"
+
+   The layers are the same as in Figma:
+     header    logo + title and subtitle            (collapsed: the logo only, centred)
+     menu      the optional select, then the items  (collapsed: icons only)
+     divider   a 1px line
+     person    photo, name and role, an arrow       (collapsed: photo over the arrow)
+   ========================================================================== */
+
+.hb-sidebar {
+	flex: none;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	width: 232px;
+	padding: 8px 0 16px;
+	overflow: hidden;
+	background: var(--uncolorful-grey-surface);
+	color: var(--uncolorful-grey-primary);
+}
+.hb-sidebar--collapsed {
+	width: 56px;
+}
+
+/* ---------- Header ---------- */
+
+.hb-sidebar__header {
+	display: flex;
+	gap: 8px;
+	padding: 8px 12px;
+}
+.hb-sidebar--collapsed .hb-sidebar__header {
+	justify-content: center;
+}
+.hb-sidebar__logo {
+	flex: none;
+	display: flex;
+	align-items: center;
+	height: 36px;
+	color: var(--uncolorful-grey-extra);
+}
+.hb-sidebar__titles {
+	flex: 1;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	height: 36px;
+	white-space: nowrap;
+}
+.hb-sidebar__title {
+	margin-bottom: -4px; /* the two lines sit close together, as in Figma */
+	font: var(--text-body-a-bold);
+}
+.hb-sidebar__subtitle {
+	padding-inline-start: 2px;
+	font: var(--text-body-d);
+	color: var(--uncolorful-grey-tertiary);
+}
+
+/* ---------- Menu ---------- */
+
+.hb-sidebar__menu {
+	flex: 1;
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding: 8px;
+	overflow-y: auto;
+}
+.hb-sidebar__items {
+	display: flex;
+	flex-direction: column;
+}
+
+/* One section: a 20px icon in a 16px-wide slot (as in Figma), then the name. */
+.hb-sidebar__item {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	width: 100%;
+	padding: 8px 12px;
+	border: 0;
+	border-radius: var(--radius-m);
+	background: transparent;
+	color: var(--uncolorful-grey-primary);
+	font: var(--text-body-c);
+	text-align: start;
+	white-space: nowrap;
+	cursor: pointer;
+}
+.hb-sidebar__item:hover {
+	background: var(--uncolorful-grey-border);
+}
+.hb-sidebar__item--active,
+.hb-sidebar__item--active:hover {
+	background: var(--boring-blue-90);
+	color: var(--boring-blue-50);
+}
+.hb-sidebar__icon {
+	flex: none;
+	display: flex;
+	justify-content: center;
+	width: 16px;
+}
+
+/* ---------- Divider ---------- */
+
+.hb-sidebar__divider {
+	flex: none;
+	height: 1px;
+	margin: 0 18px;
+	background: var(--uncolorful-grey-border);
+}
+.hb-sidebar--collapsed .hb-sidebar__divider {
+	margin: 0 12px;
+}
+
+/* ---------- The person (a click collapses / expands) ---------- */
+
+.hb-sidebar__person {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	width: 100%;
+	padding: 4px 20px;
+	border: 0;
+	border-radius: var(--radius-m);
+	background: transparent;
+	color: var(--uncolorful-grey-primary);
+	text-align: start;
+	cursor: pointer;
+}
+.hb-sidebar--collapsed .hb-sidebar__person {
+	flex-direction: column;
+	padding: 4px 0;
+}
+.hb-sidebar__photo {
+	flex: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	border-radius: var(--radius-l);
+	object-fit: cover;
+	background: var(--uncolorful-grey-border);
+}
+.hb-sidebar__who {
+	flex: 1;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	padding-bottom: 2px;
+}
+.hb-sidebar__name {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font: var(--text-body-d);
+}
+.hb-sidebar__role {
+	font: var(--text-body-e);
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var(--uncolorful-grey-tertiary);
+}
+/* The arrow sits in an 8px-wide slot, as in Figma. */
+.hb-sidebar__arrow {
+	flex: none;
+	display: flex;
+	justify-content: center;
+	width: 8px;
+}
+/* Right-to-left: the arrow points the other way (towards the edge the menu folds to). */
+[dir='rtl'] .hb-sidebar__arrow {
+	transform: scaleX(-1);
+}

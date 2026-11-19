@@ -1,6 +1,17 @@
-<!-- DOCS: Tabs, Chip, Segmented, FilterChip, Menu, Tree. -->
+<!-- DOCS: Tabs, Chip, Segmented, FilterChip, Menu, Tree, Sidebar. -->
 <script>
-	import { Tabs, Chip, Segmented, FilterChip, SearchChip, Menu, MenuItem, Tree } from '#lib';
+	import {
+		Tabs,
+		Chip,
+		Segmented,
+		FilterChip,
+		SearchChip,
+		Menu,
+		MenuItem,
+		Tree,
+		Sidebar
+	} from '#lib';
+	import { photos } from '../employees.js';
 	import Demo from '../Demo.svelte';
 	import { content } from '../content.js';
 	import { pick } from '../examples.svelte.js';
@@ -15,6 +26,8 @@
 	let query = $state('');
 	let sort = $state('name');
 	let node = $state('users');
+	let section = $state('dashboard');
+	let collapsed = $state(false);
 
 	// The domain ids (res-domain-144…) are the same in every language.
 	const tree = [
@@ -126,8 +139,40 @@
 	</div>
 </Demo>
 
+<Demo
+	title="Sidebar"
+	figma="Sidebar"
+	about="Click the person at the bottom to collapse the menu to icons, and again to open it."
+>
+	<div class="sidebar">
+		<Sidebar
+			title={t.product}
+			subtitle="Platform V"
+			items={[
+				{ id: 'dashboard', label: t.dashboard, icon: 'view-grid' },
+				{ id: 'users', label: t.users, icon: 'profile' },
+				{ id: 'files', label: t.files, icon: 'folder' },
+				{ id: 'deploy', label: t.deploy, icon: 'archive-remove' },
+				{ id: 'settings', label: t.settings, icon: 'tune' }
+			]}
+			active={section}
+			onselect={(item) => (section = item.id)}
+			name={t.tatiana}
+			role={t.superAdmin}
+			photo={photos[6]}
+			bind:collapsed
+		/>
+	</div>
+</Demo>
+
 <style>
 	.tree {
 		width: 240px;
+	}
+	/* The sidebar is as tall as a short page, with a line around it to show its edges. */
+	.sidebar {
+		display: flex;
+		height: 440px;
+		box-shadow: 0 0 0 1px var(--uncolorful-grey-border);
 	}
 </style>

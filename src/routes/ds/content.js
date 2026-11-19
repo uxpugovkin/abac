@@ -272,7 +272,12 @@ export const content = {
 		users: words.users,
 		model: words.model,
 		admins: { en: 'Admins', ar: 'المسؤولون' },
-		guests: { en: 'Guests', ar: 'الضيوف' }
+		guests: { en: 'Guests', ar: 'الضيوف' },
+		// Sidebar
+		product: { en: 'Product', ar: 'المنتج' },
+		dashboard: { en: 'Dashboard', ar: 'لوحة المعلومات' },
+		files: { en: 'Files', ar: 'الملفات' },
+		deploy: { en: 'Deploy', ar: 'النشر' }
 	},
 
 	status: {

@@ -18,7 +18,6 @@
 	        https://www.figma.com/design/OKwPuNTKnQ3p99F03r9MyG/sbertech-habibi?node-id=3050-4787
 
 	The pieces (all in this folder):
-		Sidebar.svelte        the side menu of Flow Designer
 		FileTree.svelte       the folders and files, with a search
 		Editor.svelte         policy.rego as code
 		ContextPanel.svelte   the input: Auth context, Data, Add from fixtures
@@ -38,10 +37,10 @@
 	Everything is built from the design system (#lib); nothing here fetches data.
 -->
 <script>
-	import { Button, Notification, Segmented, Splitter, Tabs } from '#lib';
+	import { Button, Notification, Segmented, Sidebar, Splitter, Tabs } from '#lib';
+	import { photos } from '../ds/employees.js';
 	import { openFiles, results } from './data.js';
 	import { proto, notify } from './prototype.svelte.js';
-	import Sidebar from './Sidebar.svelte';
 	import FileTree from './FileTree.svelte';
 	import Editor from './Editor.svelte';
 	import ContextPanel from './ContextPanel.svelte';
@@ -50,11 +49,25 @@
 	import TestDetails from './TestDetails.svelte';
 	import StatePanel from './StatePanel.svelte';
 
+	// The sections of Flow Designer's side menu. Only "Files" is built in this prototype.
+	const sections = [
+		{ id: 'files', label: 'Files', icon: 'folder' },
+		{ id: 'context', label: 'Context', icon: 'database' },
+		{ id: 'distributives', label: 'Distributives', icon: 'view-grid' },
+		{ id: 'deploy', label: 'Deploy', icon: 'archive-remove' },
+		{ id: 'settings', label: 'Settings', icon: 'tune' }
+	];
+
+	function openSection(item) {
+		if (item.id !== 'files') notify(`${item.label} is not part of this prototype`);
+	}
+
 	const modes = [
 		{ value: 'execution', label: 'Execution' },
 		{ value: 'testing', label: 'Testing' }
 	];
 
+	let menuCollapsed = $state(false); // the side menu shows only icons
 	let mode = $state('execution'); // "execution" | "testing"
 	let fileTab = $state('policy'); // the open file tab (leads nowhere)
 	let input = $state(''); // the Auth context, as text
@@ -111,7 +124,17 @@
 </svelte:head>
 
 <div class="app">
-	<Sidebar />
+	<Sidebar
+		title="Flow Designer"
+		subtitle="Platform V"
+		items={sections}
+		active="files"
+		onselect={openSection}
+		name="Tatiana Pirog"
+		role="Super admin"
+		photo={photos[6]}
+		bind:collapsed={menuCollapsed}
+	/>
 	<FileTree width={filesWidth} />
 	<Splitter
 		class="files-splitter"

@@ -36,6 +36,7 @@ export { default as SearchChip } from './components/search-chip/SearchChip.svelt
 export { default as Menu } from './components/menu/Menu.svelte';
 export { default as MenuItem } from './components/menu/MenuItem.svelte';
 export { default as Tree } from './components/tree/Tree.svelte';
+export { default as Sidebar } from './components/sidebar/Sidebar.svelte';
 
 // Status and feedback
 export { default as Tag } from './components/tag/Tag.svelte';

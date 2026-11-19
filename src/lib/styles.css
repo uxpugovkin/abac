@@ -30,6 +30,7 @@
 @import './components/search-chip/search-chip.css';
 @import './components/menu/menu.css';
 @import './components/tree/tree.css';
+@import './components/sidebar/sidebar.css';
 @import './components/tag/tag.css';
 @import './components/badge/badge.css';
 @import './components/marker/marker.css';

@@ -4,7 +4,7 @@ The **habibi-library** design system, moved from Figma into code — plus the pr
 
 - **Design system** → `src/lib` (tokens + Svelte components)
 - **Live docs** → the `/ds` page: every token and component, in all four themes and in right-to-left
-- **Prototypes** → one folder each under `src/routes` (`/abac-as-is` and `/abac-to-be`)
+- **Prototypes** → one folder each under `src/routes` (`/abac-as-is`, `/abac-to-be` and `/rego-playground`)
 
 Built with [Svelte 5](https://svelte.dev) and SvelteKit. Plain JavaScript and plain CSS — no TypeScript, no CSS framework.
 
@@ -54,6 +54,7 @@ src/
       tables/                   the table guidelines  →  /ds/tables
     abac-as-is/                 the ABAC prototype as designed today  →  /abac-as-is
     abac-to-be/                 its copy where changes are tried out  →  /abac-to-be
+    rego-playground/            Flow Designer's Rego sandbox          →  /rego-playground
     (your-prototype)/           prototypes go here, one folder each
 ```
 
@@ -148,6 +149,7 @@ npm run package      # builds dist/
 | Drop List                              | `Menu`, `MenuItem`                             |
 | Empty                                  | `EmptyState` (with the monkey mascot, 5 types) |
 | Tree                                   | `Tree`                                         |
+| Sidebar                                | `Sidebar` (expanded and collapsed)             |
 
 **Not moved yet:** Date Picker, Charts, Messages, browser frame, and a few variants
 (split-button, inline-input, combobox, vertical slider, flag and file-type icons).
