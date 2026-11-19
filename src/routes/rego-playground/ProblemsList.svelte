@@ -18,7 +18,7 @@
 -->
 <script>
 	import { Button, Icon, Tag, Tooltip } from '#lib';
-	import { notify } from './prototype.svelte.js';
+	import { notBuilt } from './prototype.svelte.js';
 
 	let { groups = [] } = $props();
 
@@ -74,7 +74,7 @@
 								mode="ghost"
 								icon="info"
 								label="View in documentation"
-								onclick={() => notify('Documentation is not part of this prototype')}
+								onclick={() => notBuilt('Documentation')}
 							/>
 						</Tooltip>
 					</span>

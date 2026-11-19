@@ -403,10 +403,10 @@ export const content = {
 		app: {
 			currentDomain: { en: 'Current domain', ar: 'النطاق الحالي' },
 			menu: [
-				{ label: { en: 'Dashboard', ar: 'لوحة المعلومات' }, icon: 'view-grid' },
-				{ label: words.users, icon: 'profile', active: true },
-				{ label: words.model, icon: 'script' },
-				{ label: { en: 'Task Manager', ar: 'مدير المهام' }, icon: 'wait' }
+				{ id: 'dashboard', label: { en: 'Dashboard', ar: 'لوحة المعلومات' }, icon: 'view-grid' },
+				{ id: 'users', label: words.users, icon: 'profile' },
+				{ id: 'model', label: words.model, icon: 'script' },
+				{ id: 'tasks', label: { en: 'Task Manager', ar: 'مدير المهام' }, icon: 'wait' }
 			],
 			tatiana: words.tatiana,
 			superAdmin: words.superAdmin

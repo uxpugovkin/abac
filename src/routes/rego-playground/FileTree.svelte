@@ -17,7 +17,7 @@
 <script>
 	import { TextInput, Tree } from '#lib';
 	import { files } from './data.js';
-	import { notify } from './prototype.svelte.js';
+	import { notBuilt } from './prototype.svelte.js';
 
 	let { width = 228 } = $props();
 
@@ -31,7 +31,7 @@
 		placeholder="Search"
 		aria-label="Search files"
 		bind:value={query}
-		onkeydown={(event) => event.key === 'Enter' && notify('Search is not part of this prototype')}
+		onkeydown={(event) => event.key === 'Enter' && notBuilt('Search')}
 	/>
 	<div class="files__tree">
 		<Tree nodes={files} bind:selected />

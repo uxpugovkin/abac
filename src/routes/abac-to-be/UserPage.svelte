@@ -27,7 +27,7 @@
 <script>
 	import { Button, Tabs, Tag, TextInput, Switch, Table, Skeleton, EmptyState } from '#lib';
 	import { statuses, formatSync, attributeGroups, roles, jsonOf } from './data.js';
-	import { proto, notify } from './prototype.svelte.js';
+	import { proto, notify, notBuilt } from './prototype.svelte.js';
 	import Breadcrumbs from './Breadcrumbs.svelte';
 	import JsonCode from './JsonCode.svelte';
 
@@ -82,10 +82,6 @@
 		{ label: 'res-domain-144', domains: true },
 		{ label: 'Users', onclick: onback }
 	]);
-
-	function notBuilt(what) {
-		notify(`${what} is not part of this prototype`);
-	}
 </script>
 
 {#snippet search()}

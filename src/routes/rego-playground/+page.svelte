@@ -40,7 +40,7 @@
 	import { Button, Notification, Segmented, Sidebar, Splitter, Tabs } from '#lib';
 	import { photos } from '../ds/employees.js';
 	import { openFiles, results } from './data.js';
-	import { proto, notify } from './prototype.svelte.js';
+	import { proto, notify, notBuilt } from './prototype.svelte.js';
 	import FileTree from './FileTree.svelte';
 	import Editor from './Editor.svelte';
 	import ContextPanel from './ContextPanel.svelte';
@@ -59,7 +59,7 @@
 	];
 
 	function openSection(item) {
-		if (item.id !== 'files') notify(`${item.label} is not part of this prototype`);
+		if (item.id !== 'files') notBuilt(item.label);
 	}
 
 	const modes = [

@@ -6,6 +6,7 @@
 		import { proto, notify } from './prototype.svelte.js';
 		{#if proto.decision === 'allow'} … {/if}
 		notify('Copied');                      ← a short message at the bottom of the screen
+		notBuilt('Search');                    ← "Search is not part of this prototype"
 
 	proto.decision  what "Run" answers in Execution:
 	                "allow" | "deny" | "failed" (the policy did not compile: see its problems)
@@ -33,6 +34,11 @@ export function notify(text, type = 'info') {
 	clearTimeout(timer);
 	proto.toast = { text, type };
 	timer = setTimeout(() => (proto.toast = null), 3000);
+}
+
+/** Says that something is drawn but not built, e.g. notBuilt('Search'). */
+export function notBuilt(what) {
+	notify(`${what} is not part of this prototype`);
 }
 
 /** Copies a text and says so. */

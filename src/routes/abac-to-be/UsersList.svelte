@@ -35,7 +35,7 @@
 		EmptyState
 	} from '#lib';
 	import { users, statuses, formatSync, hasWarning, sortRows } from './data.js';
-	import { proto, notify } from './prototype.svelte.js';
+	import { proto, notify, notBuilt } from './prototype.svelte.js';
 	import Breadcrumbs from './Breadcrumbs.svelte';
 
 	let { onopen, onjson, oncompare } = $props();
@@ -268,12 +268,8 @@
 			<span class="warnings"><Switch bind:checked={warningsOnly}>Warnings only</Switch></span>
 
 			{#snippet end()}
-				<Button icon="upload" onclick={() => notify('Import is not part of this prototype')}
-					>Import</Button
-				>
-				<Button icon="download" onclick={() => notify('Export is not part of this prototype')}
-					>Export</Button
-				>
+				<Button icon="upload" onclick={() => notBuilt('Import')}>Import</Button>
+				<Button icon="download" onclick={() => notBuilt('Export')}>Export</Button>
 			{/snippet}
 		</TableToolbar>
 

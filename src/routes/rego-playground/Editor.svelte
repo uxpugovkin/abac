@@ -13,7 +13,7 @@
 <script>
 	import { Button } from '#lib';
 	import { policy } from './data.js';
-	import { copy, notify } from './prototype.svelte.js';
+	import { copy, notBuilt } from './prototype.svelte.js';
 	import Panel from './Panel.svelte';
 	import Code from './Code.svelte';
 </script>
@@ -21,11 +21,7 @@
 <Panel>
 	{#snippet head()}policy.rego{/snippet}
 	{#snippet actions()}
-		<Button
-			icon="search"
-			label="Search"
-			onclick={() => notify('Search is not part of this prototype')}
-		/>
+		<Button icon="search" label="Search" onclick={() => notBuilt('Search')} />
 		<Button icon="duplicate" label="Copy" onclick={() => copy(policy)} />
 	{/snippet}
 

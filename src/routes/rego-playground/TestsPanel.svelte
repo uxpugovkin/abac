@@ -19,7 +19,7 @@
 <script>
 	import { Button, Chip, Switch, Tag } from '#lib';
 	import { tests, problems, statuses } from './data.js';
-	import { notify } from './prototype.svelte.js';
+	import { notBuilt } from './prototype.svelte.js';
 	import Panel from './Panel.svelte';
 	import Message from './Message.svelte';
 	import ProblemsList from './ProblemsList.svelte';
@@ -52,16 +52,8 @@
 	{/snippet}
 	{#snippet actions()}
 		{#if tab === 'problems' && run === 'failed'}
-			<Button
-				icon="search"
-				label="Search"
-				onclick={() => notify('Search is not part of this prototype')}
-			/>
-			<Button
-				icon="tune"
-				label="Filter"
-				onclick={() => notify('Filters are not part of this prototype')}
-			/>
+			<Button icon="search" label="Search" onclick={() => notBuilt('Search')} />
+			<Button icon="tune" label="Filter" onclick={() => notBuilt('Filtering')} />
 		{/if}
 	{/snippet}
 
